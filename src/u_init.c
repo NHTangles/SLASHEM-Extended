@@ -686,6 +686,56 @@ static struct trobj Camperstriker[] = {
 	{ 0, 0, 0, 0, 0 }
 };
 
+static struct trobj CellarChild[] = {
+	{ QUARTERSTAFF, 3, WEAPON_CLASS, 1, 0 },
+	{ MAGE_PLATE_MAIL, -3, WEAPON_CLASS, 1, 0 },
+	{ POT_HEALING, 0, POTION_CLASS, 3, 0 },
+	{ SPE_FROST, UNDEF_SPE, SPBOOK_CLASS, 1, 1 },
+	{ SPE_WATER_FLAME, UNDEF_SPE, SPBOOK_CLASS, 1, 1 },
+	{ SPE_HEALING, UNDEF_SPE, SPBOOK_CLASS, 1, 1 },
+	{ SPE_JUMPING, UNDEF_SPE, SPBOOK_CLASS, 1, 1 },
+	{ SCR_TELEPORTATION, 0, SCROLL_CLASS, 2, 0 },
+	{ RIN_COLD_RESISTANCE, 0, RING_CLASS, 1, 0 },
+	{ FROST_HORN, UNDEF_SPE, TOOL_CLASS, 1, 0 },
+	{ CHARGER, UNDEF_SPE, TOOL_CLASS, 1, 0 },
+	{ WAN_IDENTIFY, 5, WAND_CLASS, 1, 0 },
+	{ 0, 0, 0, 0, 0 }
+};
+
+static struct trobj Demagogue[] = {
+	{ MALLET, 0, WEAPON_CLASS, 1, 0 },
+	{ PLATE_MAIL, 0, ARMOR_CLASS, 1, 0 },
+	{ TIN_WHISTLE, 0, TOOL_CLASS, 1, 0 },
+	{ BUGLE, 0, TOOL_CLASS, 1, 0 },
+	{ 0, 0, 0, 0, 0 }
+};
+
+static struct trobj Walscholar[] = {
+	{ DIAMOND, UNDEF_SPE, GEM_CLASS, 10, 0 },
+	{ DAGGER, 0, WEAPON_CLASS, 1, 0 },
+	{ LEATHER_ARMOR, 0, ARMOR_CLASS, 1, 0 },
+	{ 0, 0, 0, 0, 0 }
+};
+
+static struct trobj SocialJusticeWarrior[] = {
+	{ FLY_SWATTER, 0, WEAPON_CLASS, 1, 0 },
+	{ FEDORA, 0, ARMOR_CLASS, 1, 0 },
+	{ 0, 0, 0, 0, 0 }
+};
+
+static struct trobj Grenadonin[] = {
+	{ ORCISH_SHORT_SWORD, 2, WEAPON_CLASS, 1, 0 },
+	{ SHURIKEN, 3, WEAPON_CLASS, 40, 0 },
+	{ FRAG_GRENADE, 0, WEAPON_CLASS, 20, 0 },
+	{ ORCISH_RING_MAIL, 6, ARMOR_CLASS, 1, 0 },
+	{ LEATHER_CLOAK, -4, ARMOR_CLASS, 1, 0 },
+	{ FEDORA, -1, ARMOR_CLASS, 1, 0 },
+	{ DRAGON_EYEPATCH, 0, TOOL_CLASS, 1, 0 },
+	{ LEATHER_GLOVES, -6, ARMOR_CLASS, 1, 0 },
+	{ AMULET_OF_QUICK_ATTACK, 0, AMULET_CLASS, 1, 0 },
+	{ 0, 0, 0, 0, 0 }
+};
+
 static struct trobj Rocker[] = {
 	{ ROCK, UNDEF_SPE, GEM_CLASS, 1, UNDEF_BLESS },
 	{ ROCK, UNDEF_SPE, GEM_CLASS, 1, UNDEF_BLESS },
@@ -3953,6 +4003,91 @@ static const struct def_skill Skill_Mys[] = {
     { P_NONE, 0 }
 };
 
+static const struct def_skill Skill_Dem[] = {
+
+    { P_DAGGER, P_EXPERT },             { P_KNIFE,  P_EXPERT },
+    { P_AXE, P_EXPERT },                 { P_PICK_AXE, P_EXPERT },
+    { P_SHORT_SWORD, P_EXPERT },        { P_BROAD_SWORD, P_EXPERT },
+    { P_LONG_SWORD, P_EXPERT },        { P_TWO_HANDED_SWORD, P_EXPERT },
+    { P_SCIMITAR, P_EXPERT },          { P_SABER, P_EXPERT },
+    { P_CLUB, P_EXPERT },    { P_PADDLE, P_EXPERT },
+    { P_MACE, P_EXPERT },                { P_MORNING_STAR, P_EXPERT },
+    { P_FLAIL, P_EXPERT },               { P_HAMMER, P_EXPERT },
+    { P_QUARTERSTAFF, P_EXPERT },        { P_POLEARMS, P_EXPERT },
+    { P_HIGH_HEELS, P_EXPERT },
+    { P_SEXY_FLATS, P_EXPERT },
+
+    { P_SPEAR, P_EXPERT },               { P_JAVELIN, P_EXPERT },
+    { P_TRIDENT, P_EXPERT },             { P_LANCE, P_EXPERT },
+    { P_BOW, P_EXPERT },                 { P_SLING, P_EXPERT },
+	{ P_FIREARM, P_EXPERT },
+    { P_CROSSBOW, P_EXPERT },            { P_DART, P_EXPERT },
+    { P_SHURIKEN, P_EXPERT },            { P_BOOMERANG, P_EXPERT },
+    { P_WHIP, P_EXPERT },                { P_UNICORN_HORN, P_EXPERT },
+	{ P_LIGHTSABER, P_EXPERT },
+
+    { P_ATTACK_SPELL, P_EXPERT },      { P_HEALING_SPELL, P_EXPERT },
+    { P_DIVINATION_SPELL, P_EXPERT },   { P_ENCHANTMENT_SPELL, P_EXPERT },
+    { P_PROTECTION_SPELL, P_EXPERT },    { P_BODY_SPELL, P_EXPERT },
+    { P_MATTER_SPELL, P_EXPERT },
+
+    { P_TWO_WEAPON_COMBAT, P_EXPERT },
+    { P_RIDING, P_EXPERT },
+    { P_GENERAL_COMBAT, P_EXPERT },
+    { P_SHIELD, P_EXPERT },
+    { P_BODY_ARMOR, P_EXPERT },
+    { P_TWO_HANDED_WEAPON, P_EXPERT },
+    { P_POLYMORPHING, P_EXPERT },
+    { P_DEVICES, P_EXPERT },
+    { P_SEARCHING, P_EXPERT },
+    { P_SPIRITUALITY, P_EXPERT },
+    { P_PETKEEPING, P_EXPERT },
+    { P_MISSILE_WEAPONS, P_EXPERT },
+    { P_TECHNIQUES, P_EXPERT },
+    { P_IMPLANTS, P_EXPERT },
+
+    { P_OCCULT_SPELL, P_EXPERT },
+    { P_ELEMENTAL_SPELL, P_EXPERT },
+    { P_CHAOS_SPELL, P_EXPERT },
+    { P_SHII_CHO, P_EXPERT },
+    { P_MAKASHI, P_EXPERT },
+    { P_SORESU, P_EXPERT },
+    { P_ATARU, P_EXPERT },
+    { P_SHIEN, P_EXPERT },
+    { P_DJEM_SO, P_EXPERT },
+    { P_NIMAN, P_EXPERT },
+    { P_JUYO, P_EXPERT },
+    { P_VAAPAD, P_EXPERT },
+    { P_WEDI, P_EXPERT },
+
+    { P_BARE_HANDED_COMBAT, P_EXPERT },
+    { P_MARTIAL_ARTS, P_EXPERT },
+    { P_NONE, 0 }
+};
+
+static const struct def_skill Skill_Cel[] = {
+
+    { P_ATTACK_SPELL, P_MASTER },		{ P_PROTECTION_SPELL, P_MASTER },
+    { P_HEALING_SPELL, P_GRAND_MASTER },		{ P_BODY_SPELL, P_MASTER },
+    { P_MATTER_SPELL, P_MASTER },		{ P_DIVINATION_SPELL, P_MASTER },
+    { P_OCCULT_SPELL, P_MASTER },		{ P_ENCHANTMENT_SPELL, P_MASTER },
+    { P_ELEMENTAL_SPELL, P_MASTER },		{ P_CHAOS_SPELL, P_MASTER },
+    { P_QUARTERSTAFF, P_MASTER },		{ P_DAGGER, P_EXPERT },
+    { P_KNIFE, P_EXPERT },		{ P_SCIMITAR, P_EXPERT },
+    { P_CLUB, P_EXPERT },		{ P_PADDLE, P_MASTER },
+    { P_MACE, P_EXPERT },		{ P_FLAIL, P_EXPERT },
+    { P_HAMMER, P_EXPERT },		{ P_SPEAR, P_EXPERT },
+    { P_SLING, P_EXPERT },		{ P_BOOMERANG, P_MASTER },
+    { P_WHIP, P_EXPERT },		{ P_BARE_HANDED_COMBAT, P_MASTER },
+    { P_POLYMORPHING, P_EXPERT },		{ P_DEVICES, P_MASTER },
+    { P_SPIRITUALITY, P_EXPERT },		{ P_TECHNIQUES, P_EXPERT },
+    { P_SHII_CHO, P_EXPERT },		{ P_SORESU, P_EXPERT },
+    { P_SHIEN, P_EXPERT },		{ P_NIMAN, P_EXPERT },
+    { P_RIDING, P_EXPERT },
+
+    { P_NONE, 0 }
+};
+
 static const struct def_skill Skill_Ble[] = {
 
 	/* Mainly uses edged weapons. --Amy */
@@ -4000,6 +4135,57 @@ static const struct def_skill Skill_Ble[] = {
 };
 
 static const struct def_skill Skill_Spa[] = {
+
+    { P_DAGGER, P_MASTER },             { P_KNIFE,  P_EXPERT },
+    { P_AXE, P_EXPERT },                 { P_PICK_AXE, P_EXPERT },
+    { P_SHORT_SWORD, P_EXPERT },        { P_BROAD_SWORD, P_EXPERT },
+    { P_LONG_SWORD, P_EXPERT },        { P_TWO_HANDED_SWORD, P_EXPERT },
+    { P_SCIMITAR, P_EXPERT },          { P_SABER, P_EXPERT },
+    { P_CLUB, P_EXPERT },    { P_PADDLE, P_EXPERT },
+    { P_MACE, P_EXPERT },                { P_MORNING_STAR, P_EXPERT },
+    { P_FLAIL, P_EXPERT },               { P_HAMMER, P_EXPERT },
+    { P_QUARTERSTAFF, P_EXPERT },        { P_POLEARMS, P_EXPERT },
+
+    { P_SPEAR, P_EXPERT },               { P_JAVELIN, P_EXPERT },
+    { P_TRIDENT, P_EXPERT },             { P_LANCE, P_EXPERT },
+
+	{ P_FIREARM, P_MASTER },
+    { P_HIGH_HEELS, P_MASTER },
+    { P_SEXY_FLATS, P_EXPERT },
+
+    { P_WHIP, P_EXPERT },                { P_LIGHTSABER, P_MASTER },
+
+    { P_ATTACK_SPELL, P_EXPERT },      { P_HEALING_SPELL, P_EXPERT },
+    { P_DIVINATION_SPELL, P_EXPERT },   { P_ENCHANTMENT_SPELL, P_EXPERT },
+    { P_PROTECTION_SPELL, P_EXPERT },    { P_BODY_SPELL, P_EXPERT },
+    { P_MATTER_SPELL, P_EXPERT },
+
+    { P_GENERAL_COMBAT, P_EXPERT },
+    { P_SHIELD, P_EXPERT },
+    { P_BODY_ARMOR, P_EXPERT },
+    { P_TWO_HANDED_WEAPON, P_EXPERT },
+    { P_DEVICES, P_MASTER },
+    { P_SEARCHING, P_EXPERT },
+
+    { P_OCCULT_SPELL, P_EXPERT },
+    { P_ELEMENTAL_SPELL, P_EXPERT },
+    { P_CHAOS_SPELL, P_EXPERT },
+    { P_SHII_CHO, P_MASTER },
+    { P_MAKASHI, P_MASTER },
+    { P_SORESU, P_EXPERT },
+    { P_ATARU, P_EXPERT },
+    { P_SHIEN, P_GRAND_MASTER },
+    { P_DJEM_SO, P_EXPERT },
+    { P_NIMAN, P_MASTER },
+    { P_JUYO, P_EXPERT },
+    { P_VAAPAD, P_GRAND_MASTER },
+    { P_WEDI, P_GRAND_MASTER },
+
+    { P_BARE_HANDED_COMBAT, P_EXPERT },
+    { P_NONE, 0 }
+};
+
+static const struct def_skill Skill_Wal[] = {
 
     { P_DAGGER, P_MASTER },             { P_KNIFE,  P_EXPERT },
     { P_AXE, P_EXPERT },                 { P_PICK_AXE, P_EXPERT },
@@ -4516,6 +4702,11 @@ static const struct def_skill Skill_Act[] = {
     { P_SHIEN, P_MASTER },
     { P_JUYO, P_GRAND_MASTER },
     { P_WEDI, P_EXPERT },
+
+    { P_NONE, 0 }
+};
+
+static const struct def_skill Skill_Soc[] = {
 
     { P_NONE, 0 }
 };
@@ -6208,6 +6399,39 @@ static const struct def_skill Skill_S[] = {
     { P_NONE, 0 }
 };
 
+static const struct def_skill Skill_Gre[] = {
+    { P_DAGGER, P_EXPERT },		{ P_KNIFE,  P_EXPERT },
+    { P_SHORT_SWORD, P_GRAND_MASTER },	{ P_BROAD_SWORD, P_EXPERT },
+    { P_LONG_SWORD, P_EXPERT },		{ P_TWO_HANDED_SWORD, P_EXPERT },
+    { P_SCIMITAR, P_EXPERT },		{ P_SABER, P_EXPERT },
+    { P_PADDLE, P_EXPERT },
+    { P_FLAIL, P_EXPERT },		{ P_QUARTERSTAFF, P_EXPERT },
+    { P_POLEARMS, P_EXPERT },		{ P_SPEAR, P_EXPERT },
+    { P_JAVELIN, P_EXPERT },		{ P_LANCE, P_EXPERT },
+    { P_BOW, P_EXPERT },		{ P_SHURIKEN, P_EXPERT },
+    { P_PROTECTION_SPELL, P_EXPERT },      { P_BODY_SPELL, P_EXPERT },
+    { P_HIGH_HEELS, P_EXPERT },	{ P_FIREARM, P_GRAND_MASTER },
+
+/* WAC - removed the attack spells, replace with body.  clairvoyance, meditate*/
+    { P_RIDING, P_EXPERT },
+    { P_GENERAL_COMBAT, P_MASTER },
+    { P_SHIELD, P_EXPERT },
+    { P_BODY_ARMOR, P_EXPERT },
+    { P_TWO_HANDED_WEAPON, P_GRAND_MASTER },
+    { P_POLYMORPHING, P_EXPERT },
+    { P_DEVICES, P_MASTER },
+    { P_SEARCHING, P_EXPERT },
+    { P_SPIRITUALITY, P_EXPERT },
+    { P_PETKEEPING, P_EXPERT },
+    { P_MISSILE_WEAPONS, P_EXPERT },
+    { P_TECHNIQUES, P_EXPERT },
+    { P_SEXY_FLATS, P_MASTER },
+
+    { P_TWO_WEAPON_COMBAT, P_EXPERT },
+    { P_MARTIAL_ARTS, P_MASTER },
+    { P_NONE, 0 }
+};
+
 static const struct def_skill Skill_Ama[] = {
     { P_DAGGER, P_EXPERT },		{ P_KNIFE,  P_EXPERT },
 	{ P_AXE,  P_EXPERT },
@@ -6901,19 +7125,19 @@ static const char * const hereticgods[] = {
 /* pantheons for priests etc. These contain all the roles pantheons; they need to be aligned so that if we pick a random number and apply that to all three, a consistent role's pantheon is created! It also contains made-up pantheons that don't belong to an actual role. --Amy */
 static const char * const lawfulgods[] = {
 
-"The Lord of the Pit", "Anti-War Movement", "_Eilistraee", "_Suzanne Collins", "Quetzalcoatl", "Leonardo", "Ehud", "Dunlain", "Mitra", "Garl Glittergold", "Yaldabaoth", "Glycocalyx", "_Rhea Oro", "Eddergud", "_Everella Shrine", "Anu", "Buddha", "Ilmater", "McDonalds", "President Kimball", "Jacob Black", "Merlin", "Tane", "_Sakuya", "Apollo", "Orome", "Thomas Alva Edison", "Solonor Thelandira", "James Bond", "Prometheus", "Earth", "Colonel Campbell", "Nintendo", "Claude Speed", "UNIX", "Sulla", "_B'loody Mary", "Jobs", "_Athena", "Air", "Bowditch", "the Light Side", "Barnum", "Lugh", "Erzulie Freda", "Hugh Hefner", "Leo Tolstoi", "Nuada", "Eluvian", "_Queen Serenity", "Shan Lai Ching", "Falis", "Donblas", "Nharlotep", "Votishal", "God the Father", "Magnum", "_Vaire", "Brahma", "Ariel", "Danzai", "the Lord", "A'En", "Democracy", "Bickney", "Mercury", "Classic Rock", "Issek", "_Cassandra", "Moori", "_Amaterasu Omikami", "Nikola Tesla", "Airyaman", "_Lady Ariane", "the Homies", "Manwe Sulimo", "Speedy Gonzales", "Blind Io", "_Olivia", "Seeker", "_Hel", "Tyr", "Larry Koopa", "Talos", "Ptah", "His Majesty", "Balder", "Andromorph", "Seraphimon", "Scorpion", "Dios", "Ceipheid", "_Tsunami", "Ladon", "_Osiris", "_Goddess", "Biron", "_Ishtar", "_Nayru", "Zephyr", "Aslan", "Bahamut", "_Princess Celestia", "_Rainbow Dash", "Ceiling Cat", "SlimKirby", "Superego", "Porphyry", "Nike", "Little Mac", "Noeda", "Dungeon Collapse", "Commissioner Hunter", "upper bull", "Acehack", "Johanna from Orleans", "Kelvin", "Bar", "Deckard Cain", "Pepin the Healer", "Sulla", "Cheibriados", "Fedhas", "Lugonu", "Okawaru", "Vehumet", "Zin", "_the Bitches", "King Somnus", "Gaia", "Khronos", "Brahma", "Pangu", "Atum", "Khepri", "Corak", "Chiyo-chichi", "Truth", "Mr. Black", "_Irina", "Ulfric Stormcloak", "Gaming PC", "Aurum", "Moradin", "Lurtz", "Legolas", "Selvetarm", "Mahal", "Ilneval", "_Vandria", "Saint Cuthbert", "_Breasts", "_Mother", "Eden", "_Balam", "Enki", "_Eurynome", "Nudziarth", "Huginn and Muninn", "Jack", "Shiro", "Tenebrous", "_Paimon", "Dahlver-Nar", "potion of urine", "Tal Rascha", "China", "General Fai", "Terrans", "Kormu", "_Demeter", "Tartarica", "_Minerva", "Static", "Jiraiya", "Nereus", "_Tenderness", "_Softness", "Toesmashing", "Bill Gates", "Albert Einstein", "Dagobert Duck", "Donkey Kong", "Mr. Spock", "the U.N.O.", "the gnome with the wand of death", "bhaak", "Elronnd", "Dudley", "stth", "muad", "Eidolos", "Boko Haram", "_Nicki Minaj", "Full Moon", "Doenerteller Versace", "Grizz", "Zombieman Brigade", "Powdery Snow", "Sol", "_Selene", "Lawful Good", "_Umbrellarina Madeline", "Jonathan Joestar", "Seveso Toxin", "Milahowalpaw", "Kanigyilak", "The Riddler", "Zeon Zum Deikun", "_Laya", "the Great Light", "Asgore Dreemurr", "the Wave Existence", "_Arle Nadja", "Amon Ra", "Fate", "Regunin", "_Mercedes", "_Ewa", "_Kumiromi of Harvest", "Yacatect of Wealth", "_Jure of Healing", "_Morodwyn", "Corellius", "Elderon", "The One Who Sees", "Onn", "Sssracht", "_Shalla", "Ka'Omsh", "Gnarl", "Order", "Fiit-Ssaaar", "Valpurus", "Legifer", "Atavus", "_Dulcis", "_Seges", "Polypiling", "Mr. Maradonna", "_Gina", "_Polyhymnia", "Tariru", "_Madeleine", "The Battlehorse", "Utu", 
+"The Lord of the Pit", "Anti-War Movement", "_Eilistraee", "_Suzanne Collins", "Quetzalcoatl", "Leonardo", "Ehud", "Dunlain", "Mitra", "Garl Glittergold", "Yaldabaoth", "Glycocalyx", "_Rhea Oro", "Eddergud", "_Everella Shrine", "Anu", "Buddha", "Ilmater", "McDonalds", "President Kimball", "Jacob Black", "Merlin", "Tane", "_Sakuya", "Apollo", "Orome", "Thomas Alva Edison", "Solonor Thelandira", "James Bond", "Prometheus", "Earth", "Colonel Campbell", "Nintendo", "Claude Speed", "UNIX", "Sulla", "_B'loody Mary", "Jobs", "_Athena", "Air", "Bowditch", "the Light Side", "Barnum", "Lugh", "Erzulie Freda", "Hugh Hefner", "Leo Tolstoi", "Nuada", "Eluvian", "_Queen Serenity", "Shan Lai Ching", "Falis", "Donblas", "Nharlotep", "Votishal", "God the Father", "Magnum", "_Vaire", "Brahma", "Ariel", "Danzai", "the Lord", "A'En", "Democracy", "Bickney", "Mercury", "Classic Rock", "Issek", "_Cassandra", "Moori", "_Amaterasu Omikami", "Nikola Tesla", "Airyaman", "_Lady Ariane", "the Homies", "Manwe Sulimo", "Speedy Gonzales", "Blind Io", "_Olivia", "Seeker", "_Hel", "Tyr", "Larry Koopa", "Talos", "Ptah", "His Majesty", "Balder", "Andromorph", "Seraphimon", "Scorpion", "Dios", "Ceipheid", "_Tsunami", "Ladon", "_Osiris", "_Goddess", "Biron", "_Ishtar", "_Nayru", "Zephyr", "Aslan", "Bahamut", "_Princess Celestia", "_Rainbow Dash", "Ceiling Cat", "SlimKirby", "Superego", "Porphyry", "Nike", "Little Mac", "Noeda", "Dungeon Collapse", "Commissioner Hunter", "upper bull", "Acehack", "Johanna from Orleans", "Kelvin", "Bar", "Deckard Cain", "Pepin the Healer", "Sulla", "Cheibriados", "Fedhas", "Lugonu", "Okawaru", "Vehumet", "Zin", "_the Bitches", "King Somnus", "Gaia", "Khronos", "Brahma", "Pangu", "Atum", "Khepri", "Corak", "Chiyo-chichi", "Truth", "Mr. Black", "_Irina", "Ulfric Stormcloak", "Gaming PC", "Aurum", "Moradin", "Lurtz", "Legolas", "Selvetarm", "Mahal", "Ilneval", "_Vandria", "Saint Cuthbert", "_Breasts", "_Mother", "Eden", "_Balam", "Enki", "_Eurynome", "Nudziarth", "Huginn and Muninn", "Jack", "Shiro", "Tenebrous", "_Paimon", "Dahlver-Nar", "potion of urine", "Tal Rascha", "China", "General Fai", "Terrans", "Kormu", "_Demeter", "Tartarica", "_Minerva", "Static", "Jiraiya", "Nereus", "_Tenderness", "_Softness", "Toesmashing", "Bill Gates", "Albert Einstein", "Dagobert Duck", "Donkey Kong", "Mr. Spock", "the U.N.O.", "the gnome with the wand of death", "bhaak", "Elronnd", "Dudley", "stth", "muad", "Eidolos", "Boko Haram", "_Nicki Minaj", "Full Moon", "Doenerteller Versace", "Grizz", "Zombieman Brigade", "Powdery Snow", "Sol", "_Selene", "Lawful Good", "_Umbrellarina Madeline", "Jonathan Joestar", "Seveso Toxin", "Milahowalpaw", "Kanigyilak", "The Riddler", "Zeon Zum Deikun", "_Laya", "the Great Light", "Asgore Dreemurr", "the Wave Existence", "_Arle Nadja", "Amon Ra", "Fate", "Regunin", "_Mercedes", "_Ewa", "_Kumiromi of Harvest", "Yacatect of Wealth", "_Jure of Healing", "_Morodwyn", "Corellius", "Elderon", "The One Who Sees", "Onn", "Sssracht", "_Shalla", "Ka'Omsh", "Gnarl", "Order", "Fiit-Ssaaar", "Valpurus", "Legifer", "Atavus", "_Dulcis", "_Seges", "Polypiling", "Mr. Maradonna", "_Gina", "_Polyhymnia", "Tariru", "_Madeleine", "The Battlehorse", "Utu", "_Your Magical Roommate", "Heimskr", "_Margaret", "_Zoe Quinn", "Speaker Walt", 
 
 };
 
 static const char * const neutralgods[] = {
 
-"Goldblight of the Flame", "Global Freedom Council", "_Kiaransali", "_Effie Trinket", "Camaxtli", "Picasso", "Ford", "Savos Aren", "Crom", "Flandal Steelskin", "the void", "Fibrinogen", "_Liebea Luna", "Vhaeraun", "Butch DeLoria", "_Ishtar", "Jahwe", "Grumbar", "Kentucky's Fried Chicken", "Mr. House", "_Bella Swan", "Salazar Slytherin", "Tangaroa", "_Reimu", "Dionysus", "_Yavanna", "Benjamin Franklin", "Aerdrie Faenya", "Chuck Norris", "Thor", "Fire", "Deepthroat", "Microsoft", "Carl CJ Johnson", "the PDP-7", "Cicero", "_Ebony Dark'ness", "Wozniak", "Hermes", "Frost", "Peabody", "the Force", "Bailey", "_Brigit", "Marassa Jumeaux", "G-boy", "Stephen Hawking", "Dagda", "Moon", "_Angel Aphrodite", "Chih Sung-tzu", "_Marfa", "Grome", "Zugguthobal", "Raiden", "_Mother Earth", "Smith", "_Varda Elentari", "Vishnu", "Tyrael", "Milanor", "_the deep blue sea", "Dr. Oujide", "Communism", "Corridor", "_Venus", "Symphonic Metal", "Mog", "Menelaos", "King Kai", "Raijin", "Erwin Schroedinger", "Gandarewa", "Lord Stahngnir", "the Robbers", "Mandos", "Dan Naginati", "_The Lady", "Peyman", "_Osiris", "Pluto", "Odin", "Roy Koopa", "_Meridia", "Thoth", "His Holiness", "_Edda", "Technix", "_Ophanimon", "Sub-Zero", "_the Rose Bride", "_the Lord of Nightmares", "_Washu", "Namanda", "Obelisk", "Doom", "Tieg", "Filaha", "_Farore", "_Raftina", "the Emperor-beyond-the-Sea", "Io", "_the Fausticorn", "_Fluttershy", "Longcat", "Lucahjin", "Ego", "_Fanny Kemble", "Adidas", "Mister Sandman", "Soviet5lo", "Segfault Bug", "Jeweler Jublgrais", "type of ice block", "DNethack", "Queen Katharina", "Celsius", "Torr", "Qual-Kehk", "Griswold the Armorer", "Amenophis", "Beogh", "Elyvilon", "Kikubaaqudgha", "Nemelex", "Trog", "Yredelemnul", "_the Hell Brides", "_Rubiss", "Ahura Mazda", "Demiourgos", "Aeon", "Bulaing", "Kamui", "Vishvakarman", "the Dragon Pharaoh", "Neco Coneco", "Love", "Big Bear", "Max", "_Delphine", "Sony PlayStation", "Argentum", "Dumathoin", "Saruman", "_Eowyn", "Keptolo", "Holashner", "_Luthic", "Corellon", "Helm", "_Feet", "Andromalius", "Berith", "_Cosmos", "Buer", "Amon", "Andrealphus", "Fafnir", "Astaroth", "_Eve", "_Chupoclops", "Naberius", "Orthos", "scroll of bullshit", "_Blood Raven", "USA", "General Townes", "Zerg", "_Sophie", "_Hestia", "Acetica", "Apollo", "Magnet", "_Tsunade", "Neptune", "_Beautifulness", "_Squeakiness", "Shin Kick", "_Britney Spears", "Homer Simpson", "_Xena", "Jack Bauer", "_Your mom", "the Flying Spaghetti Monster", "paxed", "tungtn", "Dion Nicolaas", "the RNG", "Adeon", "speedycat7", "dograt", "The Taliban", "_Taylor Swift", "New Moon", "Fish and Chips", "Panda", "The Revenants", "Large Snowflakes", "_Terra", "Helios", "True Neutral", "_Medium Deborah", "Hirohiko Araki", "Fukoshima Radiation", "_Timalixomol", "Omeatl", "_Poison Ivy", "Degwin Sodo Zabi", "Orakio", "Lutz", "the Absolute GOD of Hyperdeath", "Emperor Cain", "_Celine Jules", "Hersifon", "Unlimited Blade Works", "Caxon", "_Misty", "Lorskel", "Opatos of Earth", "Itzpalt of Element", "Mani of Machine", "Clamgaddin", "_Ayssia", "_Anssaria", "The One Who Kills", "_Istaria", "Issrecht", "_Auroree", "Ne'Ftrr", "_Berwyn", "Balance", "Sssaass", "Loricatus", "_Silva", "Mellis", "_Cleptia", "Sophos", "Monster Polymorphing", "_Ms. Unfortunate Forest", "Gordon Freeman", "_Euterpe", "FIQ", "_Sofia", "The Wild Boar", "Kossuth", 
+"Goldblight of the Flame", "Global Freedom Council", "_Kiaransali", "_Effie Trinket", "Camaxtli", "Picasso", "Ford", "Savos Aren", "Crom", "Flandal Steelskin", "the void", "Fibrinogen", "_Liebea Luna", "Vhaeraun", "Butch DeLoria", "_Ishtar", "Jahwe", "Grumbar", "Kentucky's Fried Chicken", "Mr. House", "_Bella Swan", "Salazar Slytherin", "Tangaroa", "_Reimu", "Dionysus", "_Yavanna", "Benjamin Franklin", "Aerdrie Faenya", "Chuck Norris", "Thor", "Fire", "Deepthroat", "Microsoft", "Carl CJ Johnson", "the PDP-7", "Cicero", "_Ebony Dark'ness", "Wozniak", "Hermes", "Frost", "Peabody", "the Force", "Bailey", "_Brigit", "Marassa Jumeaux", "G-boy", "Stephen Hawking", "Dagda", "Moon", "_Angel Aphrodite", "Chih Sung-tzu", "_Marfa", "Grome", "Zugguthobal", "Raiden", "_Mother Earth", "Smith", "_Varda Elentari", "Vishnu", "Tyrael", "Milanor", "_the deep blue sea", "Dr. Oujide", "Communism", "Corridor", "_Venus", "Symphonic Metal", "Mog", "Menelaos", "King Kai", "Raijin", "Erwin Schroedinger", "Gandarewa", "Lord Stahngnir", "the Robbers", "Mandos", "Dan Naginati", "_The Lady", "Peyman", "_Osiris", "Pluto", "Odin", "Roy Koopa", "_Meridia", "Thoth", "His Holiness", "_Edda", "Technix", "_Ophanimon", "Sub-Zero", "_the Rose Bride", "_the Lord of Nightmares", "_Washu", "Namanda", "Obelisk", "Doom", "Tieg", "Filaha", "_Farore", "_Raftina", "the Emperor-beyond-the-Sea", "Io", "_the Fausticorn", "_Fluttershy", "Longcat", "Lucahjin", "Ego", "_Fanny Kemble", "Adidas", "Mister Sandman", "Soviet5lo", "Segfault Bug", "Jeweler Jublgrais", "type of ice block", "DNethack", "Queen Katharina", "Celsius", "Torr", "Qual-Kehk", "Griswold the Armorer", "Amenophis", "Beogh", "Elyvilon", "Kikubaaqudgha", "Nemelex", "Trog", "Yredelemnul", "_the Hell Brides", "_Rubiss", "Ahura Mazda", "Demiourgos", "Aeon", "Bulaing", "Kamui", "Vishvakarman", "the Dragon Pharaoh", "Neco Coneco", "Love", "Big Bear", "Max", "_Delphine", "Sony PlayStation", "Argentum", "Dumathoin", "Saruman", "_Eowyn", "Keptolo", "Holashner", "_Luthic", "Corellon", "Helm", "_Feet", "Andromalius", "Berith", "_Cosmos", "Buer", "Amon", "Andrealphus", "Fafnir", "Astaroth", "_Eve", "_Chupoclops", "Naberius", "Orthos", "scroll of bullshit", "_Blood Raven", "USA", "General Townes", "Zerg", "_Sophie", "_Hestia", "Acetica", "Apollo", "Magnet", "_Tsunade", "Neptune", "_Beautifulness", "_Squeakiness", "Shin Kick", "_Britney Spears", "Homer Simpson", "_Xena", "Jack Bauer", "_Your mom", "the Flying Spaghetti Monster", "paxed", "tungtn", "Dion Nicolaas", "the RNG", "Adeon", "speedycat7", "dograt", "The Taliban", "_Taylor Swift", "New Moon", "Fish and Chips", "Panda", "The Revenants", "Large Snowflakes", "_Terra", "Helios", "True Neutral", "_Medium Deborah", "Hirohiko Araki", "Fukoshima Radiation", "_Timalixomol", "Omeatl", "_Poison Ivy", "Degwin Sodo Zabi", "Orakio", "Lutz", "the Absolute GOD of Hyperdeath", "Emperor Cain", "_Celine Jules", "Hersifon", "Unlimited Blade Works", "Caxon", "_Misty", "Lorskel", "Opatos of Earth", "Itzpalt of Element", "Mani of Machine", "Clamgaddin", "_Ayssia", "_Anssaria", "The One Who Kills", "_Istaria", "Issrecht", "_Auroree", "Ne'Ftrr", "_Berwyn", "Balance", "Sssaass", "Loricatus", "_Silva", "Mellis", "_Cleptia", "Sophos", "Monster Polymorphing", "_Ms. Unfortunate Forest", "Gordon Freeman", "_Euterpe", "FIQ", "_Sofia", "The Wild Boar", "Kossuth", "_Your Annoying Sister", "_Suffragette", "_Anaconda", "_Brianna Wu", "Great Corner-Hard", 
 
 };
 
 static const char * const chaoticgods[] = {
 
-"Warpfire Hellspawn", "Human Rights Progression", "_Lolth", "President Snow", "Huhetotl", "Dali", "Ivins", "_Hert the Vampire", "Set", "Urdlen", "_Sophia", "_Hemophilia", "_Elenya Pure", "the black web", "Draco Malfoy", "Anshar", "Allah", "_Tymora", "Burger King", "Caesar", "Edward Cullen", "Lord Voldemort", "Whiro", "_Yukari Yakumo", "Pan", "Tulkas", "_Marilyn Monroe", "Erevan Ilesere", "Jackie Chan", "Arson", "Ash", "The Patriots", "Sony", "Tommy Vercetti", "VMS", "Catilina", "Darth Valer", "Gates", "Poseidon", "Smoke", "Rothchild", "the Dark Side", "Shaco", "Manannan Mac Lir", "Papa Legba", "Arsene Lupin", "H. P. Lovecraft", "Morrigan", "Lycanthus", "_Queen Beryl", "Huan Ti", "Falaris", "Arioch", "Gothuulbe", "Rat God", "the Satan", "Wesson", "_Nessa", "_Shiva", "Gabriel", "Daini", "the Devil", "Team Missile Bomb", "Despotism", "Lockney", "Mars", "Hardcore Punk", "Kos", "_Helen of Troy", "Vegeta", "Susanowo", "Wernher von Braun", "Daevas", "Sven Fanara", "the Motherfuckers", "Lorien", "_Kylie Lum", "Offler", "_Lady Gaga", "Seth", "Orcus", "Loki", "Morton Koopa Jr.", "Clavicus Vile", "Anhur", "The Commons", "Hagen", "Mechatron", "Cherubimon", "Kano", "End of the World", "Shabranigdo", "_Tokimi", "_Myria", "Ra", "Poltergeist", "the Mist", "Asmodeus", "_Din", "Justine", "Tash", "_Tiamat", "_Princess Luna", "_Pinkie Pie", "Basement Cat", "The Dark Id", "Id", "Amos Bronson Alcott", "Puma", "Mike Tyson", "Kerio", "Game Freeze", "Captain Future", "water puddle", "SLASH'EM Extended", "Al-Mutasim", "Fahrenheit", "Atue", "Geglash", "Farnham the Drunk", "Pyrrhus", "Ashenzari", "Dithmenos", "Jiyva", "Makhleb", "Sif Muna", "Xom", "_the Sluts with Syphilis", "Malroth", "Viracocha", "Mbombo", "Unkulunkulu", "Apsu", "Coatlique", "Tepeu", "Sheltem", "Kamineko", "Courage", "Faster-Than-All-Others", "Anton", "General Tullius", "XBox 360", "Antimony", "Abbathor", "Morgoth", "Eol", "Ghaunadaur", "Armok", "Gruumsh", "_Sehanine", "_Mask", "Sexy Butt", "_Marionette", "Ymir", "Dantalion", "_Iris", "Acererak", "Ose", "Ahazu", "_Echidna", "Miska", "Malphas", "Otias", "_Simurgh", "wand of summon sexy girl", "B-a-a-l", "Global Liberation Army", "Rodall 'Demo' Juhziz", "Protoss", "Gabnid", "_Adephagia", "Hydrocloria", "Linus", "Lightning", "Orochimaru", "Proteus", "_Disgustingness", "_Loudness", "Kick in the Nuts", "_Mother Teresa", "George W. Bush", "Super Mario", "the blue Power Ranger", "the universe", "the Invisible Pink Unicorn", "the DevTeam", "_Bluescreenofdeath", "marvin", "Tariru", "mrivan", "stenno", "DeathOnAStick", "The IS", "_Miley Cyrus", "Friday the 13th", "Fugu Globefish Sushi", "Ice Bear", "Cyberdemon MkIII Deluxe", "Blizzard", "_Luna", "_Eos", "Chaotic Evil", "_Crueltrainer Cindy", "Cars", "Mustard Gas", "Emoxivalirex", "Tleselagyila", "Two-Face", "Gihren Zabi", "Dark Force", "_the Profound Darkness", "Chara", "Deus", "_Miki Onimaru", "Mor Havoc", "Heaven's Feel", "_Jylla", "_Kendl", "Kaczynski", "_Ehekatl of Luck", "_Lulwy of Wind", "Eyth of Infidel", "Abbad-Undar", "Ni'Pregh", "_Rofl'th", "The One Who Rages", "Ssraxx", "Ussrachs", "Fnordjar", "Vagrak", "_Urglyn", "Chaos", "Fiit-Yaaar", "Mortifer", "Cruentus", "_Infuscor", "_Scabies", "_Nefas", "Self-Polymorph", "_Ms. Storm", "G-Man", "_Terpsichore", "Demo", "_Wendy", "The Dire Wolf", "Garyx", 
+"Warpfire Hellspawn", "Human Rights Progression", "_Lolth", "President Snow", "Huhetotl", "Dali", "Ivins", "_Hert the Vampire", "Set", "Urdlen", "_Sophia", "_Hemophilia", "_Elenya Pure", "the black web", "Draco Malfoy", "Anshar", "Allah", "_Tymora", "Burger King", "Caesar", "Edward Cullen", "Lord Voldemort", "Whiro", "_Yukari Yakumo", "Pan", "Tulkas", "_Marilyn Monroe", "Erevan Ilesere", "Jackie Chan", "Arson", "Ash", "The Patriots", "Sony", "Tommy Vercetti", "VMS", "Catilina", "Darth Valer", "Gates", "Poseidon", "Smoke", "Rothchild", "the Dark Side", "Shaco", "Manannan Mac Lir", "Papa Legba", "Arsene Lupin", "H. P. Lovecraft", "Morrigan", "Lycanthus", "_Queen Beryl", "Huan Ti", "Falaris", "Arioch", "Gothuulbe", "Rat God", "the Satan", "Wesson", "_Nessa", "_Shiva", "Gabriel", "Daini", "the Devil", "Team Missile Bomb", "Despotism", "Lockney", "Mars", "Hardcore Punk", "Kos", "_Helen of Troy", "Vegeta", "Susanowo", "Wernher von Braun", "Daevas", "Sven Fanara", "the Motherfuckers", "Lorien", "_Kylie Lum", "Offler", "_Lady Gaga", "Seth", "Orcus", "Loki", "Morton Koopa Jr.", "Clavicus Vile", "Anhur", "The Commons", "Hagen", "Mechatron", "Cherubimon", "Kano", "End of the World", "Shabranigdo", "_Tokimi", "_Myria", "Ra", "Poltergeist", "the Mist", "Asmodeus", "_Din", "Justine", "Tash", "_Tiamat", "_Princess Luna", "_Pinkie Pie", "Basement Cat", "The Dark Id", "Id", "Amos Bronson Alcott", "Puma", "Mike Tyson", "Kerio", "Game Freeze", "Captain Future", "water puddle", "SLASH'EM Extended", "Al-Mutasim", "Fahrenheit", "Atue", "Geglash", "Farnham the Drunk", "Pyrrhus", "Ashenzari", "Dithmenos", "Jiyva", "Makhleb", "Sif Muna", "Xom", "_the Sluts with Syphilis", "Malroth", "Viracocha", "Mbombo", "Unkulunkulu", "Apsu", "Coatlique", "Tepeu", "Sheltem", "Kamineko", "Courage", "Faster-Than-All-Others", "Anton", "General Tullius", "XBox 360", "Antimony", "Abbathor", "Morgoth", "Eol", "Ghaunadaur", "Armok", "Gruumsh", "_Sehanine", "_Mask", "Sexy Butt", "_Marionette", "Ymir", "Dantalion", "_Iris", "Acererak", "Ose", "Ahazu", "_Echidna", "Miska", "Malphas", "Otias", "_Simurgh", "wand of summon sexy girl", "B-a-a-l", "Global Liberation Army", "Rodall 'Demo' Juhziz", "Protoss", "Gabnid", "_Adephagia", "Hydrocloria", "Linus", "Lightning", "Orochimaru", "Proteus", "_Disgustingness", "_Loudness", "Kick in the Nuts", "_Mother Teresa", "George W. Bush", "Super Mario", "the blue Power Ranger", "the universe", "the Invisible Pink Unicorn", "the DevTeam", "_Bluescreenofdeath", "marvin", "Tariru", "mrivan", "stenno", "DeathOnAStick", "The IS", "_Miley Cyrus", "Friday the 13th", "Fugu Globefish Sushi", "Ice Bear", "Cyberdemon MkIII Deluxe", "Blizzard", "_Luna", "_Eos", "Chaotic Evil", "_Crueltrainer Cindy", "Cars", "Mustard Gas", "Emoxivalirex", "Tleselagyila", "Two-Face", "Gihren Zabi", "Dark Force", "_the Profound Darkness", "Chara", "Deus", "_Miki Onimaru", "Mor Havoc", "Heaven's Feel", "_Jylla", "_Kendl", "Kaczynski", "_Ehekatl of Luck", "_Lulwy of Wind", "Eyth of Infidel", "Abbad-Undar", "Ni'Pregh", "_Rofl'th", "The One Who Rages", "Ssraxx", "Ussrachs", "Fnordjar", "Vagrak", "_Urglyn", "Chaos", "Fiit-Yaaar", "Mortifer", "Cruentus", "_Infuscor", "_Scabies", "_Nefas", "Self-Polymorph", "_Ms. Storm", "G-Man", "_Terpsichore", "Demo", "_Wendy", "The Dire Wolf", "Garyx", "_Your Insufferable Mother-In-Law", "Cromwell", "Aerschie-Miesie", "_Anita Sarkeesian", "Left Guenter",
 
 
 };
@@ -7416,6 +7640,10 @@ u_init()
 	u.temprecursiontime = 0;
 	u.oldrecursionrole = -1;
 	u.oldrecursionrace = -1;
+
+	u.demagoguerecursion = 0;
+	u.demagoguerecursiontime = 0;
+	u.demagogueabilitytimer = 10000;
 
 	u.tarmustrokingturn = 0;
 
@@ -8200,8 +8428,8 @@ u_init()
 	}
 
 	u.femauspices4 = rnd(11);
-	u.femauspices6 = rnd(8);
-	u.femauspices8 = rnd(8);
+	u.femauspices6 = rnd(9);
+	u.femauspices8 = rnd(9);
 	u.femauspices11 = rnd(16);
 	u.femauspices13 = rnd(10);
 	u.femauspices15 = rnd(8);
@@ -8212,9 +8440,324 @@ u_init()
 	u.femauspices28 = rnd(9);
 	u.femauspices30 = rnd(10);
 
+	u.sjwL1E1 = rnd(235); /* timerun and stuff */
+	u.sjwL2E1 = rnd(235);
+	u.sjwL3E1 = rnd(235);
+	u.sjwL4E1 = rnd(235);
+	u.sjwL5E1 = rnd(235);
+	u.sjwL5E2 = rnd(235);
+	u.sjwL6E1 = rnd(235);
+	u.sjwL6E2 = rnd(235);
+	u.sjwL7E1 = rnd(235);
+	u.sjwL7E2 = rnd(235);
+	u.sjwL8E1 = rnd(235);
+	u.sjwL8E2 = rnd(235);
+	u.sjwL9E1 = rnd(235);
+	u.sjwL9E2 = rnd(235);
+	u.sjwL10E1 = rnd(235);
+	u.sjwL10E2 = rnd(235);
+	u.sjwL10E3 = rnd(235);
+	u.sjwL11E1 = rnd(235);
+	u.sjwL11E2 = rnd(235);
+	u.sjwL11E3 = rnd(235);
+	u.sjwL12E1 = rnd(235);
+	u.sjwL12E2 = rnd(235);
+	u.sjwL12E3 = rnd(235);
+	u.sjwL13E1 = rnd(235);
+	u.sjwL13E2 = rnd(235);
+	u.sjwL13E3 = rnd(235);
+	u.sjwL14E1 = rnd(235);
+	u.sjwL14E2 = rnd(235);
+	u.sjwL14E3 = rnd(235);
+	u.sjwL15E1 = rnd(235);
+	u.sjwL15E2 = rnd(235);
+	u.sjwL15E3 = rnd(235);
+	u.sjwL15E4 = rnd(235);
+	u.sjwL16E1 = rnd(235);
+	u.sjwL16E2 = rnd(235);
+	u.sjwL16E3 = rnd(235);
+	u.sjwL16E4 = rnd(235);
+	u.sjwL17E1 = rnd(235);
+	u.sjwL17E2 = rnd(235);
+	u.sjwL17E3 = rnd(235);
+	u.sjwL17E4 = rnd(235);
+	u.sjwL18E1 = rnd(235);
+	u.sjwL18E2 = rnd(235);
+	u.sjwL18E3 = rnd(235);
+	u.sjwL18E4 = rnd(235);
+	u.sjwL19E1 = rnd(235);
+	u.sjwL19E2 = rnd(235);
+	u.sjwL19E3 = rnd(235);
+	u.sjwL19E4 = rnd(235);
+	u.sjwL20E1 = rnd(235);
+	u.sjwL20E2 = rnd(235);
+	u.sjwL20E3 = rnd(235);
+	u.sjwL20E4 = rnd(235);
+	u.sjwL20E5 = rnd(235);
+	u.sjwL21E1 = rnd(235);
+	u.sjwL21E2 = rnd(235);
+	u.sjwL21E3 = rnd(235);
+	u.sjwL21E4 = rnd(235);
+	u.sjwL21E5 = rnd(235);
+	u.sjwL22E1 = rnd(235);
+	u.sjwL22E2 = rnd(235);
+	u.sjwL22E3 = rnd(235);
+	u.sjwL22E4 = rnd(235);
+	u.sjwL22E5 = rnd(235);
+	u.sjwL23E1 = rnd(235);
+	u.sjwL23E2 = rnd(235);
+	u.sjwL23E3 = rnd(235);
+	u.sjwL23E4 = rnd(235);
+	u.sjwL23E5 = rnd(235);
+	u.sjwL24E1 = rnd(235);
+	u.sjwL24E2 = rnd(235);
+	u.sjwL24E3 = rnd(235);
+	u.sjwL24E4 = rnd(235);
+	u.sjwL24E5 = rnd(235);
+	u.sjwL25E1 = rnd(235);
+	u.sjwL25E2 = rnd(235);
+	u.sjwL25E3 = rnd(235);
+	u.sjwL25E4 = rnd(235);
+	u.sjwL25E5 = rnd(235);
+	u.sjwL25E6 = rnd(235);
+	u.sjwL26E1 = rnd(235);
+	u.sjwL26E2 = rnd(235);
+	u.sjwL26E3 = rnd(235);
+	u.sjwL26E4 = rnd(235);
+	u.sjwL26E5 = rnd(235);
+	u.sjwL26E6 = rnd(235);
+	u.sjwL27E1 = rnd(235);
+	u.sjwL27E2 = rnd(235);
+	u.sjwL27E3 = rnd(235);
+	u.sjwL27E4 = rnd(235);
+	u.sjwL27E5 = rnd(235);
+	u.sjwL27E6 = rnd(235);
+	u.sjwL28E1 = rnd(235);
+	u.sjwL28E2 = rnd(235);
+	u.sjwL28E3 = rnd(235);
+	u.sjwL28E4 = rnd(235);
+	u.sjwL28E5 = rnd(235);
+	u.sjwL28E6 = rnd(235);
+	u.sjwL29E1 = rnd(235);
+	u.sjwL29E2 = rnd(235);
+	u.sjwL29E3 = rnd(235);
+	u.sjwL29E4 = rnd(235);
+	u.sjwL29E5 = rnd(235);
+	u.sjwL29E6 = rnd(235);
+	u.sjwL30E1 = rnd(235);
+	u.sjwL30E2 = rnd(235);
+	u.sjwL30E3 = rnd(235);
+	u.sjwL30E4 = rnd(235);
+	u.sjwL30E5 = rnd(235);
+	u.sjwL30E6 = rnd(235);
+	u.sjwL30E7 = rnd(235);
+	u.sjwL31E1 = rnd(235);
+	u.sjwL31E2 = rnd(235);
+	u.sjwL31E3 = rnd(235);
+	u.sjwL31E4 = rnd(235);
+	u.sjwL31E5 = rnd(235);
+	u.sjwL31E6 = rnd(235);
+	u.sjwL31E7 = rnd(235);
+	u.sjwL32E1 = rnd(235);
+	u.sjwL32E2 = rnd(235);
+	u.sjwL32E3 = rnd(235);
+	u.sjwL32E4 = rnd(235);
+	u.sjwL32E5 = rnd(235);
+	u.sjwL32E6 = rnd(235);
+	u.sjwL32E7 = rnd(235);
+	u.sjwL33E1 = rnd(235);
+	u.sjwL33E2 = rnd(235);
+	u.sjwL33E3 = rnd(235);
+	u.sjwL33E4 = rnd(235);
+	u.sjwL33E5 = rnd(235);
+	u.sjwL33E6 = rnd(235);
+	u.sjwL33E7 = rnd(235);
+	u.sjwL34E1 = rnd(235);
+	u.sjwL34E2 = rnd(235);
+	u.sjwL34E3 = rnd(235);
+	u.sjwL34E4 = rnd(235);
+	u.sjwL34E5 = rnd(235);
+	u.sjwL34E6 = rnd(235);
+	u.sjwL34E7 = rnd(235);
+	u.sjwL35E1 = rnd(235);
+	u.sjwL35E2 = rnd(235);
+	u.sjwL35E3 = rnd(235);
+	u.sjwL35E4 = rnd(235);
+	u.sjwL35E5 = rnd(235);
+	u.sjwL35E6 = rnd(235);
+	u.sjwL35E7 = rnd(235);
+	u.sjwL36E1 = rnd(235);
+	u.sjwL36E2 = rnd(235);
+	u.sjwL36E3 = rnd(235);
+	u.sjwL36E4 = rnd(235);
+	u.sjwL36E5 = rnd(235);
+	u.sjwL36E6 = rnd(235);
+	u.sjwL36E7 = rnd(235);
+	u.sjwL37E1 = rnd(235);
+	u.sjwL37E2 = rnd(235);
+	u.sjwL37E3 = rnd(235);
+	u.sjwL37E4 = rnd(235);
+	u.sjwL37E5 = rnd(235);
+	u.sjwL37E6 = rnd(235);
+	u.sjwL37E7 = rnd(235);
+	u.sjwL38E1 = rnd(235);
+	u.sjwL38E2 = rnd(235);
+	u.sjwL38E3 = rnd(235);
+	u.sjwL38E4 = rnd(235);
+	u.sjwL38E5 = rnd(235);
+	u.sjwL38E6 = rnd(235);
+	u.sjwL38E7 = rnd(235);
+	u.sjwL39E1 = rnd(235);
+	u.sjwL39E2 = rnd(235);
+	u.sjwL39E3 = rnd(235);
+	u.sjwL39E4 = rnd(235);
+	u.sjwL39E5 = rnd(235);
+	u.sjwL39E6 = rnd(235);
+	u.sjwL39E7 = rnd(235);
+	u.sjwL40E1 = rnd(235);
+	u.sjwL40E2 = rnd(235);
+	u.sjwL40E3 = rnd(235);
+	u.sjwL40E4 = rnd(235);
+	u.sjwL40E5 = rnd(235);
+	u.sjwL40E6 = rnd(235);
+	u.sjwL40E7 = rnd(235);
+	u.sjwL41E1 = rnd(235);
+	u.sjwL41E2 = rnd(235);
+	u.sjwL41E3 = rnd(235);
+	u.sjwL41E4 = rnd(235);
+	u.sjwL41E5 = rnd(235);
+	u.sjwL41E6 = rnd(235);
+	u.sjwL41E7 = rnd(235);
+	u.sjwL42E1 = rnd(235);
+	u.sjwL42E2 = rnd(235);
+	u.sjwL42E3 = rnd(235);
+	u.sjwL42E4 = rnd(235);
+	u.sjwL42E5 = rnd(235);
+	u.sjwL42E6 = rnd(235);
+	u.sjwL42E7 = rnd(235);
+	u.sjwL43E1 = rnd(235);
+	u.sjwL43E2 = rnd(235);
+	u.sjwL43E3 = rnd(235);
+	u.sjwL43E4 = rnd(235);
+	u.sjwL43E5 = rnd(235);
+	u.sjwL43E6 = rnd(235);
+	u.sjwL43E7 = rnd(235);
+	u.sjwL44E1 = rnd(235);
+	u.sjwL44E2 = rnd(235);
+	u.sjwL44E3 = rnd(235);
+	u.sjwL44E4 = rnd(235);
+	u.sjwL44E5 = rnd(235);
+	u.sjwL44E6 = rnd(235);
+	u.sjwL44E7 = rnd(235);
+	u.sjwL45E1 = rnd(235);
+	u.sjwL45E2 = rnd(235);
+	u.sjwL45E3 = rnd(235);
+	u.sjwL45E4 = rnd(235);
+	u.sjwL45E5 = rnd(235);
+	u.sjwL45E6 = rnd(235);
+	u.sjwL45E7 = rnd(235);
+	u.sjwL46E1 = rnd(235);
+	u.sjwL46E2 = rnd(235);
+	u.sjwL46E3 = rnd(235);
+	u.sjwL46E4 = rnd(235);
+	u.sjwL46E5 = rnd(235);
+	u.sjwL46E6 = rnd(235);
+	u.sjwL46E7 = rnd(235);
+	u.sjwL47E1 = rnd(235);
+	u.sjwL47E2 = rnd(235);
+	u.sjwL47E3 = rnd(235);
+	u.sjwL47E4 = rnd(235);
+	u.sjwL47E5 = rnd(235);
+	u.sjwL47E6 = rnd(235);
+	u.sjwL47E7 = rnd(235);
+	u.sjwL48E1 = rnd(235);
+	u.sjwL48E2 = rnd(235);
+	u.sjwL48E3 = rnd(235);
+	u.sjwL48E4 = rnd(235);
+	u.sjwL48E5 = rnd(235);
+	u.sjwL48E6 = rnd(235);
+	u.sjwL48E7 = rnd(235);
+	u.sjwL49E1 = rnd(235);
+	u.sjwL49E2 = rnd(235);
+	u.sjwL49E3 = rnd(235);
+	u.sjwL49E4 = rnd(235);
+	u.sjwL49E5 = rnd(235);
+	u.sjwL49E6 = rnd(235);
+	u.sjwL49E7 = rnd(235);
+	u.sjwL50E1 = rnd(235);
+	u.sjwL50E2 = rnd(235);
+	u.sjwL50E3 = rnd(235);
+	u.sjwL50E4 = rnd(235);
+	u.sjwL50E5 = rnd(235);
+	u.sjwL50E6 = rnd(235);
+	u.sjwL50E7 = rnd(235);
+	u.sjwL51E1 = rnd(235);
+	u.sjwL51E2 = rnd(235);
+	u.sjwL51E3 = rnd(235);
+	u.sjwL51E4 = rnd(235);
+	u.sjwL51E5 = rnd(235);
+	u.sjwL51E6 = rnd(235);
+	u.sjwL51E7 = rnd(235);
+	u.sjwL52E1 = rnd(235);
+	u.sjwL52E2 = rnd(235);
+	u.sjwL52E3 = rnd(235);
+	u.sjwL52E4 = rnd(235);
+	u.sjwL52E5 = rnd(235);
+	u.sjwL52E6 = rnd(235);
+	u.sjwL52E7 = rnd(235);
+	u.sjwL53E1 = rnd(235);
+	u.sjwL53E2 = rnd(235);
+	u.sjwL53E3 = rnd(235);
+	u.sjwL53E4 = rnd(235);
+	u.sjwL53E5 = rnd(235);
+	u.sjwL53E6 = rnd(235);
+	u.sjwL53E7 = rnd(235);
+	u.sjwL54E1 = rnd(235);
+	u.sjwL54E2 = rnd(235);
+	u.sjwL54E3 = rnd(235);
+	u.sjwL54E4 = rnd(235);
+	u.sjwL54E5 = rnd(235);
+	u.sjwL54E6 = rnd(235);
+	u.sjwL54E7 = rnd(235);
+	u.sjwL55E1 = rnd(235);
+	u.sjwL55E2 = rnd(235);
+	u.sjwL55E3 = rnd(235);
+	u.sjwL55E4 = rnd(235);
+	u.sjwL55E5 = rnd(235);
+	u.sjwL55E6 = rnd(235);
+	u.sjwL55E7 = rnd(235);
+	u.sjwL56E1 = rnd(235);
+	u.sjwL56E2 = rnd(235);
+	u.sjwL56E3 = rnd(235);
+	u.sjwL56E4 = rnd(235);
+	u.sjwL56E5 = rnd(235);
+	u.sjwL56E6 = rnd(235);
+	u.sjwL56E7 = rnd(235);
+	u.sjwL57E1 = rnd(235);
+	u.sjwL57E2 = rnd(235);
+	u.sjwL57E3 = rnd(235);
+	u.sjwL57E4 = rnd(235);
+	u.sjwL57E5 = rnd(235);
+	u.sjwL57E6 = rnd(235);
+	u.sjwL57E7 = rnd(235);
+	u.sjwL58E1 = rnd(235);
+	u.sjwL58E2 = rnd(235);
+	u.sjwL58E3 = rnd(235);
+	u.sjwL58E4 = rnd(235);
+	u.sjwL58E5 = rnd(235);
+	u.sjwL58E6 = rnd(235);
+	u.sjwL58E7 = rnd(235);
+	u.sjwL59E1 = rnd(235);
+	u.sjwL59E2 = rnd(235);
+	u.sjwL59E3 = rnd(235);
+	u.sjwL59E4 = rnd(235);
+	u.sjwL59E5 = rnd(235);
+	u.sjwL59E6 = rnd(235);
+	u.sjwL59E7 = rnd(235);
+
 	u.adpartattack = rn2(AD_ENDS);
 	while (u.adpartattack == AD_ENDS || u.adpartattack == AD_WERE) u.adpartattack = rn2(AD_ENDS);
-	u.adrunsattack = rnd(232); /* timerun etc. */
+	u.adrunsattack = rnd(235); /* timerun etc. */
 
 	u.scholarturns = 0;
 
@@ -8812,12 +9355,25 @@ u_init()
 	u.vibratingsquarefind = 0;
 
 	u.wonderlandescape = 0;
+	u.zapemescape = 0;
 
 	u.felidlives = 9;
 
 	u.homosexual = 0;
 
+	u.dungeongrowthhack = 0;
+
+	u.katitrapocc = 0;
+
+	u.cellargravate = 0;
+
+	u.walscholarpass = 0;
+
+	u.mushroompoles = 0;
+	u.grenadoninlauncher = 0;
 	u.nataljetrapturns = 0;
+	u.mushroompoleused = 0;
+	u.automorefuckthisshit = 0;
 	u.nataljetrapx = 0;
 	u.nataljetrapy = 0;
 	u.riennevaplus = 0;
@@ -8859,6 +9415,7 @@ u_init()
 	u.urmaxlvlH = 1; /* will go up if a mystic role player levels up */
 	u.urmaxlvlI = 1; /* will go up if a DQ Slime with green slime race levels up */
 	u.urmaxlvlJ = 1; /* will go up if an anachronounbinder role player levels up */
+	u.urmaxlvlK = 1; /* will go up if a SJW role player levels up */
 	u.urmaxlvlUP = 1; /* will go up whenever any player levels up */
 	u.xtralevelmult = 1; /* will go up if you level up from EXP points while already XL30 */
 
@@ -8942,11 +9499,11 @@ u_init()
 	u.fumbleduration = 0;
 	u.antimagicshell = 0;
 
-	u.nastinator01 = u.nastinator02 = u.nastinator03 = u.nastinator04 = u.nastinator05 = u.nastinator06 = u.nastinator07 = u.nastinator08 = u.nastinator09 = u.nastinator10 = u.nastinator11 = u.nastinator12 = u.nastinator13 = u.nastinator14 = u.nastinator15 = u.nastinator16 = u.nastinator17 = u.nastinator18 = u.nastinator19 = u.nastinator20 = u.nastinator21 = u.nastinator22 = u.nastinator23 = u.nastinator24 = u.nastinator25 = u.nastinator26 = u.nastinator27 = u.nastinator28 = u.nastinator29 = u.nastinator30 = u.nastinator31 = u.nastinator32 = u.nastinator33 = u.nastinator34 = u.nastinator35 = u.nastinator36 = u.nastinator37 = u.nastinator38 = u.nastinator39 = u.nastinator40 = u.nastinator41 = u.nastinator42 = u.nastinator43 = u.nastinator44 = u.nastinator45 = u.nastinator46 = u.nastinator47 = u.nastinator48 = u.nastinator49 = u.nastinator50 = u.nastinator51 = u.nastinator52 = u.nastinator53 = u.nastinator54 = u.nastinator55 = u.nastinator56 = u.nastinator57 = u.nastinator58 = u.nastinator59 = u.nastinator60 = u.nastinator61 = u.nastinator62 = u.nastinator63 = u.nastinator64 = u.nastinator65 = u.nastinator66 = u.nastinator67 = u.nastinator68 = u.nastinator69 = u.nastinator70 = u.nastinator71 = u.nastinator72 = u.nastinator73 = u.nastinator74 = u.nastinator75 = u.nastinator76 = u.nastinator77 = u.nastinator78 = u.nastinator79 = u.nastinator80 = u.nastinator81 = u.nastinator82 = u.nastinator83 = u.nastinator84 = u.nastinator85 = u.nastinator86 = u.nastinator87 = u.nastinator88 = u.nastinator89 = u.nastinator90 = u.nastinator91 = u.nastinator92 = u.nastinator93 = u.nastinator94 = u.nastinator95 = u.nastinator96 = u.nastinator97 = u.nastinator98 = u.nastinator99 = u.nastinator100 = u.nastinator101 = u.nastinator102 = u.nastinator103 = u.nastinator104 = u.nastinator105 = u.nastinator106 = u.nastinator107 = u.nastinator108 = u.nastinator109 = u.nastinator110 = u.nastinator111 = u.nastinator112 = u.nastinator113 = u.nastinator114 = u.nastinator115 = u.nastinator116 = u.nastinator117 = u.nastinator118 = u.nastinator119 = u.nastinator120 = u.nastinator121 = u.nastinator122 = u.nastinator123 = u.nastinator124 = u.nastinator125 = u.nastinator126 = u.nastinator127 = u.nastinator128 = u.nastinator129 = u.nastinator130 = u.nastinator131 = u.nastinator132 = u.nastinator133 = u.nastinator134 = u.nastinator135 = u.nastinator136 = u.nastinator137 = u.nastinator138 = u.nastinator139 = u.nastinator140 = u.nastinator141 = u.nastinator142 = u.nastinator143 = u.nastinator144 = u.nastinator145 = u.nastinator146 = u.nastinator147 = u.nastinator148 = u.nastinator149 = u.nastinator150 = u.nastinator151 = u.nastinator152 = u.nastinator153 = u.nastinator154 = u.nastinator155 = u.nastinator156 = u.nastinator157 = u.nastinator158 = u.nastinator159 = u.nastinator160 = u.nastinator161 = u.nastinator162 = u.nastinator163 = u.nastinator164 = u.nastinator165 = u.nastinator166 = u.nastinator167 = u.nastinator168 = u.nastinator169 = u.nastinator170 = u.nastinator171 = u.nastinator172 = u.nastinator173 = u.nastinator174 = u.nastinator175 = u.nastinator176 = u.nastinator177 = u.nastinator178 = u.nastinator179 = u.nastinator180 = u.nastinator181 = u.nastinator182 = u.nastinator183 = u.nastinator184 = u.nastinator185 = u.nastinator186 = u.nastinator187 = u.nastinator188 = u.nastinator189 = u.nastinator190 = u.nastinator191 = u.nastinator192 = u.nastinator193 = u.nastinator194 = u.nastinator195 = u.nastinator196 = u.nastinator197 = u.nastinator198 = u.nastinator199 = u.nastinator200 = u.nastinator201 = u.nastinator202 = u.nastinator203 = u.nastinator204 = u.nastinator205 = u.nastinator206 = u.nastinator207 = u.nastinator208 = u.nastinator209 = u.nastinator210 = u.nastinator211 = u.nastinator212 = u.nastinator213 = u.nastinator214 = u.nastinator215 = u.nastinator216 = u.nastinator217 = u.nastinator218 = u.nastinator219 = u.nastinator220 = u.nastinator221 = u.nastinator222 = u.nastinator223 = u.nastinator224 = u.nastinator225 = u.nastinator226 = u.nastinator227 = u.nastinator228 = u.nastinator229 = 0;
+	u.nastinator01 = u.nastinator02 = u.nastinator03 = u.nastinator04 = u.nastinator05 = u.nastinator06 = u.nastinator07 = u.nastinator08 = u.nastinator09 = u.nastinator10 = u.nastinator11 = u.nastinator12 = u.nastinator13 = u.nastinator14 = u.nastinator15 = u.nastinator16 = u.nastinator17 = u.nastinator18 = u.nastinator19 = u.nastinator20 = u.nastinator21 = u.nastinator22 = u.nastinator23 = u.nastinator24 = u.nastinator25 = u.nastinator26 = u.nastinator27 = u.nastinator28 = u.nastinator29 = u.nastinator30 = u.nastinator31 = u.nastinator32 = u.nastinator33 = u.nastinator34 = u.nastinator35 = u.nastinator36 = u.nastinator37 = u.nastinator38 = u.nastinator39 = u.nastinator40 = u.nastinator41 = u.nastinator42 = u.nastinator43 = u.nastinator44 = u.nastinator45 = u.nastinator46 = u.nastinator47 = u.nastinator48 = u.nastinator49 = u.nastinator50 = u.nastinator51 = u.nastinator52 = u.nastinator53 = u.nastinator54 = u.nastinator55 = u.nastinator56 = u.nastinator57 = u.nastinator58 = u.nastinator59 = u.nastinator60 = u.nastinator61 = u.nastinator62 = u.nastinator63 = u.nastinator64 = u.nastinator65 = u.nastinator66 = u.nastinator67 = u.nastinator68 = u.nastinator69 = u.nastinator70 = u.nastinator71 = u.nastinator72 = u.nastinator73 = u.nastinator74 = u.nastinator75 = u.nastinator76 = u.nastinator77 = u.nastinator78 = u.nastinator79 = u.nastinator80 = u.nastinator81 = u.nastinator82 = u.nastinator83 = u.nastinator84 = u.nastinator85 = u.nastinator86 = u.nastinator87 = u.nastinator88 = u.nastinator89 = u.nastinator90 = u.nastinator91 = u.nastinator92 = u.nastinator93 = u.nastinator94 = u.nastinator95 = u.nastinator96 = u.nastinator97 = u.nastinator98 = u.nastinator99 = u.nastinator100 = u.nastinator101 = u.nastinator102 = u.nastinator103 = u.nastinator104 = u.nastinator105 = u.nastinator106 = u.nastinator107 = u.nastinator108 = u.nastinator109 = u.nastinator110 = u.nastinator111 = u.nastinator112 = u.nastinator113 = u.nastinator114 = u.nastinator115 = u.nastinator116 = u.nastinator117 = u.nastinator118 = u.nastinator119 = u.nastinator120 = u.nastinator121 = u.nastinator122 = u.nastinator123 = u.nastinator124 = u.nastinator125 = u.nastinator126 = u.nastinator127 = u.nastinator128 = u.nastinator129 = u.nastinator130 = u.nastinator131 = u.nastinator132 = u.nastinator133 = u.nastinator134 = u.nastinator135 = u.nastinator136 = u.nastinator137 = u.nastinator138 = u.nastinator139 = u.nastinator140 = u.nastinator141 = u.nastinator142 = u.nastinator143 = u.nastinator144 = u.nastinator145 = u.nastinator146 = u.nastinator147 = u.nastinator148 = u.nastinator149 = u.nastinator150 = u.nastinator151 = u.nastinator152 = u.nastinator153 = u.nastinator154 = u.nastinator155 = u.nastinator156 = u.nastinator157 = u.nastinator158 = u.nastinator159 = u.nastinator160 = u.nastinator161 = u.nastinator162 = u.nastinator163 = u.nastinator164 = u.nastinator165 = u.nastinator166 = u.nastinator167 = u.nastinator168 = u.nastinator169 = u.nastinator170 = u.nastinator171 = u.nastinator172 = u.nastinator173 = u.nastinator174 = u.nastinator175 = u.nastinator176 = u.nastinator177 = u.nastinator178 = u.nastinator179 = u.nastinator180 = u.nastinator181 = u.nastinator182 = u.nastinator183 = u.nastinator184 = u.nastinator185 = u.nastinator186 = u.nastinator187 = u.nastinator188 = u.nastinator189 = u.nastinator190 = u.nastinator191 = u.nastinator192 = u.nastinator193 = u.nastinator194 = u.nastinator195 = u.nastinator196 = u.nastinator197 = u.nastinator198 = u.nastinator199 = u.nastinator200 = u.nastinator201 = u.nastinator202 = u.nastinator203 = u.nastinator204 = u.nastinator205 = u.nastinator206 = u.nastinator207 = u.nastinator208 = u.nastinator209 = u.nastinator210 = u.nastinator211 = u.nastinator212 = u.nastinator213 = u.nastinator214 = u.nastinator215 = u.nastinator216 = u.nastinator217 = u.nastinator218 = u.nastinator219 = u.nastinator220 = u.nastinator221 = u.nastinator222 = u.nastinator223 = u.nastinator224 = u.nastinator225 = u.nastinator226 = u.nastinator227 = u.nastinator228 = u.nastinator229 = u.nastinator230 = u.nastinator231 = u.nastinator232 = u.nastinator233 = u.nastinator234 = u.nastinator235 = 0;
 
 	if (isnastinator) { /* harder than hard race - starts with uncurable nasty trap effects --Amy */
 
-		switch (rnd(229)) {
+		switch (rnd(235)) {
 
 			case 1: u.nastinator01 = 1; break;
 			case 2: u.nastinator02 = 1; break;
@@ -9177,11 +9734,17 @@ u_init()
 			case 227: u.nastinator227 = 1; break;
 			case 228: u.nastinator228 = 1; break;
 			case 229: u.nastinator229 = 1; break;
+			case 230: u.nastinator230 = 1; break;
+			case 231: u.nastinator231 = 1; break;
+			case 232: u.nastinator232 = 1; break;
+			case 233: u.nastinator233 = 1; break;
+			case 234: u.nastinator234 = 1; break;
+			case 235: u.nastinator235 = 1; break;
 		}
 
 		while ((rnd(7)) < 3) {
 
-			switch (rnd(229)) {
+			switch (rnd(235)) {
 
 				case 1: u.nastinator01 = 1; break;
 				case 2: u.nastinator02 = 1; break;
@@ -9412,6 +9975,12 @@ u_init()
 			case 227: u.nastinator227 = 1; break;
 			case 228: u.nastinator228 = 1; break;
 			case 229: u.nastinator229 = 1; break;
+			case 230: u.nastinator230 = 1; break;
+			case 231: u.nastinator231 = 1; break;
+			case 232: u.nastinator232 = 1; break;
+			case 233: u.nastinator233 = 1; break;
+			case 234: u.nastinator234 = 1; break;
+			case 235: u.nastinator235 = 1; break;
 			}
 
 		}
@@ -9419,7 +9988,7 @@ u_init()
 
 	if (iswindinhabitant) { /* similar to nastinator, but they will be re-initialized sometimes --Amy */
 
-		switch (rnd(229)) {
+		switch (rnd(235)) {
 
 			case 1: u.nastinator01 = 1; break;
 			case 2: u.nastinator02 = 1; break;
@@ -9650,11 +10219,17 @@ u_init()
 			case 227: u.nastinator227 = 1; break;
 			case 228: u.nastinator228 = 1; break;
 			case 229: u.nastinator229 = 1; break;
+			case 230: u.nastinator230 = 1; break;
+			case 231: u.nastinator231 = 1; break;
+			case 232: u.nastinator232 = 1; break;
+			case 233: u.nastinator233 = 1; break;
+			case 234: u.nastinator234 = 1; break;
+			case 235: u.nastinator235 = 1; break;
 		}
 
 		while (!rn2(3)) {
 
-			switch (rnd(229)) {
+			switch (rnd(235)) {
 
 				case 1: u.nastinator01 = 1; break;
 				case 2: u.nastinator02 = 1; break;
@@ -9885,6 +10460,12 @@ u_init()
 			case 227: u.nastinator227 = 1; break;
 			case 228: u.nastinator228 = 1; break;
 			case 229: u.nastinator229 = 1; break;
+			case 230: u.nastinator230 = 1; break;
+			case 231: u.nastinator231 = 1; break;
+			case 232: u.nastinator232 = 1; break;
+			case 233: u.nastinator233 = 1; break;
+			case 234: u.nastinator234 = 1; break;
+			case 235: u.nastinator235 = 1; break;
 			}
 
 		}
@@ -11083,6 +11664,31 @@ u_init()
 		skill_init(Skill_Loc);
 		break;
 
+	case PM_GRENADONIN:
+		ini_inv(Grenadonin);
+		skill_init(Skill_Gre);
+		break;
+
+	case PM_DEMAGOGUE:
+		ini_inv(Demagogue);
+		skill_init(Skill_Dem);
+		break;
+
+	case PM_WALSCHOLAR:
+		ini_inv(Walscholar);
+		skill_init(Skill_Wal);
+		break;
+
+	case PM_SOCIAL_JUSTICE_WARRIOR:
+		ini_inv(SocialJusticeWarrior);
+		skill_init(Skill_Soc);
+		break;
+
+	case PM_CELLAR_CHILD:
+		ini_inv(CellarChild);
+		skill_init(Skill_Cel);
+		break;
+
 	case PM_SAMURAI:
 		Samurai[S_ARROWS].trquan = rn1(20, 26);
 		ini_inv(Samurai);
@@ -11508,6 +12114,26 @@ u_init()
             skill_init(Skill_Mur);
             break;
 
+	case PM_GRENADONIN:
+            skill_init(Skill_Gre);
+            break;
+
+	case PM_WALSCHOLAR:
+            skill_init(Skill_Wal);
+            break;
+
+	case PM_SOCIAL_JUSTICE_WARRIOR:
+            skill_init(Skill_Soc);
+            break;
+
+	case PM_DEMAGOGUE:
+            skill_init(Skill_Dem);
+            break;
+
+	case PM_CELLAR_CHILD:
+            skill_init(Skill_Cel);
+            break;
+
 	case PM_HEALER:
 		skill_init(Skill_H);
 		break;
@@ -11884,7 +12510,7 @@ u_init()
 
 	if (!isnullrace) { /* randomizer only */
 
-	switch (rnd(126)) {
+	switch (rnd(131)) {
 	case 1:
 		switch (rnd(5)) {   
 		    case 1: Archeologist[A_BOOK].trotyp = SPE_DETECT_FOOD; break;
@@ -13206,6 +13832,27 @@ u_init()
 
 		ini_inv(Acu);
 		break;
+
+	case 127:
+		ini_inv(Grenadonin);
+		break;
+
+	case 128:
+		ini_inv(Demagogue);
+		break;
+
+	case 129:
+		ini_inv(Walscholar);
+		break;
+
+	case 130:
+		ini_inv(SocialJusticeWarrior);
+		break;
+
+	case 131:
+		ini_inv(CellarChild);
+		break;
+
 
 	default:	/* impossible */
 		break;
@@ -13363,7 +14010,7 @@ u_init()
 
 	if (Race_if(PM_BASTARD)) {
 
-	switch (rnd(126)) {
+	switch (rnd(131)) {
 	case 1:
 		switch (rnd(5)) {   
 		    case 1: Archeologist[A_BOOK].trotyp = SPE_DETECT_FOOD; break;
@@ -14684,6 +15331,26 @@ u_init()
 		}
 
 		ini_inv(Acu);
+		break;
+
+	case 127:
+		ini_inv(Grenadonin);
+		break;
+
+	case 128:
+		ini_inv(Demagogue);
+		break;
+
+	case 129:
+		ini_inv(Walscholar);
+		break;
+
+	case 130:
+		ini_inv(SocialJusticeWarrior);
+		break;
+
+	case 131:
+		ini_inv(CellarChild);
 		break;
 
 	default:	/* impossible */
@@ -15502,18 +16169,26 @@ u_init()
 	case PM_ELEMENTAL: racebounus = rnz(12); break;
 	case PM_TURTLE: racebounus = rnz(11); break;
 	case PM_THUNDERLORD: racebounus = rnz(11); break;
+	case PM_CHIQUAI: racebounus = rnz(16); break;
+	case PM_ITAQUE: racebounus = rnz(11); break;
 	case PM_DUNADAN: racebounus = rnz(15); break;
 	case PM_DEVELOPER: racebounus = rnz(15); break;
 	case PM_LOWER_ENT: racebounus = rnz(12); break;
+	case PM_HC_ALIEN: racebounus = rnz(12); break;
 	case PM_MANSTER: racebounus = rnz(12); break;
 	case PM_WEAPON_BUG: racebounus = rnz(16); break;
 	case PM_BASTARD: racebounus = rnz(7); break;
 	case PM_SOVIET: racebounus = rnd(5); break; /* note the rnd instead of rnz! */
 	case PM_FAWN: racebounus = rnz(8); break;
+	case PM_MAGYAR: racebounus = rnz(5); break;
+	case PM_VIKING: racebounus = rnz(8); break;
 	case PM_YUKI_PLAYA: racebounus = 0; break;
 	case PM_YEEK: racebounus = 0; break;
 	case PM_HUMANOID_DRYAD: racebounus = rnz(8); break;
 	case PM_PLAYER_ZRUTY: racebounus = rnz(15); break;
+	case PM_METAL: racebounus = rnz(6); break;
+	case PM_PLAYER_GOLEM: racebounus = rnz(11); break;
+	case PM_PLAYER_MECHANIC: racebounus = rnz(12); break;
 	default:	racebounus = rnz(10); break;
 
 	}
@@ -15546,7 +16221,7 @@ u_init()
 	for(i = 0; i < A_MAX; i++)
 	    if(!rn2(20)) {
 		register int xd = rn2(7) - 2;	/* biased variation */
-		(void) adjattrib(i, xd, 3);
+		(void) adjattrib(i, xd, 3, TRUE);
 		if (ABASE(i) < AMAX(i)) AMAX(i) = ABASE(i);
 	    }
 	/* make sure you can carry all you have - especially for Tourists */
@@ -15554,10 +16229,10 @@ u_init()
 	while (inv_weight() > 0 && ( (weight_cap() < 1000 && rn2(10)) || (weight_cap() > 999 && rn2(2)) ) ) {
 
 		if (ABASE(A_STR) < 18) {
-			if (adjattrib(A_STR, 1, 3)) continue;
+			if (adjattrib(A_STR, 1, 3, TRUE)) continue;
 		}
 		if (ABASE(A_CON) < 18) {
-			if (adjattrib(A_CON, 1, 3)) continue;
+			if (adjattrib(A_CON, 1, 3, TRUE)) continue;
 		}
 		/* only get here when didn't boost strength or constitution */
 		break;
@@ -26471,6 +27146,11 @@ int otyp;
      case PM_CAVEMAN:		skills = Skill_C; break;
      case PM_CONVICT:		skills = Skill_Con; break;
      case PM_MURDERER:		skills = Skill_Mur; break;
+     case PM_DEMAGOGUE:		skills = Skill_Dem; break;
+     case PM_WALSCHOLAR:		skills = Skill_Wal; break;
+     case PM_CELLAR_CHILD:		skills = Skill_Cel; break;
+     case PM_SOCIAL_JUSTICE_WARRIOR:		skills = Skill_Soc; break;
+     case PM_GRENADONIN:		skills = Skill_Gre; break;
      case PM_COURIER:		skills = Skill_Cou; break;
      case PM_SPACEWARS_FIGHTER:		skills = Skill_Spa; break;
      case PM_CAMPERSTRIKER:		skills = Skill_Cam; break;
@@ -26640,6 +27320,7 @@ register struct trobj *trop;
 				|| otyp == SCR_RESURRECTION
 				|| otyp == SCR_ACQUIREMENT
 				|| otyp == SCR_ENTHRONIZATION
+				|| otyp == SCR_MAKE_PENTAGRAM
 				|| otyp == SCR_FOUNTAIN_BUILDING
 				|| otyp == SCR_SINKING
 				|| otyp == SCR_WC
@@ -26725,6 +27406,7 @@ register struct trobj *trop;
 				|| otyp == SCR_RESURRECTION
 				|| otyp == SCR_ACQUIREMENT
 				|| otyp == SCR_ENTHRONIZATION
+				|| otyp == SCR_MAKE_PENTAGRAM
 				|| otyp == SCR_FOUNTAIN_BUILDING
 				|| otyp == SCR_SINKING
 				|| otyp == SCR_WC
@@ -26903,6 +27585,12 @@ register struct trobj *trop;
             if (objX->otyp == WOOLEN_SHIRT && !issoviet ) {
                 objX->cursed = TRUE;
             }
+            if (objX->otyp == YOGA_PANTS && !issoviet ) {
+                objX->cursed = TRUE;
+            }
+            if (objX->otyp == GREEN_GOWN && !issoviet ) {
+                objX->cursed = TRUE;
+            }
             if (objX->otyp == PRINTED_SHIRT && !issoviet ) {
                 objX->cursed = TRUE;
             }
@@ -26938,6 +27626,50 @@ register struct trobj *trop;
             }
 
 		if ((objX->otyp == SNIPER_RIFLE || objX->otyp == SHOTGUN_SHELL || objX->otyp == ROCK || objX->otyp == CYAN_DRAGON_SCALE_MAIL || objX->otyp == CLOAK_OF_LUCK_NEGATION || objX->otyp == ANTI_CASTER_CLOAK || objX->otyp == SADO_MASO_GLOVES || objX->otyp == STAIRWELL_STOMPING_BOOTS || objX->otyp == HELM_OF_THIRST || objX->otyp == HELM_OF_BAD_ALIGNMENT || objX->otyp == UNDROPPABLE_GLOVES || objX->otyp == GAUNTLETS_OF_TRAP_CREATION || objX->otyp == BOOTS_OF_WEAKNESS || objX->otyp == HEALTHSTONE || objX->otyp == STONE_OF_MAGIC_RESISTANCE || objX->otyp == SHADES_OF_GREY_STONE || objX->otyp == DSTW_STONE || objX->otyp == CONFUSION_STONE || objX->otyp == STONE_OF_INTRINSIC_LOSS || objX->otyp == ALIGNMENT_STONE || objX->otyp == TRAP_CREATION_STONE || objX->otyp == STONE_OF_VULNERABILITY || objX->otyp == STONE_OF_CURSING || objX->otyp == STATUS_STONE || objX->otyp == DEAFNESS_STONE || objX->otyp == AMULET_OF_POISON_WARNING || objX->otyp == RIN_SUSTAIN_ABILITY || objX->otyp == RIN_GAIN_INTELLIGENCE || objX->otyp == SPE_DARKNESS || objX->otyp == SPE_AGGRAVATE_MONSTER || objX->otyp == SPE_STUN_SELF || objX->otyp == FORTUNE_COOKIE || objX->otyp == CORPSE || objX->otyp == TIN_WHISTLE || objX->otyp == MIRROR || objX->otyp == TINNING_KIT || objX->otyp == CAN_OF_GREASE) && Role_if(PM_MURDERER) ) {
+                objX->cursed = TRUE;
+            }
+
+            if (objX->otyp == QUARTERSTAFF && Role_if(PM_CELLAR_CHILD) ) {
+                objX->cursed = TRUE;
+                objX->stckcurse = TRUE;
+            }
+            if (objX->otyp == MAGE_PLATE_MAIL && Role_if(PM_CELLAR_CHILD) ) {
+                objX->cursed = TRUE;
+                objX->hvycurse = TRUE;
+		    objX->enchantment = randnastyenchantment();
+            }
+            if (objX->otyp == ORCISH_SHORT_SWORD && Role_if(PM_GRENADONIN) ) {
+                objX->cursed = TRUE;
+                objX->hvycurse = TRUE;
+            }
+            if (objX->otyp == SHURIKEN && Role_if(PM_GRENADONIN) ) {
+                objX->cursed = TRUE;
+		    objX->greased = 1;
+            }
+            if (objX->otyp == ORCISH_RING_MAIL && Role_if(PM_GRENADONIN) ) {
+                objX->cursed = TRUE;
+                objX->hvycurse = TRUE;
+                objX->enchantment = CONFLICT;
+            }
+            if (objX->otyp == LEATHER_CLOAK && Role_if(PM_GRENADONIN) ) {
+                objX->cursed = TRUE;
+                objX->enchantment = FIRE_RES;
+            }
+            if (objX->otyp == FEDORA && Role_if(PM_GRENADONIN) ) {
+                objX->cursed = TRUE;
+                objX->enchantment = HALF_PHDAM;
+            }
+            if (objX->otyp == LEATHER_GLOVES && Role_if(PM_GRENADONIN) ) {
+                objX->cursed = TRUE;
+                objX->enchantment = WARN_UNDEAD;
+            }
+            if (objX->otyp == AMULET_OF_QUICK_ATTACK && Role_if(PM_GRENADONIN) ) {
+                objX->cursed = TRUE;
+                objX->hvycurse = TRUE;
+                objX->stckcurse = TRUE;
+                objX->prmcurse = TRUE;
+            }
+            if (objX->otyp == DRAGON_EYEPATCH && Role_if(PM_GRENADONIN) ) {
                 objX->cursed = TRUE;
             }
 
@@ -26997,7 +27729,10 @@ register struct trobj *trop;
 			    objX->spe = trop->trspe;
 			if (trop->trbless != UNDEF_BLESS)
 			    objX->blessed = trop->trbless;
-		}
+
+		objX->owt = weight(objX);
+
+		} /* haxor, i.e. objX code */
 
 
 
@@ -27038,6 +27773,12 @@ register struct trobj *trop;
                 obj->cursed = TRUE;
             }
             if (obj->otyp == WOOLEN_SHIRT && !issoviet ) {
+                obj->cursed = TRUE;
+            }
+            if (obj->otyp == YOGA_PANTS && !issoviet ) {
+                obj->cursed = TRUE;
+            }
+            if (obj->otyp == GREEN_GOWN && !issoviet ) {
                 obj->cursed = TRUE;
             }
             if (obj->otyp == PRINTED_SHIRT && !issoviet ) {
@@ -27082,6 +27823,49 @@ register struct trobj *trop;
                 obj->cursed = TRUE;
             }
 
+            if (obj->otyp == QUARTERSTAFF && Role_if(PM_CELLAR_CHILD) ) {
+                obj->cursed = TRUE;
+                obj->stckcurse = TRUE;
+            }
+            if (obj->otyp == MAGE_PLATE_MAIL && Role_if(PM_CELLAR_CHILD) ) {
+                obj->cursed = TRUE;
+                obj->hvycurse = TRUE;
+		    obj->enchantment = randnastyenchantment();
+            }
+            if (obj->otyp == ORCISH_SHORT_SWORD && Role_if(PM_GRENADONIN) ) {
+                obj->cursed = TRUE;
+                obj->hvycurse = TRUE;
+            }
+            if (obj->otyp == SHURIKEN && Role_if(PM_GRENADONIN) ) {
+                obj->cursed = TRUE;
+		    obj->greased = 1;
+            }
+            if (obj->otyp == ORCISH_RING_MAIL && Role_if(PM_GRENADONIN) ) {
+                obj->cursed = TRUE;
+                obj->hvycurse = TRUE;
+                obj->enchantment = CONFLICT;
+            }
+            if (obj->otyp == LEATHER_CLOAK && Role_if(PM_GRENADONIN) ) {
+                obj->cursed = TRUE;
+                obj->enchantment = FIRE_RES;
+            }
+            if (obj->otyp == FEDORA && Role_if(PM_GRENADONIN) ) {
+                obj->cursed = TRUE;
+                obj->enchantment = HALF_PHDAM;
+            }
+            if (obj->otyp == LEATHER_GLOVES && Role_if(PM_GRENADONIN) ) {
+                obj->cursed = TRUE;
+                obj->enchantment = WARN_UNDEAD;
+            }
+            if (obj->otyp == AMULET_OF_QUICK_ATTACK && Role_if(PM_GRENADONIN) ) {
+                obj->cursed = TRUE;
+                obj->hvycurse = TRUE;
+                obj->stckcurse = TRUE;
+                obj->prmcurse = TRUE;
+            }
+            if (obj->otyp == DRAGON_EYEPATCH && Role_if(PM_GRENADONIN) ) {
+                obj->cursed = TRUE;
+            }
             if (obj->otyp == WAN_DEATH && (Role_if(PM_DEATH_EATER) || Race_if(PM_UNGENOMOLD) ) ) {
                 obj->cursed = TRUE;
             }
@@ -27178,6 +27962,10 @@ register struct trobj *trop;
 				setworn(obj, W_AMUL);
 			}
 
+		if(obj->otyp == AMULET_OF_QUICK_ATTACK && (Role_if(PM_GRENADONIN)) ) {
+				setworn(obj, W_AMUL);
+			}
+
 		if(obj->otyp == RIN_SUSTAIN_ABILITY && (Role_if(PM_MURDERER)) ) {
 				setworn(obj, W_RINGL);
 			}
@@ -27203,7 +27991,7 @@ register struct trobj *trop;
 			otyp == TIN_OPENER || otyp == FLINT || otyp == ROCK) {
 		    if (is_ammo(obj) || is_missile(obj)) {
 			if (!uquiver) setuqwep(obj);
-		    } else if (!uwep) setuwep(obj, FALSE);
+		    } else if (!uwep) setuwep(obj, FALSE, TRUE);
 		    else if (!uswapwep) setuswapwep(obj, FALSE);
 		}
 		if (obj->oclass == SPBOOK_CLASS &&
@@ -27227,8 +28015,13 @@ register struct trobj *trop;
 
 }
 
+/* Alter reality: the flag controls which messages you get.
+ * 0 = "The power of Eru flows through you"
+ * 1 = 90% chance of no message, 10% chance of "Suddenly, the reality is altered"
+ */
 void
-alter_reality()
+alter_reality(realityflag)
+int realityflag;
 {
 
 	register int i, temp, racebounus, rolebounus, alignbounus, genderbounus, maxbounus, randpantheon, starlitmonster, starlitattempts;
@@ -28366,8 +29159,8 @@ alter_reality()
 	}
 
 	u.femauspices4 = rnd(11);
-	u.femauspices6 = rnd(8);
-	u.femauspices8 = rnd(8);
+	u.femauspices6 = rnd(9);
+	u.femauspices8 = rnd(9);
 	u.femauspices11 = rnd(16);
 	u.femauspices13 = rnd(10);
 	u.femauspices15 = rnd(8);
@@ -28378,9 +29171,324 @@ alter_reality()
 	u.femauspices28 = rnd(9);
 	u.femauspices30 = rnd(10);
 
+	u.sjwL1E1 = rnd(235); /* timerun and stuff */
+	u.sjwL2E1 = rnd(235);
+	u.sjwL3E1 = rnd(235);
+	u.sjwL4E1 = rnd(235);
+	u.sjwL5E1 = rnd(235);
+	u.sjwL5E2 = rnd(235);
+	u.sjwL6E1 = rnd(235);
+	u.sjwL6E2 = rnd(235);
+	u.sjwL7E1 = rnd(235);
+	u.sjwL7E2 = rnd(235);
+	u.sjwL8E1 = rnd(235);
+	u.sjwL8E2 = rnd(235);
+	u.sjwL9E1 = rnd(235);
+	u.sjwL9E2 = rnd(235);
+	u.sjwL10E1 = rnd(235);
+	u.sjwL10E2 = rnd(235);
+	u.sjwL10E3 = rnd(235);
+	u.sjwL11E1 = rnd(235);
+	u.sjwL11E2 = rnd(235);
+	u.sjwL11E3 = rnd(235);
+	u.sjwL12E1 = rnd(235);
+	u.sjwL12E2 = rnd(235);
+	u.sjwL12E3 = rnd(235);
+	u.sjwL13E1 = rnd(235);
+	u.sjwL13E2 = rnd(235);
+	u.sjwL13E3 = rnd(235);
+	u.sjwL14E1 = rnd(235);
+	u.sjwL14E2 = rnd(235);
+	u.sjwL14E3 = rnd(235);
+	u.sjwL15E1 = rnd(235);
+	u.sjwL15E2 = rnd(235);
+	u.sjwL15E3 = rnd(235);
+	u.sjwL15E4 = rnd(235);
+	u.sjwL16E1 = rnd(235);
+	u.sjwL16E2 = rnd(235);
+	u.sjwL16E3 = rnd(235);
+	u.sjwL16E4 = rnd(235);
+	u.sjwL17E1 = rnd(235);
+	u.sjwL17E2 = rnd(235);
+	u.sjwL17E3 = rnd(235);
+	u.sjwL17E4 = rnd(235);
+	u.sjwL18E1 = rnd(235);
+	u.sjwL18E2 = rnd(235);
+	u.sjwL18E3 = rnd(235);
+	u.sjwL18E4 = rnd(235);
+	u.sjwL19E1 = rnd(235);
+	u.sjwL19E2 = rnd(235);
+	u.sjwL19E3 = rnd(235);
+	u.sjwL19E4 = rnd(235);
+	u.sjwL20E1 = rnd(235);
+	u.sjwL20E2 = rnd(235);
+	u.sjwL20E3 = rnd(235);
+	u.sjwL20E4 = rnd(235);
+	u.sjwL20E5 = rnd(235);
+	u.sjwL21E1 = rnd(235);
+	u.sjwL21E2 = rnd(235);
+	u.sjwL21E3 = rnd(235);
+	u.sjwL21E4 = rnd(235);
+	u.sjwL21E5 = rnd(235);
+	u.sjwL22E1 = rnd(235);
+	u.sjwL22E2 = rnd(235);
+	u.sjwL22E3 = rnd(235);
+	u.sjwL22E4 = rnd(235);
+	u.sjwL22E5 = rnd(235);
+	u.sjwL23E1 = rnd(235);
+	u.sjwL23E2 = rnd(235);
+	u.sjwL23E3 = rnd(235);
+	u.sjwL23E4 = rnd(235);
+	u.sjwL23E5 = rnd(235);
+	u.sjwL24E1 = rnd(235);
+	u.sjwL24E2 = rnd(235);
+	u.sjwL24E3 = rnd(235);
+	u.sjwL24E4 = rnd(235);
+	u.sjwL24E5 = rnd(235);
+	u.sjwL25E1 = rnd(235);
+	u.sjwL25E2 = rnd(235);
+	u.sjwL25E3 = rnd(235);
+	u.sjwL25E4 = rnd(235);
+	u.sjwL25E5 = rnd(235);
+	u.sjwL25E6 = rnd(235);
+	u.sjwL26E1 = rnd(235);
+	u.sjwL26E2 = rnd(235);
+	u.sjwL26E3 = rnd(235);
+	u.sjwL26E4 = rnd(235);
+	u.sjwL26E5 = rnd(235);
+	u.sjwL26E6 = rnd(235);
+	u.sjwL27E1 = rnd(235);
+	u.sjwL27E2 = rnd(235);
+	u.sjwL27E3 = rnd(235);
+	u.sjwL27E4 = rnd(235);
+	u.sjwL27E5 = rnd(235);
+	u.sjwL27E6 = rnd(235);
+	u.sjwL28E1 = rnd(235);
+	u.sjwL28E2 = rnd(235);
+	u.sjwL28E3 = rnd(235);
+	u.sjwL28E4 = rnd(235);
+	u.sjwL28E5 = rnd(235);
+	u.sjwL28E6 = rnd(235);
+	u.sjwL29E1 = rnd(235);
+	u.sjwL29E2 = rnd(235);
+	u.sjwL29E3 = rnd(235);
+	u.sjwL29E4 = rnd(235);
+	u.sjwL29E5 = rnd(235);
+	u.sjwL29E6 = rnd(235);
+	u.sjwL30E1 = rnd(235);
+	u.sjwL30E2 = rnd(235);
+	u.sjwL30E3 = rnd(235);
+	u.sjwL30E4 = rnd(235);
+	u.sjwL30E5 = rnd(235);
+	u.sjwL30E6 = rnd(235);
+	u.sjwL30E7 = rnd(235);
+	u.sjwL31E1 = rnd(235);
+	u.sjwL31E2 = rnd(235);
+	u.sjwL31E3 = rnd(235);
+	u.sjwL31E4 = rnd(235);
+	u.sjwL31E5 = rnd(235);
+	u.sjwL31E6 = rnd(235);
+	u.sjwL31E7 = rnd(235);
+	u.sjwL32E1 = rnd(235);
+	u.sjwL32E2 = rnd(235);
+	u.sjwL32E3 = rnd(235);
+	u.sjwL32E4 = rnd(235);
+	u.sjwL32E5 = rnd(235);
+	u.sjwL32E6 = rnd(235);
+	u.sjwL32E7 = rnd(235);
+	u.sjwL33E1 = rnd(235);
+	u.sjwL33E2 = rnd(235);
+	u.sjwL33E3 = rnd(235);
+	u.sjwL33E4 = rnd(235);
+	u.sjwL33E5 = rnd(235);
+	u.sjwL33E6 = rnd(235);
+	u.sjwL33E7 = rnd(235);
+	u.sjwL34E1 = rnd(235);
+	u.sjwL34E2 = rnd(235);
+	u.sjwL34E3 = rnd(235);
+	u.sjwL34E4 = rnd(235);
+	u.sjwL34E5 = rnd(235);
+	u.sjwL34E6 = rnd(235);
+	u.sjwL34E7 = rnd(235);
+	u.sjwL35E1 = rnd(235);
+	u.sjwL35E2 = rnd(235);
+	u.sjwL35E3 = rnd(235);
+	u.sjwL35E4 = rnd(235);
+	u.sjwL35E5 = rnd(235);
+	u.sjwL35E6 = rnd(235);
+	u.sjwL35E7 = rnd(235);
+	u.sjwL36E1 = rnd(235);
+	u.sjwL36E2 = rnd(235);
+	u.sjwL36E3 = rnd(235);
+	u.sjwL36E4 = rnd(235);
+	u.sjwL36E5 = rnd(235);
+	u.sjwL36E6 = rnd(235);
+	u.sjwL36E7 = rnd(235);
+	u.sjwL37E1 = rnd(235);
+	u.sjwL37E2 = rnd(235);
+	u.sjwL37E3 = rnd(235);
+	u.sjwL37E4 = rnd(235);
+	u.sjwL37E5 = rnd(235);
+	u.sjwL37E6 = rnd(235);
+	u.sjwL37E7 = rnd(235);
+	u.sjwL38E1 = rnd(235);
+	u.sjwL38E2 = rnd(235);
+	u.sjwL38E3 = rnd(235);
+	u.sjwL38E4 = rnd(235);
+	u.sjwL38E5 = rnd(235);
+	u.sjwL38E6 = rnd(235);
+	u.sjwL38E7 = rnd(235);
+	u.sjwL39E1 = rnd(235);
+	u.sjwL39E2 = rnd(235);
+	u.sjwL39E3 = rnd(235);
+	u.sjwL39E4 = rnd(235);
+	u.sjwL39E5 = rnd(235);
+	u.sjwL39E6 = rnd(235);
+	u.sjwL39E7 = rnd(235);
+	u.sjwL40E1 = rnd(235);
+	u.sjwL40E2 = rnd(235);
+	u.sjwL40E3 = rnd(235);
+	u.sjwL40E4 = rnd(235);
+	u.sjwL40E5 = rnd(235);
+	u.sjwL40E6 = rnd(235);
+	u.sjwL40E7 = rnd(235);
+	u.sjwL41E1 = rnd(235);
+	u.sjwL41E2 = rnd(235);
+	u.sjwL41E3 = rnd(235);
+	u.sjwL41E4 = rnd(235);
+	u.sjwL41E5 = rnd(235);
+	u.sjwL41E6 = rnd(235);
+	u.sjwL41E7 = rnd(235);
+	u.sjwL42E1 = rnd(235);
+	u.sjwL42E2 = rnd(235);
+	u.sjwL42E3 = rnd(235);
+	u.sjwL42E4 = rnd(235);
+	u.sjwL42E5 = rnd(235);
+	u.sjwL42E6 = rnd(235);
+	u.sjwL42E7 = rnd(235);
+	u.sjwL43E1 = rnd(235);
+	u.sjwL43E2 = rnd(235);
+	u.sjwL43E3 = rnd(235);
+	u.sjwL43E4 = rnd(235);
+	u.sjwL43E5 = rnd(235);
+	u.sjwL43E6 = rnd(235);
+	u.sjwL43E7 = rnd(235);
+	u.sjwL44E1 = rnd(235);
+	u.sjwL44E2 = rnd(235);
+	u.sjwL44E3 = rnd(235);
+	u.sjwL44E4 = rnd(235);
+	u.sjwL44E5 = rnd(235);
+	u.sjwL44E6 = rnd(235);
+	u.sjwL44E7 = rnd(235);
+	u.sjwL45E1 = rnd(235);
+	u.sjwL45E2 = rnd(235);
+	u.sjwL45E3 = rnd(235);
+	u.sjwL45E4 = rnd(235);
+	u.sjwL45E5 = rnd(235);
+	u.sjwL45E6 = rnd(235);
+	u.sjwL45E7 = rnd(235);
+	u.sjwL46E1 = rnd(235);
+	u.sjwL46E2 = rnd(235);
+	u.sjwL46E3 = rnd(235);
+	u.sjwL46E4 = rnd(235);
+	u.sjwL46E5 = rnd(235);
+	u.sjwL46E6 = rnd(235);
+	u.sjwL46E7 = rnd(235);
+	u.sjwL47E1 = rnd(235);
+	u.sjwL47E2 = rnd(235);
+	u.sjwL47E3 = rnd(235);
+	u.sjwL47E4 = rnd(235);
+	u.sjwL47E5 = rnd(235);
+	u.sjwL47E6 = rnd(235);
+	u.sjwL47E7 = rnd(235);
+	u.sjwL48E1 = rnd(235);
+	u.sjwL48E2 = rnd(235);
+	u.sjwL48E3 = rnd(235);
+	u.sjwL48E4 = rnd(235);
+	u.sjwL48E5 = rnd(235);
+	u.sjwL48E6 = rnd(235);
+	u.sjwL48E7 = rnd(235);
+	u.sjwL49E1 = rnd(235);
+	u.sjwL49E2 = rnd(235);
+	u.sjwL49E3 = rnd(235);
+	u.sjwL49E4 = rnd(235);
+	u.sjwL49E5 = rnd(235);
+	u.sjwL49E6 = rnd(235);
+	u.sjwL49E7 = rnd(235);
+	u.sjwL50E1 = rnd(235);
+	u.sjwL50E2 = rnd(235);
+	u.sjwL50E3 = rnd(235);
+	u.sjwL50E4 = rnd(235);
+	u.sjwL50E5 = rnd(235);
+	u.sjwL50E6 = rnd(235);
+	u.sjwL50E7 = rnd(235);
+	u.sjwL51E1 = rnd(235);
+	u.sjwL51E2 = rnd(235);
+	u.sjwL51E3 = rnd(235);
+	u.sjwL51E4 = rnd(235);
+	u.sjwL51E5 = rnd(235);
+	u.sjwL51E6 = rnd(235);
+	u.sjwL51E7 = rnd(235);
+	u.sjwL52E1 = rnd(235);
+	u.sjwL52E2 = rnd(235);
+	u.sjwL52E3 = rnd(235);
+	u.sjwL52E4 = rnd(235);
+	u.sjwL52E5 = rnd(235);
+	u.sjwL52E6 = rnd(235);
+	u.sjwL52E7 = rnd(235);
+	u.sjwL53E1 = rnd(235);
+	u.sjwL53E2 = rnd(235);
+	u.sjwL53E3 = rnd(235);
+	u.sjwL53E4 = rnd(235);
+	u.sjwL53E5 = rnd(235);
+	u.sjwL53E6 = rnd(235);
+	u.sjwL53E7 = rnd(235);
+	u.sjwL54E1 = rnd(235);
+	u.sjwL54E2 = rnd(235);
+	u.sjwL54E3 = rnd(235);
+	u.sjwL54E4 = rnd(235);
+	u.sjwL54E5 = rnd(235);
+	u.sjwL54E6 = rnd(235);
+	u.sjwL54E7 = rnd(235);
+	u.sjwL55E1 = rnd(235);
+	u.sjwL55E2 = rnd(235);
+	u.sjwL55E3 = rnd(235);
+	u.sjwL55E4 = rnd(235);
+	u.sjwL55E5 = rnd(235);
+	u.sjwL55E6 = rnd(235);
+	u.sjwL55E7 = rnd(235);
+	u.sjwL56E1 = rnd(235);
+	u.sjwL56E2 = rnd(235);
+	u.sjwL56E3 = rnd(235);
+	u.sjwL56E4 = rnd(235);
+	u.sjwL56E5 = rnd(235);
+	u.sjwL56E6 = rnd(235);
+	u.sjwL56E7 = rnd(235);
+	u.sjwL57E1 = rnd(235);
+	u.sjwL57E2 = rnd(235);
+	u.sjwL57E3 = rnd(235);
+	u.sjwL57E4 = rnd(235);
+	u.sjwL57E5 = rnd(235);
+	u.sjwL57E6 = rnd(235);
+	u.sjwL57E7 = rnd(235);
+	u.sjwL58E1 = rnd(235);
+	u.sjwL58E2 = rnd(235);
+	u.sjwL58E3 = rnd(235);
+	u.sjwL58E4 = rnd(235);
+	u.sjwL58E5 = rnd(235);
+	u.sjwL58E6 = rnd(235);
+	u.sjwL58E7 = rnd(235);
+	u.sjwL59E1 = rnd(235);
+	u.sjwL59E2 = rnd(235);
+	u.sjwL59E3 = rnd(235);
+	u.sjwL59E4 = rnd(235);
+	u.sjwL59E5 = rnd(235);
+	u.sjwL59E6 = rnd(235);
+	u.sjwL59E7 = rnd(235);
+
 	u.adpartattack = rn2(AD_ENDS);
 	while (u.adpartattack == AD_ENDS || u.adpartattack == AD_WERE) u.adpartattack = rn2(AD_ENDS);
-	u.adrunsattack = rnd(232); /* timerun etc. */
+	u.adrunsattack = rnd(235); /* timerun etc. */
 
 	u.unobtainable = -1;
 	while ( (u.unobtainable == -1) || (u.unobtainable == GOLD_PIECE) || (u.unobtainable == STRANGE_OBJECT) || (u.unobtainable == AMULET_OF_YENDOR) || (u.unobtainable == CANDELABRUM_OF_INVOCATION) || (u.unobtainable == BELL_OF_OPENING) || (u.unobtainable == SPE_BOOK_OF_THE_DEAD) || (objects[u.unobtainable].oc_prob < 1) ) u.unobtainable = rn2(NUM_OBJECTS);
@@ -28901,11 +30009,11 @@ alter_reality()
 	u.genericcursechance = 0;
 	if (!rn2(10)) u.genericcursechance = rnd(33);
 
-	u.nastinator01 = u.nastinator02 = u.nastinator03 = u.nastinator04 = u.nastinator05 = u.nastinator06 = u.nastinator07 = u.nastinator08 = u.nastinator09 = u.nastinator10 = u.nastinator11 = u.nastinator12 = u.nastinator13 = u.nastinator14 = u.nastinator15 = u.nastinator16 = u.nastinator17 = u.nastinator18 = u.nastinator19 = u.nastinator20 = u.nastinator21 = u.nastinator22 = u.nastinator23 = u.nastinator24 = u.nastinator25 = u.nastinator26 = u.nastinator27 = u.nastinator28 = u.nastinator29 = u.nastinator30 = u.nastinator31 = u.nastinator32 = u.nastinator33 = u.nastinator34 = u.nastinator35 = u.nastinator36 = u.nastinator37 = u.nastinator38 = u.nastinator39 = u.nastinator40 = u.nastinator41 = u.nastinator42 = u.nastinator43 = u.nastinator44 = u.nastinator45 = u.nastinator46 = u.nastinator47 = u.nastinator48 = u.nastinator49 = u.nastinator50 = u.nastinator51 = u.nastinator52 = u.nastinator53 = u.nastinator54 = u.nastinator55 = u.nastinator56 = u.nastinator57 = u.nastinator58 = u.nastinator59 = u.nastinator60 = u.nastinator61 = u.nastinator62 = u.nastinator63 = u.nastinator64 = u.nastinator65 = u.nastinator66 = u.nastinator67 = u.nastinator68 = u.nastinator69 = u.nastinator70 = u.nastinator71 = u.nastinator72 = u.nastinator73 = u.nastinator74 = u.nastinator75 = u.nastinator76 = u.nastinator77 = u.nastinator78 = u.nastinator79 = u.nastinator80 = u.nastinator81 = u.nastinator82 = u.nastinator83 = u.nastinator84 = u.nastinator85 = u.nastinator86 = u.nastinator87 = u.nastinator88 = u.nastinator89 = u.nastinator90 = u.nastinator91 = u.nastinator92 = u.nastinator93 = u.nastinator94 = u.nastinator95 = u.nastinator96 = u.nastinator97 = u.nastinator98 = u.nastinator99 = u.nastinator100 = u.nastinator101 = u.nastinator102 = u.nastinator103 = u.nastinator104 = u.nastinator105 = u.nastinator106 = u.nastinator107 = u.nastinator108 = u.nastinator109 = u.nastinator110 = u.nastinator111 = u.nastinator112 = u.nastinator113 = u.nastinator114 = u.nastinator115 = u.nastinator116 = u.nastinator117 = u.nastinator118 = u.nastinator119 = u.nastinator120 = u.nastinator121 = u.nastinator122 = u.nastinator123 = u.nastinator124 = u.nastinator125 = u.nastinator126 = u.nastinator127 = u.nastinator128 = u.nastinator129 = u.nastinator130 = u.nastinator131 = u.nastinator132 = u.nastinator133 = u.nastinator134 = u.nastinator135 = u.nastinator136 = u.nastinator137 = u.nastinator138 = u.nastinator139 = u.nastinator140 = u.nastinator141 = u.nastinator142 = u.nastinator143 = u.nastinator144 = u.nastinator145 = u.nastinator146 = u.nastinator147 = u.nastinator148 = u.nastinator149 = u.nastinator150 = u.nastinator151 = u.nastinator152 = u.nastinator153 = u.nastinator154 = u.nastinator155 = u.nastinator156 = u.nastinator157 = u.nastinator158 = u.nastinator159 = u.nastinator160 = u.nastinator161 = u.nastinator162 = u.nastinator163 = u.nastinator164 = u.nastinator165 = u.nastinator166 = u.nastinator167 = u.nastinator168 = u.nastinator169 = u.nastinator170 = u.nastinator171 = u.nastinator172 = u.nastinator173 = u.nastinator174 = u.nastinator175 = u.nastinator176 = u.nastinator177 = u.nastinator178 = u.nastinator179 = u.nastinator180 = u.nastinator181 = u.nastinator182 = u.nastinator183 = u.nastinator184 = u.nastinator185 = u.nastinator186 = u.nastinator187 = u.nastinator188 = u.nastinator189 = u.nastinator190 = u.nastinator191 = u.nastinator192 = u.nastinator193 = u.nastinator194 = u.nastinator195 = u.nastinator196 = u.nastinator197 = u.nastinator198 = u.nastinator199 = u.nastinator200 = u.nastinator201 = u.nastinator202 = u.nastinator203 = u.nastinator204 = u.nastinator205 = u.nastinator206 = u.nastinator207 = u.nastinator208 = u.nastinator209 = u.nastinator210 = u.nastinator211 = u.nastinator212 = u.nastinator213 = u.nastinator214 = u.nastinator215 = u.nastinator216 = u.nastinator217 = u.nastinator218 = u.nastinator219 = u.nastinator220 = u.nastinator221 = u.nastinator222 = u.nastinator223 = u.nastinator224 = u.nastinator225 = u.nastinator226 = u.nastinator227 = u.nastinator228 = u.nastinator229 = 0;
+	u.nastinator01 = u.nastinator02 = u.nastinator03 = u.nastinator04 = u.nastinator05 = u.nastinator06 = u.nastinator07 = u.nastinator08 = u.nastinator09 = u.nastinator10 = u.nastinator11 = u.nastinator12 = u.nastinator13 = u.nastinator14 = u.nastinator15 = u.nastinator16 = u.nastinator17 = u.nastinator18 = u.nastinator19 = u.nastinator20 = u.nastinator21 = u.nastinator22 = u.nastinator23 = u.nastinator24 = u.nastinator25 = u.nastinator26 = u.nastinator27 = u.nastinator28 = u.nastinator29 = u.nastinator30 = u.nastinator31 = u.nastinator32 = u.nastinator33 = u.nastinator34 = u.nastinator35 = u.nastinator36 = u.nastinator37 = u.nastinator38 = u.nastinator39 = u.nastinator40 = u.nastinator41 = u.nastinator42 = u.nastinator43 = u.nastinator44 = u.nastinator45 = u.nastinator46 = u.nastinator47 = u.nastinator48 = u.nastinator49 = u.nastinator50 = u.nastinator51 = u.nastinator52 = u.nastinator53 = u.nastinator54 = u.nastinator55 = u.nastinator56 = u.nastinator57 = u.nastinator58 = u.nastinator59 = u.nastinator60 = u.nastinator61 = u.nastinator62 = u.nastinator63 = u.nastinator64 = u.nastinator65 = u.nastinator66 = u.nastinator67 = u.nastinator68 = u.nastinator69 = u.nastinator70 = u.nastinator71 = u.nastinator72 = u.nastinator73 = u.nastinator74 = u.nastinator75 = u.nastinator76 = u.nastinator77 = u.nastinator78 = u.nastinator79 = u.nastinator80 = u.nastinator81 = u.nastinator82 = u.nastinator83 = u.nastinator84 = u.nastinator85 = u.nastinator86 = u.nastinator87 = u.nastinator88 = u.nastinator89 = u.nastinator90 = u.nastinator91 = u.nastinator92 = u.nastinator93 = u.nastinator94 = u.nastinator95 = u.nastinator96 = u.nastinator97 = u.nastinator98 = u.nastinator99 = u.nastinator100 = u.nastinator101 = u.nastinator102 = u.nastinator103 = u.nastinator104 = u.nastinator105 = u.nastinator106 = u.nastinator107 = u.nastinator108 = u.nastinator109 = u.nastinator110 = u.nastinator111 = u.nastinator112 = u.nastinator113 = u.nastinator114 = u.nastinator115 = u.nastinator116 = u.nastinator117 = u.nastinator118 = u.nastinator119 = u.nastinator120 = u.nastinator121 = u.nastinator122 = u.nastinator123 = u.nastinator124 = u.nastinator125 = u.nastinator126 = u.nastinator127 = u.nastinator128 = u.nastinator129 = u.nastinator130 = u.nastinator131 = u.nastinator132 = u.nastinator133 = u.nastinator134 = u.nastinator135 = u.nastinator136 = u.nastinator137 = u.nastinator138 = u.nastinator139 = u.nastinator140 = u.nastinator141 = u.nastinator142 = u.nastinator143 = u.nastinator144 = u.nastinator145 = u.nastinator146 = u.nastinator147 = u.nastinator148 = u.nastinator149 = u.nastinator150 = u.nastinator151 = u.nastinator152 = u.nastinator153 = u.nastinator154 = u.nastinator155 = u.nastinator156 = u.nastinator157 = u.nastinator158 = u.nastinator159 = u.nastinator160 = u.nastinator161 = u.nastinator162 = u.nastinator163 = u.nastinator164 = u.nastinator165 = u.nastinator166 = u.nastinator167 = u.nastinator168 = u.nastinator169 = u.nastinator170 = u.nastinator171 = u.nastinator172 = u.nastinator173 = u.nastinator174 = u.nastinator175 = u.nastinator176 = u.nastinator177 = u.nastinator178 = u.nastinator179 = u.nastinator180 = u.nastinator181 = u.nastinator182 = u.nastinator183 = u.nastinator184 = u.nastinator185 = u.nastinator186 = u.nastinator187 = u.nastinator188 = u.nastinator189 = u.nastinator190 = u.nastinator191 = u.nastinator192 = u.nastinator193 = u.nastinator194 = u.nastinator195 = u.nastinator196 = u.nastinator197 = u.nastinator198 = u.nastinator199 = u.nastinator200 = u.nastinator201 = u.nastinator202 = u.nastinator203 = u.nastinator204 = u.nastinator205 = u.nastinator206 = u.nastinator207 = u.nastinator208 = u.nastinator209 = u.nastinator210 = u.nastinator211 = u.nastinator212 = u.nastinator213 = u.nastinator214 = u.nastinator215 = u.nastinator216 = u.nastinator217 = u.nastinator218 = u.nastinator219 = u.nastinator220 = u.nastinator221 = u.nastinator222 = u.nastinator223 = u.nastinator224 = u.nastinator225 = u.nastinator226 = u.nastinator227 = u.nastinator228 = u.nastinator229 = u.nastinator230 = u.nastinator231 = u.nastinator232 = u.nastinator233 = u.nastinator234 = u.nastinator235 = 0;
 
 	if (isnastinator) { /* harder than hard race - starts with uncurable nasty trap effects --Amy */
 
-		switch (rnd(229)) {
+		switch (rnd(235)) {
 
 			case 1: u.nastinator01 = 1; break;
 			case 2: u.nastinator02 = 1; break;
@@ -29136,11 +30244,17 @@ alter_reality()
 			case 227: u.nastinator227 = 1; break;
 			case 228: u.nastinator228 = 1; break;
 			case 229: u.nastinator229 = 1; break;
+			case 230: u.nastinator230 = 1; break;
+			case 231: u.nastinator231 = 1; break;
+			case 232: u.nastinator232 = 1; break;
+			case 233: u.nastinator233 = 1; break;
+			case 234: u.nastinator234 = 1; break;
+			case 235: u.nastinator235 = 1; break;
 		}
 
 		while ((rnd(7)) < 3) {
 
-			switch (rnd(229)) {
+			switch (rnd(235)) {
 
 				case 1: u.nastinator01 = 1; break;
 				case 2: u.nastinator02 = 1; break;
@@ -29371,6 +30485,12 @@ alter_reality()
 			case 227: u.nastinator227 = 1; break;
 			case 228: u.nastinator228 = 1; break;
 			case 229: u.nastinator229 = 1; break;
+			case 230: u.nastinator230 = 1; break;
+			case 231: u.nastinator231 = 1; break;
+			case 232: u.nastinator232 = 1; break;
+			case 233: u.nastinator233 = 1; break;
+			case 234: u.nastinator234 = 1; break;
+			case 235: u.nastinator235 = 1; break;
 			}
 
 		}
@@ -29378,7 +30498,7 @@ alter_reality()
 
 	if (iswindinhabitant) { /* similar to nastinator, but they will be re-initialized sometimes --Amy */
 
-		switch (rnd(229)) {
+		switch (rnd(235)) {
 
 			case 1: u.nastinator01 = 1; break;
 			case 2: u.nastinator02 = 1; break;
@@ -29609,11 +30729,17 @@ alter_reality()
 			case 227: u.nastinator227 = 1; break;
 			case 228: u.nastinator228 = 1; break;
 			case 229: u.nastinator229 = 1; break;
+			case 230: u.nastinator230 = 1; break;
+			case 231: u.nastinator231 = 1; break;
+			case 232: u.nastinator232 = 1; break;
+			case 233: u.nastinator233 = 1; break;
+			case 234: u.nastinator234 = 1; break;
+			case 235: u.nastinator235 = 1; break;
 		}
 
 		while (!rn2(3)) {
 
-			switch (rnd(229)) {
+			switch (rnd(235)) {
 
 				case 1: u.nastinator01 = 1; break;
 				case 2: u.nastinator02 = 1; break;
@@ -29844,6 +30970,12 @@ alter_reality()
 			case 227: u.nastinator227 = 1; break;
 			case 228: u.nastinator228 = 1; break;
 			case 229: u.nastinator229 = 1; break;
+			case 230: u.nastinator230 = 1; break;
+			case 231: u.nastinator231 = 1; break;
+			case 232: u.nastinator232 = 1; break;
+			case 233: u.nastinator233 = 1; break;
+			case 234: u.nastinator234 = 1; break;
+			case 235: u.nastinator235 = 1; break;
 			}
 
 		}
@@ -40725,8 +41857,15 @@ polyinitredoX:
 	randfwean->mflags2 &= ~M2_PEACEFUL;			/* no peacefuls */
 	randfwean->mflags2 &= ~M2_WERE;				/* no lycanthropes */
 
-	pline(Hallucination ? "You invoke the power of Eru Iluvator... err, Sauron. Whatever it's called." : "The power of Eru Iluvator flows through you!");
-	pline(Hallucination ? "Somehow, that did all of jack diddly." : "The world changes!");
+	if (realityflag == 0) {
+
+		pline(Hallucination ? "You invoke the power of Eru Iluvator... err, Sauron. Whatever it's called." : "The power of Eru Iluvator flows through you!");
+		pline(Hallucination ? "Somehow, that did all of jack diddly." : "The world changes!");
+	}
+
+	if (realityflag == 1 && !rn2(10)) {
+		pline("Suddenly, the reality is altered!");
+	}
 
 	return;
 

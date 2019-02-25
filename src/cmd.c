@@ -368,6 +368,11 @@ doprev_message()
 	return 0;
 	}
 
+	if (AutomaticMorePrompt) {
+	pline("No, sorry, you can't review earlier messages.");
+	return 0;
+	}
+
     return nh_doprev_message();
 }
 
@@ -1494,6 +1499,7 @@ domonability()
 			}
 
 		}
+		(void) doredraw();
 		pline("%d traps were disarmed.", trpcount);
 		if (undtrpcnt) pline("%d traps could not be disarmed.", undtrpcnt);
 		return TRUE;
@@ -1667,7 +1673,7 @@ domonability()
 
 		if (uarmu && uarmu->oartifact == ART_KATIA_S_SOFT_COTTON) {
 			You("produce very erotic noises.");
-			if (!rn2(10)) adjattrib(rn2(A_CHA), 1, -1);
+			if (!rn2(10)) adjattrib(rn2(A_CHA), 1, -1, TRUE);
 		} else You("grunt.");
 		morehungry(rn2(400)+200);
 
@@ -1683,7 +1689,23 @@ domonability()
 		}
 		return 1;
 
-	} else if (P_SKILL(P_MARTIAL_ARTS) >= P_UNSKILLED && P_SKILL(P_BARE_HANDED_COMBAT) >= P_UNSKILLED) {
+	} else if (Race_if(PM_PLAYER_MUSHROOM)) {
+
+		/* This does not consume a turn, which is intentional. --Amy */
+		if (!u.mushroompoles && yn("Currently your ability to use any weapon as a polearm is deactivated. Do you want to activate it?") == 'y') {
+			u.mushroompoles = TRUE;
+			pline("You switch to polearm mode.");
+			return 0;
+		} else if (u.mushroompoles && yn("Currently your ability to use any weapon as a polearm is activated. Do you want to deactivate it?") == 'y') {
+			u.mushroompoles = FALSE;
+			pline("You switch to regular weapon application mode.");
+			return 0;
+		}
+
+		goto mushroomannoyance;
+	} else
+mushroomannoyance:
+	if (P_SKILL(P_MARTIAL_ARTS) >= P_UNSKILLED && P_SKILL(P_BARE_HANDED_COMBAT) >= P_UNSKILLED) {
 
 		if (!u.disablemartial && yn("You have both the martial arts and bare-handed combat skills, which are mutually exclusive. Currently martial arts is activated. Deactivate it?") == 'y') {
 			u.disablemartial = TRUE;
@@ -1695,7 +1717,12 @@ domonability()
 			pline("You switch to martial arts.");
 			return 1;
 		}
-
+		goto flowannoyance;
+	} else
+flowannoyance:
+	if (Role_if(PM_DEMAGOGUE) && !u.temprecursion && !u.demagoguerecursion && u.demagogueabilitytimer == 0 && !(In_endgame(&u.uz)) && yn("Do you want to use recursion to temporarily become someone else?") == 'y') {
+		u.demagogueabilitytimer = rnz(2500);
+		demagoguerecursioneffect();
 	} else if (Upolyd)
 		pline("Any (other) special ability you may have is purely reflexive.");
 	else You("don't have another special ability in your normal form!");
@@ -1910,7 +1937,7 @@ wiz_wish()	/* Unlimited wishes for debug mode by Paul Polderman */
 	    boolean save_verbose = flags.verbose;
 
 	    flags.verbose = FALSE;
-	    makewish();
+	    makewish(TRUE);
 	    flags.verbose = save_verbose;
 	    (void) encumber_msg();
 	} else
@@ -2506,6 +2533,7 @@ boolean guaranteed;
 	putstr(en_win, 0, final ? "Final Attributes:" : "Current Attributes:");
 	putstr(en_win, 0, "");
 
+	if (flags.zapem) you_are("playing in ZAPM mode");
 	if (flags.wonderland) you_are("playing in wonderland mode");
 	if (flags.lostsoul && !flags.uberlostsoul) you_are("playing in lost soul mode");
 	if (flags.uberlostsoul) you_are("playing in uber lost soul mode");
@@ -3690,6 +3718,24 @@ boolean guaranteed;
 	if ((guaranteed || !rn2(10)) && (TimerunBug || u.uprops[TIMERUN_BUG].extrinsic || have_timerunstone())) {
 		sprintf(buf, "the following problem: All actions take turns.");
 	    if (wizard || (!rn2(10)) || final >= 1 ) sprintf(eos(buf), " (%d)", TimerunBug);
+		you_have(buf);
+	}
+
+	if ((guaranteed || !rn2(10)) && (SanityTrebleEffect || u.uprops[SANITY_TREBLE_EFFECT].extrinsic || have_sanitytreblestone())) {
+		sprintf(buf, "the following problem: Sanity effects will increase your sanity by a much higher amount than usual.");
+	    if (wizard || (!rn2(10)) || final >= 1 ) sprintf(eos(buf), " (%d)", SanityTrebleEffect);
+		you_have(buf);
+	}
+
+	if ((guaranteed || !rn2(10)) && (StatDecreaseBug || u.uprops[STAT_DECREASE_BUG].extrinsic || have_statdecreasestone())) {
+		sprintf(buf, "the following problem: The soft cap for your attributes is much lower.");
+	    if (wizard || (!rn2(10)) || final >= 1 ) sprintf(eos(buf), " (%d)", StatDecreaseBug);
+		you_have(buf);
+	}
+
+	if ((guaranteed || !rn2(10)) && (SimeoutBug || u.uprops[SIMEOUT_BUG].extrinsic || have_simeoutstone())) {
+		sprintf(buf, "the following problem: Your sanity slowly increases over time.");
+	    if (wizard || (!rn2(10)) || final >= 1 ) sprintf(eos(buf), " (%d)", SimeoutBug);
 		you_have(buf);
 	}
 
@@ -4964,6 +5010,30 @@ boolean guaranteed;
 		you_are(buf);
 	}
 
+	if ((guaranteed || !rn2(10)) && FemaleTrapSarah) {
+		sprintf(buf, "possessed by the ghost of Sarah.");
+	    if (wizard || (!rn2(10)) || final >= 1 ) sprintf(eos(buf), " (%d)", FemaleTrapSarah);
+		you_are(buf);
+	}
+
+	if ((guaranteed || !rn2(10)) && FemaleTrapClaudia) {
+		sprintf(buf, "possessed by the ghost of Claudia.");
+	    if (wizard || (!rn2(10)) || final >= 1 ) sprintf(eos(buf), " (%d)", FemaleTrapClaudia);
+		you_are(buf);
+	}
+
+	if ((guaranteed || !rn2(10)) && FemaleTrapLudgera) {
+		sprintf(buf, "possessed by the ghost of Ludgera.");
+	    if (wizard || (!rn2(10)) || final >= 1 ) sprintf(eos(buf), " (%d)", FemaleTrapLudgera);
+		you_are(buf);
+	}
+
+	if ((guaranteed || !rn2(10)) && FemaleTrapKati) {
+		sprintf(buf, "possessed by the ghost of Kati.");
+	    if (wizard || (!rn2(10)) || final >= 1 ) sprintf(eos(buf), " (%d)", FemaleTrapKati);
+		you_are(buf);
+	}
+
 	if ((guaranteed || !rn2(10)) && FemaleTrapAnastasia) {
 		sprintf(buf, "possessed by the ghost of Anastasia.");
 	    if (wizard || (!rn2(10)) || final >= 1 ) sprintf(eos(buf), " (%d)", FemaleTrapAnastasia);
@@ -5224,6 +5294,18 @@ boolean guaranteed;
 	if ((guaranteed || !rn2(10)) && u.hussyperfume) {
 		sprintf(buf, "to wait until you can spread the perfume again.");
 	      sprintf(eos(buf), " (%d)", u.hussyperfume);
+		you_have(buf);
+	}
+
+	if ((guaranteed || !rn2(10)) && u.walscholarpass) {
+		sprintf(buf, "able to pass through grave walls.");
+	      sprintf(eos(buf), " (%d)", u.walscholarpass);
+		you_are(buf);
+	}
+
+	if ((guaranteed || !rn2(10)) && u.demagogueabilitytimer && isdemagogue) {
+		sprintf(buf, "to wait until you can use your special recursion.");
+	      sprintf(eos(buf), " (%d)", u.demagogueabilitytimer);
 		you_have(buf);
 	}
 
@@ -5652,6 +5734,7 @@ boolean guaranteed;
 			break;
 		case CRYSTAL_SHIELD:
 		case RAPIRAPI:
+		case HIDE_SHIELD:
 			shieldblockrate = 35;
 			break;
 		case SHIELD_OF_REFLECTION:
@@ -5906,6 +5989,12 @@ boolean guaranteed;
 		you_are(buf);
 	}
 
+	if ((guaranteed || !rn2(10)) && u.demagoguerecursion) {
+		sprintf(buf, "temporarily playing as another role");
+	    if (wizard || (!rn2(10)) || final >= 1 ) sprintf(eos(buf), " (%d)", u.demagoguerecursiontime);
+		you_are(buf);
+	}
+
 	if ((guaranteed || !rn2(10)) && Detect_monsters) {
 		sprintf(buf, StrongDetect_monsters ? "sensing all monsters" : "sensing the presence of monsters");
 	    if (wizard || (!rn2(10)) || final >= 1 ) sprintf(eos(buf), " (%d)", HDetect_monsters);
@@ -6060,6 +6149,8 @@ boolean guaranteed;
 		enl_msg("Your life ", "will be", "would have been", " saved");
 	if ((guaranteed || !rn2(10)) && Second_chance)
   	  enl_msg("You ","will be", "would have been"," given a second chance");
+	if ((guaranteed || !rn2(10)) && u.metalguard)	
+  	  enl_msg("The next damage you ","take will be", "took would have been"," nullified");
 	if ((guaranteed || !rn2(10)) && u.twoweap) {
 	    if (uwep && uswapwep)
 		sprintf(buf, "wielding two weapons at once");
@@ -6240,6 +6331,7 @@ int final;
 
 	dump("", "Final attributes");
 
+	if (flags.zapem) dump(youwere, "playing in ZAPM mode");
 	if (flags.wonderland) dump(youwere, "playing in wonderland mode");
 	if (flags.lostsoul && !flags.uberlostsoul) dump(youwere, "playing in lost soul mode");
 	if (flags.uberlostsoul) dump(youwere, "playing in uber lost soul mode");
@@ -7227,6 +7319,24 @@ int final;
 	if (TimerunBug || u.uprops[TIMERUN_BUG].extrinsic || have_timerunstone()) {
 		sprintf(buf, "the following problem: All actions take turns.");
 	      sprintf(eos(buf), " (%d)", TimerunBug);
+		dump(youhad, buf);
+	}
+
+	if (SanityTrebleEffect || u.uprops[SANITY_TREBLE_EFFECT].extrinsic || have_sanitytreblestone()) {
+		sprintf(buf, "the following problem: Sanity effects will increase your sanity by a much higher amount than usual.");
+	      sprintf(eos(buf), " (%d)", SanityTrebleEffect);
+		dump(youhad, buf);
+	}
+
+	if (StatDecreaseBug || u.uprops[STAT_DECREASE_BUG].extrinsic || have_statdecreasestone()) {
+		sprintf(buf, "the following problem: The soft cap for your attributes is much lower.");
+	      sprintf(eos(buf), " (%d)", StatDecreaseBug);
+		dump(youhad, buf);
+	}
+
+	if (SimeoutBug || u.uprops[SIMEOUT_BUG].extrinsic || have_simeoutstone()) {
+		sprintf(buf, "the following problem: Your sanity slowly increases over time.");
+	      sprintf(eos(buf), " (%d)", SimeoutBug);
 		dump(youhad, buf);
 	}
 
@@ -8498,6 +8608,30 @@ int final;
 		dump(youwere, buf);
 	}
 
+	if (FemaleTrapSarah) {
+		sprintf(buf, "possessed by the ghost of Sarah.");
+	      sprintf(eos(buf), " (%d)", FemaleTrapSarah);
+		dump(youwere, buf);
+	}
+
+	if (FemaleTrapClaudia) {
+		sprintf(buf, "possessed by the ghost of Claudia.");
+	      sprintf(eos(buf), " (%d)", FemaleTrapClaudia);
+		dump(youwere, buf);
+	}
+
+	if (FemaleTrapLudgera) {
+		sprintf(buf, "possessed by the ghost of Ludgera.");
+	      sprintf(eos(buf), " (%d)", FemaleTrapLudgera);
+		dump(youwere, buf);
+	}
+
+	if (FemaleTrapKati) {
+		sprintf(buf, "possessed by the ghost of Kati.");
+	      sprintf(eos(buf), " (%d)", FemaleTrapKati);
+		dump(youwere, buf);
+	}
+
 	if (FemaleTrapAnastasia) {
 		sprintf(buf, "possessed by the ghost of Anastasia.");
 	      sprintf(eos(buf), " (%d)", FemaleTrapAnastasia);
@@ -8757,6 +8891,18 @@ int final;
 	if (u.hussyperfume) {
 		sprintf(buf, "to wait until you can spread the perfume again.");
 	      sprintf(eos(buf), " (%d)", u.hussyperfume);
+		dump(youhad, buf);
+	}
+
+	if (u.walscholarpass) {
+		sprintf(buf, "able to pass through grave walls.");
+	      sprintf(eos(buf), " (%d)", u.walscholarpass);
+		dump(youwere, buf);
+	}
+
+	if (u.demagogueabilitytimer && isdemagogue) {
+		sprintf(buf, "to wait until you can use your special recursion.");
+	      sprintf(eos(buf), " (%d)", u.demagogueabilitytimer);
 		dump(youhad, buf);
 	}
 
@@ -9180,6 +9326,7 @@ int final;
 			break;
 		case CRYSTAL_SHIELD:
 		case RAPIRAPI:
+		case HIDE_SHIELD:
 			shieldblockrate = 35;
 			break;
 		case SHIELD_OF_REFLECTION:
@@ -9404,6 +9551,11 @@ int final;
 		dump(youwere, buf);
 	}
 
+	if (u.demagoguerecursion) {
+		sprintf(buf, "temporarily playing as another role");
+		sprintf(eos(buf), " (%d)", u.demagoguerecursiontime);
+		dump(youwere, buf);
+	}
 	if (Detect_monsters) {
 		sprintf(buf, StrongDetect_monsters ? "sensing all monsters" : "sensing the presence of monsters");
 	      sprintf(eos(buf), " (%d)", HDetect_monsters);
@@ -9552,6 +9704,8 @@ int final;
 		dump("  ", "Your life would have been saved");
 	if (Second_chance)
 		dump("  ", "You would have been given a second chance");
+	if (u.metalguard)	
+  	  	dump("  ", "The next damage you took would have been nullified");
 	if (u.twoweap) dump(youwere, "wielding two weapons at once");
 
 	/*** Miscellany ***/
@@ -11601,6 +11755,17 @@ register char *cmd;
 	do_walk = do_rush = prefix_seen = FALSE;
 	flags.travel = iflags.travel1 = 0;
 	if (*cmd == DORUSH) {
+
+		if (TronEffectIsActive || SpellColorPink) {
+
+			pline("Some sinister force is preventing you from using the rush command.");
+			if (Hallucination) pline("Could this be the work of Arabella?");
+			if (flags.moreforced && !MessagesSuppressed) display_nhwindow(WIN_MESSAGE, TRUE);    /* --More-- */
+			flags.move = FALSE;
+			return;
+
+		}
+
 	    if (movecmd(cmd[1])) {
 		flags.run = 2;
 		do_rush = TRUE;
@@ -11608,6 +11773,17 @@ register char *cmd;
 		prefix_seen = TRUE;
 	} else if ( (*cmd == '5' && iflags.num_pad)
 		    || *cmd == DORUN) {
+
+		if (TronEffectIsActive || SpellColorPink) {
+
+			pline("Some sinister force is preventing you from using the run command.");
+			if (Hallucination) pline("Could this be the work of Arabella?");
+			if (flags.moreforced && !MessagesSuppressed) display_nhwindow(WIN_MESSAGE, TRUE);    /* --More-- */
+			flags.move = FALSE;
+			return;
+
+		}
+
 	    if (movecmd(lowc(cmd[1]))) {
 		flags.run = 3;
 		do_rush = TRUE;
@@ -11634,6 +11810,17 @@ register char *cmd;
 	    } else
 		prefix_seen = TRUE;
 	} else if (*cmd == DORUN_NOPICKUP) {
+
+		if (TronEffectIsActive || SpellColorPink) {
+
+			pline("Some sinister force is preventing you from using the run-no-pickup command.");
+			if (Hallucination) pline("Could this be the work of Arabella?");
+			if (flags.moreforced && !MessagesSuppressed) display_nhwindow(WIN_MESSAGE, TRUE);    /* --More-- */
+			flags.move = FALSE;
+			return;
+
+		}
+
 	    if (movecmd(lowc(cmd[1]))) {
 		flags.run = 1;
 		flags.nopick = 1;
@@ -11655,9 +11842,31 @@ register char *cmd;
 		do_walk = TRUE;
 	    } else if (movecmd(iflags.num_pad ?
 			       UNMETA(*cmd) : lowc(*cmd))) {
+
+		if (TronEffectIsActive || SpellColorPink) {
+
+			pline("Some sinister force is preventing you from using the meta-run command.");
+			if (Hallucination) pline("Could this be the work of Arabella?");
+			if (flags.moreforced && !MessagesSuppressed) display_nhwindow(WIN_MESSAGE, TRUE);    /* --More-- */
+			flags.move = FALSE;
+			return;
+
+		}
+
 		flags.run = 1;
 		do_rush = TRUE;
 	    } else if (movecmd(UNCTRL(*cmd))) {
+
+		if (TronEffectIsActive || SpellColorPink) {
+
+			pline("Some sinister force is preventing you from using whatever weird run command this is.");
+			if (Hallucination) pline("Could this be the work of Arabella?");
+			if (flags.moreforced && !MessagesSuppressed) display_nhwindow(WIN_MESSAGE, TRUE);    /* --More-- */
+			flags.move = FALSE;
+			return;
+
+		}
+
 		flags.run = 3;
 		do_rush = TRUE;
 	    }
@@ -12100,6 +12309,8 @@ click_to_cmd(x, y, mod)
     static char cmd[4];
     cmd[1]=0;
 
+	if (!youmonst.data) goto quaakskip;
+
 	if (MenuIsBugged) {
 	pline("The travel command is currently unavailable!");
 	if (flags.moreforced && !MessagesSuppressed) display_nhwindow(WIN_MESSAGE, TRUE);    /* --More-- */
@@ -12131,6 +12342,8 @@ click_to_cmd(x, y, mod)
 	return cmd;
 
 	}
+
+quaakskip:
 
     x -= u.ux;
     y -= u.uy;

@@ -264,7 +264,7 @@ register struct monst *mtmp;
 	}
 
 	if (!rn2(8)) { /* shield */
-		switch (rnd(25)) {
+		switch (rnd(26)) {
 			case 1:
 			case 2:
 			case 3:
@@ -290,6 +290,7 @@ register struct monst *mtmp;
 			case 23: (void) mongets(mtmp, SHIELD); break;
 			case 24: (void) mongets(mtmp, SILVER_SHIELD); break;
 			case 25: (void) mongets(mtmp, RAPIRAPI); break;
+			case 26: (void) mongets(mtmp, HIDE_SHIELD); break;
 		}
 	}
 
@@ -721,6 +722,139 @@ register struct monst *mtmp;
 
 	if (needspick(ptr) && !rn2(40) ) (void) mongets(mtmp, PICK_AXE);
 
+	if (Role_if(PM_GRENADONIN) && !rn2(50)) {
+
+		switch (rnd(42)) { /* grenades half of the time, guns otherwise */
+
+			case 1:
+				(void) mongets(mtmp, PISTOL);
+				m_initthrow(mtmp, rn2(2000) ? BULLET : ANTIMATTER_BULLET, 30);
+				break;
+			case 2:
+				(void) mongets(mtmp, FLINTLOCK);
+				m_initthrow(mtmp, rn2(2000) ? BULLET : ANTIMATTER_BULLET, 20);
+				break;
+			case 3:
+				(void) mongets(mtmp, BEAM_REFLECTOR_GUN);
+				m_initthrow(mtmp, rn2(2000) ? BULLET : ANTIMATTER_BULLET, 30);
+				break;
+			case 4:
+				(void) mongets(mtmp, mtmp->m_lev > 4 ? SUBMACHINE_GUN : PISTOL);
+				m_initthrow(mtmp, rn2(2000) ? BULLET : ANTIMATTER_BULLET, 50);
+				break;
+			case 5:
+				(void) mongets(mtmp, mtmp->m_lev > 30 ? HEAVY_MACHINE_GUN : PISTOL);
+				m_initthrow(mtmp, rn2(2000) ? BULLET : ANTIMATTER_BULLET, 50);
+				if (mtmp->m_lev > 30) {
+					m_initthrow(mtmp, rn2(2000) ? BULLET : ANTIMATTER_BULLET, 50);
+					m_initthrow(mtmp, rn2(2000) ? BULLET : ANTIMATTER_BULLET, 50);
+					m_initthrow(mtmp, rn2(2000) ? BULLET : ANTIMATTER_BULLET, 50);
+				}
+				break;
+			case 6:
+				(void) mongets(mtmp, RIFLE);
+				m_initthrow(mtmp, rn2(2000) ? BULLET : ANTIMATTER_BULLET, 50);
+				break;
+			case 7:
+				(void) mongets(mtmp, HUNTING_RIFLE);
+				m_initthrow(mtmp, rn2(2000) ? BULLET : ANTIMATTER_BULLET, 50);
+				break;
+			case 8:
+				(void) mongets(mtmp, mtmp->m_lev > 11 ? ASSAULT_RIFLE : PISTOL);
+				m_initthrow(mtmp, rn2(2000) ? BULLET : ANTIMATTER_BULLET, 50);
+				if (mtmp->m_lev > 11) {
+					m_initthrow(mtmp, rn2(2000) ? BULLET : ANTIMATTER_BULLET, 50);
+				}
+				break;
+			case 9:
+				(void) mongets(mtmp, mtmp->m_lev > 6 ? SNIPER_RIFLE : RIFLE);
+				m_initthrow(mtmp, rn2(2000) ? BULLET : ANTIMATTER_BULLET, 50);
+				break;
+			case 10:
+				(void) mongets(mtmp, SHOTGUN);
+				m_initthrow(mtmp, SHOTGUN_SHELL, 25);
+				break;
+			case 11:
+				(void) mongets(mtmp, PAPER_SHOTGUN);
+				m_initthrow(mtmp, SHOTGUN_SHELL, 25);
+				break;
+			case 12:
+				(void) mongets(mtmp, SAWED_OFF_SHOTGUN);
+				m_initthrow(mtmp, SHOTGUN_SHELL, 25);
+				break;
+			case 13:
+				(void) mongets(mtmp, mtmp->m_lev > 8 ? AUTO_SHOTGUN : SHOTGUN);
+				m_initthrow(mtmp, SHOTGUN_SHELL, 25);
+				if (mtmp->m_lev > 8) {
+					m_initthrow(mtmp, SHOTGUN_SHELL, 25);
+				}
+				break;
+			case 14:
+				(void) mongets(mtmp, HAND_BLASTER);
+				m_initthrow(mtmp, rn2(20) ? BLASTER_BOLT : rn2(10) ? HEAVY_BLASTER_BOLT : LASER_BEAM, 40);
+				break;
+			case 15:
+				(void) mongets(mtmp, mtmp->m_lev > 15 ? ARM_BLASTER : HAND_BLASTER);
+				m_initthrow(mtmp, rn2(20) ? BLASTER_BOLT : rn2(10) ? HEAVY_BLASTER_BOLT : LASER_BEAM, 50);
+				break;
+			case 16:
+				(void) mongets(mtmp, PROCESS_CARD);
+				m_initthrow(mtmp, rn2(20) ? BLASTER_BOLT : rn2(10) ? HEAVY_BLASTER_BOLT : LASER_BEAM, 40);
+				break;
+			case 17:
+				(void) mongets(mtmp, mtmp->m_lev > 6 ? CUTTING_LASER : HAND_BLASTER);
+				m_initthrow(mtmp, rn2(20) ? BLASTER_BOLT : rn2(10) ? HEAVY_BLASTER_BOLT : LASER_BEAM, 50);
+				if (mtmp->m_lev > 6) {
+					m_initthrow(mtmp, rn2(20) ? BLASTER_BOLT : rn2(10) ? HEAVY_BLASTER_BOLT : LASER_BEAM, 50);
+				}
+				break;
+			case 18:
+				(void) mongets(mtmp, mtmp->m_lev > 30 ? BFG : PISTOL);
+				if (mtmp->m_lev > 30) {
+				  	m_initthrow(mtmp, BFG_AMMO, 50);
+				  	m_initthrow(mtmp, BFG_AMMO, 50);
+				  	m_initthrow(mtmp, BFG_AMMO, 50);
+				  	m_initthrow(mtmp, BFG_AMMO, 50);
+				  	m_initthrow(mtmp, BFG_AMMO, 50);
+				  	m_initthrow(mtmp, BFG_AMMO, 50);
+				  	m_initthrow(mtmp, BFG_AMMO, 50);
+				  	m_initthrow(mtmp, BFG_AMMO, 50);
+				} else {
+					m_initthrow(mtmp, rn2(2000) ? BULLET : ANTIMATTER_BULLET, 30);
+				}
+				break;
+			case 19:
+				(void) mongets(mtmp, mtmp->m_lev > 9 ? ROCKET_LAUNCHER : PISTOL);
+				if (mtmp->m_lev > 9) {
+					m_initthrow(mtmp, ROCKET, 5);
+				} else {
+					m_initthrow(mtmp, rn2(2000) ? BULLET : ANTIMATTER_BULLET, 30);
+				}
+				break;
+			case 20:
+				(void) mongets(mtmp, mtmp->m_lev > 4 ? GRENADE_LAUNCHER : PISTOL);
+				if (mtmp->m_lev > 4) {
+					m_initthrow(mtmp, FRAG_GRENADE, 15);
+				} else {
+					m_initthrow(mtmp, rn2(2000) ? BULLET : ANTIMATTER_BULLET, 30);
+				}
+				break;
+			case 21:
+				(void) mongets(mtmp, mtmp->m_lev > 4 ? GRENADE_LAUNCHER : PISTOL);
+				if (mtmp->m_lev > 4) {
+					m_initthrow(mtmp, GAS_GRENADE, 15);
+				} else {
+					m_initthrow(mtmp, rn2(2000) ? BULLET : ANTIMATTER_BULLET, 30);
+				}
+				break;
+			default:
+				m_initthrow(mtmp, rn2(2) ? FRAG_GRENADE : GAS_GRENADE, 20);
+				break;
+
+		}
+
+	}
+
 	return;
 }
 
@@ -1085,7 +1219,7 @@ register struct monst *mtmp;
 			case PM_WATCHMAN:
 			case PM_ANGRY_WATCHMAN:
 			  if (!rn2(3)) {
-			      w1 = rn1(BEC_DE_CORBIN - PARTISAN + 1, PARTISAN);
+			      w1 = rnd_class(PARTISAN,BEC_DE_CORBIN);
 			      w2 = rn2(2) ? DAGGER : KNIFE;
 			  } else w1 = rn2(2) ? SPEAR : SHORT_SWORD;
 			  break;
@@ -1329,7 +1463,7 @@ register struct monst *mtmp;
 			(void) mongets(mtmp, DARK_ELVEN_SHORT_SWORD);
 			(void) mongets(mtmp, DROVEN_BOW);
 			m_initthrow(mtmp, DROVEN_ARROW, 45);
-		    } else {
+		    } else if (ptr->mlevel >= 3) { /* fail safe, because of albae and stuff */
 				if (rn2(2))
 					(void) mongets(mtmp, !rn2(4) ? ELVEN_MITHRIL_COAT : ELVEN_CLOAK);
 				if (!rn2(3)) (void)mongets(mtmp, ELVEN_LEATHER_HELM);
@@ -1358,6 +1492,8 @@ register struct monst *mtmp;
 						(void)mongets(mtmp, PICK_AXE);
 					if (!rn2(50)) (void)mongets(mtmp, CRYSTAL_BALL);
 				}
+		    } else { /* too low in level to be getting a bow */
+			(void) mongets(mtmp, LEATHER_CLOAK);
 		    } /* normal elves */                
 		} else /* enemy characters! */ /* They will always get stuff now. --Amy */
 		 if ((mm >= PM_ARCHEOLOGIST && mm <= PM_WIZARD /*&& rn2(4)*/) || (mm >= PM_UNDEAD_ARCHEOLOGIST && mm <= PM_UNDEAD_WIZARD) ) { 
@@ -1537,6 +1673,101 @@ register struct monst *mtmp;
 		     (void)mongets(mtmp, KNIFE);
 		     (void)mongets(mtmp, LAB_COAT);
 		   break;
+
+		   case PM_GRENADONIN:
+		   case PM_UNDEAD_GRENADONIN:
+
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_offensive_item(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_offensive_item(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_offensive_item(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_offensive_item(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_defensive_item(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_offensive_item_new(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_offensive_item_new(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_offensive_item_new(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_offensive_item_new(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_defensive_item_new(mtmp));
+		     (void)mongets(mtmp, KATANA);
+		     if (rn2(2)) (void)mongets(mtmp, SHORT_SWORD);
+		     if (rn2(3)) {
+			(void)mongets(mtmp, YUMI);
+			m_initthrow(mtmp, YA, 40);
+		     }
+			m_initthrow(mtmp, FRAG_GRENADE, 40);
+		     (void)mongets(mtmp, SPLINT_MAIL);
+
+			break;
+
+		   case PM_CELLAR_CHILD:
+		   case PM_UNDEAD_CELLAR_CHILD:
+
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_misc_item(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_misc_item_new(mtmp));
+		     (void)mongets(mtmp, QUARTERSTAFF);
+		     (void)mongets(mtmp, PLATE_MAIL);
+
+			break;
+
+		   case PM_DEMAGOGUE:
+		   case PM_UNDEAD_DEMAGOGUE:
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_offensive_item(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_offensive_item(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_offensive_item(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_offensive_item(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_offensive_item(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_offensive_item_new(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_offensive_item_new(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_offensive_item_new(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_offensive_item_new(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_offensive_item_new(mtmp));
+
+		     (void)mongets(mtmp, MALLET);
+		     (void)mongets(mtmp, FULL_PLATE_MAIL);
+		     (void)mongets(mtmp, HELMET);
+
+			break;
+
+		   case PM_SOCIAL_JUSTICE_WARRIOR:
+		   case PM_UNDEAD_SOCIAL_JUSTICE_WARRIOR:
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_offensive_item(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_offensive_item_new(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_misc_item(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_misc_item_new(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_defensive_item(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_defensive_item_new(mtmp));
+
+		     (void)mongets(mtmp, FEDORA);
+		     (void)mongets(mtmp, FLY_SWATTER);
+
+			break;
+
+		   case PM_WALSCHOLAR:
+		   case PM_UNDEAD_WALSCHOLAR:
+
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_offensive_item(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_offensive_item(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_defensive_item(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_defensive_item(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_misc_item(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_misc_item(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_misc_item(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_misc_item(mtmp));
+		     if (!rn2(50)) (void) mongets(mtmp, rnd_misc_item(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_offensive_item_new(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_defensive_item_new(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_misc_item_new(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_offensive_item_new(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_defensive_item_new(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_misc_item_new(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_misc_item_new(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_misc_item_new(mtmp));
+		     if (!rn2(400)) (void) mongets(mtmp, rnd_misc_item_new(mtmp));
+
+		     (void)mongets(mtmp, DAGGER);
+		     (void)mongets(mtmp, PICK_AXE);
+		     (void)mongets(mtmp, LEATHER_ARMOR);
+
+			break;
 
 		   case PM_MASON:
 		   case PM_UNDEAD_MASON:
@@ -1947,7 +2178,14 @@ register struct monst *mtmp;
 		     (void)mongets(mtmp, IRON_SHOES);
 			if (!rn2(100)) {
 		     (void)mongets(mtmp, BFG);
-			 m_initthrow(mtmp, BFG_AMMO, 400);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
 			}
 
 		   break;
@@ -2913,7 +3151,7 @@ register struct monst *mtmp;
 		     if (!rn2(400)) (void) mongets(mtmp, rnd_misc_item_new(mtmp));
 
 		     (void)mongets(mtmp, MACE);
-		     (void)mongets(mtmp, rn1(ROBE_OF_WEAKNESS - ROBE + 1, ROBE));
+		     (void)mongets(mtmp, rnd_class(ROBE,ROBE_OF_WEAKNESS));
 		     (void)mongets(mtmp, SMALL_SHIELD);
 		     if (!rn2(4)) {
 			int v,vials;
@@ -4624,6 +4862,7 @@ register struct monst *mtmp;
 			otmp = mksobj(TORCH, TRUE, FALSE);
 			if (otmp) {
 				otmp->quan = 1;
+				otmp->owt = weight(otmp);
 				(void) mpickobj(mtmp, otmp, TRUE);
 			}
 
@@ -5102,12 +5341,12 @@ register struct monst *mtmp;
 		}
 
 		if (ptr == &mons[PM_WATCH_KOP]) {
-			if (!rn2(2)) (void)mongets(mtmp, rn1(BEC_DE_CORBIN - PARTISAN + 1, PARTISAN));
+			if (!rn2(2)) (void)mongets(mtmp, rnd_class(PARTISAN,BEC_DE_CORBIN));
 			(void)mongets(mtmp, (rn2(2)) ? KNIFE : DAGGER);
 			if (!rn2(2)) (void)mongets(mtmp, (rn2(2)) ? SPEAR : SHORT_SWORD);
 		}
 		if (ptr == &mons[PM_KATCHMAN]) {
-			if (!rn2(2)) (void)mongets(mtmp, rn1(BEC_DE_CORBIN - PARTISAN + 1, PARTISAN));
+			if (!rn2(2)) (void)mongets(mtmp, rnd_class(PARTISAN,BEC_DE_CORBIN));
 			(void)mongets(mtmp, (rn2(2)) ? KNIFE : DAGGER);
 			if (!rn2(2)) (void)mongets(mtmp, (rn2(2)) ? SPEAR : SHORT_SWORD);
 			(void)mongets(mtmp, (!rn2(3)) ? RING_MAIL : rn2(2) ? CHAIN_MAIL : SPLINT_MAIL);
@@ -5513,6 +5752,20 @@ register struct monst *mtmp;
 				(void) mongets(mtmp, CROSSBOW);
 		  		m_initthrow(mtmp, CROSSBOW_BOLT, 45);
 			}
+			if (ptr == &mons[PM_KOBOLD_ARROWHAILER]) {
+				(void) mongets(mtmp, COMPOST_BOW);
+		  		m_initthrow(mtmp, FORBIDDEN_ARROW, 40);
+			}
+			if (ptr == &mons[PM_KOBOLD_PEPPERMASTER]) {
+				(void) mongets(mtmp, ORCISH_BOW);
+		  		m_initthrow(mtmp, ORCISH_ARROW, 50);
+		  		m_initthrow(mtmp, ORCISH_ARROW, 50);
+		  		m_initthrow(mtmp, ORCISH_ARROW, 50);
+			}
+			if (ptr == &mons[PM_KOBOLD_PHAZER]) {
+				(void) mongets(mtmp, PROCESS_CARD);
+		  		m_initthrow(mtmp, LASER_BEAM, 50);
+			}
 
 			if (ptr == &mons[PM_SHIBOLD]) {
 				(void) mongets(mtmp, SMALL_SHIELD);
@@ -5572,6 +5825,19 @@ register struct monst *mtmp;
 		if (ptr == &mons[PM_BAUR]) {
 			(void) mongets(mtmp, BOW);
 			m_initthrow(mtmp, ARROW, 35);
+		}
+		if (ptr == &mons[PM_KENTAURS]) {
+			(void) mongets(mtmp, BOW);
+			m_initthrow(mtmp, ARROW, 35);
+		}
+		if (ptr == &mons[PM_KENTAURS_KNIGHT]) {
+			(void) mongets(mtmp, SLING);
+			m_initthrow(mtmp, ROCK, 50);
+			m_initthrow(mtmp, ROCK, 50);
+		}
+		if (ptr == &mons[PM_GUNNTAURS]) {
+			(void) mongets(mtmp, PISTOL);
+			m_initthrow(mtmp, BULLET, 50);
 		}
 		if (ptr == &mons[PM_FLINGAUR]) {
 			(void) mongets(mtmp, BOW);
@@ -5638,6 +5904,11 @@ register struct monst *mtmp;
 		(void)mongets(mtmp, KNIFE);
 		(void)mongets(mtmp, LONG_SWORD);
 
+		if(mm == PM_BARROW_WARRIOR) {
+			(void)mongets(mtmp, PICK_AXE);
+			(void)mongets(mtmp, SCR_GRAVE);
+			(void)mongets(mtmp, WAN_DIGGING);
+		}
 		if(mm == PM_GRAVE_WARRIOR) { (void)mongets(mtmp, PICK_AXE);
 			(void)mongets(mtmp, WAN_DIGGING);
 		}
@@ -5847,6 +6118,13 @@ register struct monst *mtmp;
 
 	}
 
+	if (attackdamagetype(mtmp->data, AT_GAZE, AD_SPC2) && !rn2(200)) {
+		(void) mongets(mtmp, YITH_TENTACLE);
+	}
+	if (dmgtype(mtmp->data, AD_NAST) && !rn2(500)) {
+		(void) mongets(mtmp, NASTYPOLE);
+	}
+
 }
 
 #endif /* OVL2 */
@@ -5931,7 +6209,7 @@ register struct	monst	*mtmp;
 		else if (monsndx(ptr) == PM_HUMAN_WERESTILETTOSANDAL) (void)mongets(mtmp, HIGH_STILETTOS);
 
 		if (ptr == &mons[PM_RENEGADE_WATCHMAN]) {
-			if (!rn2(2)) (void)mongets(mtmp, rn1(BEC_DE_CORBIN - PARTISAN + 1, PARTISAN));
+			if (!rn2(2)) (void)mongets(mtmp, rnd_class(PARTISAN,BEC_DE_CORBIN));
 			(void)mongets(mtmp, (rn2(2)) ? KNIFE : DAGGER);
 			if (!rn2(2)) (void)mongets(mtmp, (rn2(2)) ? SPEAR : SHORT_SWORD);
 		}
@@ -5953,6 +6231,41 @@ register struct	monst	*mtmp;
 			m_initthrow(mtmp, SHOTGUN_SHELL, 30);
 		}
 
+		if (ptr == &mons[PM_ENGCHIP]) {
+			(void)mongets(mtmp, BOW);
+			m_initthrow(mtmp, ARROW, 30);
+		}
+		if (ptr == &mons[PM_SPARD]) {
+			(void)mongets(mtmp, BOW);
+			m_initthrow(mtmp, ARROW, 30);
+			m_initthrow(mtmp, ARROW, 30);
+			m_initthrow(mtmp, ARROW, 30);
+			m_initthrow(mtmp, ARROW, 30);
+		}
+		if (ptr == &mons[PM_JAVA]) {
+			m_initthrow(mtmp, JAVELIN, 5);
+		}
+		if (ptr == &mons[PM_GREURO]) {
+			(void)mongets(mtmp, LANCE);
+		}
+		if (ptr == &mons[PM_JAPS]) {
+			(void)mongets(mtmp, KATANA);
+		}
+		if (ptr == &mons[PM_GERTEUT]) {
+			(void)mongets(mtmp, POT_RADIUM);
+		}
+		if (ptr == &mons[PM_FRO]) {
+			(void)mongets(mtmp, AXE);
+		}
+		if (ptr == &mons[PM_MAYMES]) {
+			(void)mongets(mtmp, COMPOST_BOW);
+			m_initthrow(mtmp, FORBIDDEN_ARROW, 40);
+		}
+		if (ptr == &mons[PM_TURMENE]) {
+			(void)mongets(mtmp, FLINTLOCK);
+			m_initthrow(mtmp, BULLET, 35);
+		}
+
 		if (ptr == &mons[PM_EVIL_WATCH_LEADER]) {
 			(void)mongets(mtmp, (rn2(2)) ? LONG_SWORD : SILVER_SABER);
 			(void)mongets(mtmp, (!rn2(3)) ? RING_MAIL : rn2(2) ? CHAIN_MAIL : SPLINT_MAIL);
@@ -5963,7 +6276,7 @@ register struct	monst	*mtmp;
 		}
 
 		if (ptr == &mons[PM_EVIL_WATCHMAN]) {
-			if (!rn2(2)) (void)mongets(mtmp, rn1(BEC_DE_CORBIN - PARTISAN + 1, PARTISAN));
+			if (!rn2(2)) (void)mongets(mtmp, rnd_class(PARTISAN,BEC_DE_CORBIN));
 			(void)mongets(mtmp, (rn2(2)) ? KNIFE : DAGGER);
 			if (!rn2(2)) (void)mongets(mtmp, (rn2(2)) ? SPEAR : SHORT_SWORD);
 			(void)mongets(mtmp, (!rn2(3)) ? RING_MAIL : rn2(2) ? CHAIN_MAIL : SPLINT_MAIL);
@@ -6259,7 +6572,7 @@ register struct	monst	*mtmp;
 		    /* evil patch idea by jonadab: 5% chance for aligned priests to be generated invisible */
 
 		    (void) mongets(mtmp,
-			    !rn2(20) ? CLOAK_OF_INVISIBILITY : rn2(7) ? rn1(ROBE_OF_WEAKNESS - ROBE + 1, ROBE) :
+			    !rn2(20) ? CLOAK_OF_INVISIBILITY : rn2(7) ? rnd_class(ROBE,ROBE_OF_WEAKNESS) :
 					     rn2(3) ? CLOAK_OF_PROTECTION :
 						 CLOAK_OF_MAGIC_RESISTANCE);
 		    (void) mongets(mtmp, SMALL_SHIELD);
@@ -6279,14 +6592,36 @@ register struct	monst	*mtmp;
 
 	    case S_PIERCER:
 
+		if (mtmp->data == &mons[PM_DING_CLING_PIERCER]) (void) mongets(mtmp, SCR_STALACTITE);
+		if (ptr == &mons[PM_CUTE_NICKNAME]) (void) mongets(mtmp, YITH_TENTACLE);
+
 		if (mtmp->data == &mons[PM_JIGEN_DAISUKE]) { (void) mongets(mtmp, ROCKET_LAUNCHER); (void) mongets(mtmp, ROCKET_LAUNCHER); m_initthrow(mtmp, ROCKET, 10); m_initthrow(mtmp, ROCKET, 10); m_initthrow(mtmp, ROCKET, 10); }
 		if (mtmp->data == &mons[PM_JUEN_S_LEATHER_PEEP_TOE]) (void) mongets(mtmp, LEATHER_PEEP_TOES);
+		if (mtmp->data == &mons[PM_WANDERING_PENGUIN]) {
+			 (void) mongets(mtmp, SLING);
+			 m_initthrow(mtmp, ROCK, 50);
+		}
 
 		break;
 
 	    case S_GOLEM:
 		if (mtmp->data == &mons[PM_ROBO_KY]) { (void) mongets(mtmp, ROCKET_LAUNCHER); m_initthrow(mtmp, ROCKET, 10); }
 		if (mtmp->data == &mons[PM_TGWTG]) { (void) mongets(mtmp, SUBMACHINE_GUN); m_initthrow(mtmp, BULLET, 50); m_initthrow(mtmp, BULLET, 50); }
+
+		if (ptr == &mons[PM_ONIJI_TANKOBO]) (void) mongets(mtmp, YITH_TENTACLE);
+
+		if(mtmp->data == &mons[PM_MELUGAST_TYPEM]) {
+			(void) mongets(mtmp, LONG_SWORD);
+			(void) mongets(mtmp, ELVEN_CLOAK);
+			(void) mongets(mtmp, ARM_BLASTER);
+			 m_initthrow(mtmp, HEAVY_BLASTER_BOLT, 50);
+			 m_initthrow(mtmp, HEAVY_BLASTER_BOLT, 50);
+
+		}
+		if(mtmp->data == &mons[PM_KONIGS_KATZE]) {
+			(void) mongets(mtmp, ROCKET_LAUNCHER);
+			 m_initthrow(mtmp, ROCKET, 30);
+		}
 
 		if(mtmp->data == &mons[PM_GRAY_STONE_GOLEM]) {
 			(void) mongets(mtmp, SLING);
@@ -6295,6 +6630,13 @@ register struct	monst	*mtmp;
 		}
 		if (mtmp->data == &mons[PM_DILDO_GOLEM]) {
 			 (void) mongets(mtmp, VIBROBLADE);
+		}
+		if (mtmp->data == &mons[PM_MUSCLE_GOLEM]) {
+			 (void) mongets(mtmp, CLUB);
+			 m_initthrow(mtmp, JAVELIN, 4);
+		}
+		if (mtmp->data == &mons[PM_HC_DENTER]) {
+			 (void) mongets(mtmp, TRIDENT);
 		}
 		if (mtmp->data == &mons[PM_UNICORN_GOLEM]) {
 			 (void) mongets(mtmp, UNICORN_HORN);
@@ -6306,6 +6648,13 @@ register struct	monst	*mtmp;
 		if (mtmp->data == &mons[PM_RETARDED_GOLEM]) {
 			 (void) mongets(mtmp, SLING);
 			 m_initthrow(mtmp, ROCK, 30);
+		}
+		if (mtmp->data == &mons[PM_PUTIT_TANK]) {
+			 (void) mongets(mtmp, PISTOL);
+			 m_initthrow(mtmp, BULLET, 25);
+		}
+		if (mtmp->data == &mons[PM_YERLES_CONBAT_PLANE]) {
+			 m_initthrow(mtmp, FRAG_GRENADE, 20);
 		}
 		if (mtmp->data == &mons[PM_LANCE_GOLEM]) {
 			 (void) mongets(mtmp, LANCE);
@@ -6468,12 +6817,19 @@ register struct	monst	*mtmp;
 			 (void) mongets(mtmp, CUTTING_LASER);
 			 m_initthrow(mtmp, LASER_BEAM, 50);
 		}
+		if (mtmp->data == &mons[PM_ELOJAGUAR_WARRIOR]) (void) mongets(mtmp, LONG_SWORD);
 
 		break;
 
 	    case S_ZOMBIE:
 		if (mtmp->data == &mons[PM_ROBOT_TERMINATOR_ZOMBIE]) {
 			 (void) mongets(mtmp, RED_LIGHTSABER);
+		}
+		if (mtmp->data == &mons[PM_DEEP_CRYPT_ZOMBIE]) {
+			 (void) mongets(mtmp, SCR_CRYPT);
+		}
+		if (mtmp->data == &mons[PM_SKELETON_HERO]) {
+			 (void) mongets(mtmp, TWO_HANDED_SWORD);
 		}
 		if (mtmp->data == &mons[PM_WALKING_STICK_BLUBBERER]) {
 			 (void) mongets(mtmp, WALKING_STICK);
@@ -6545,6 +6901,8 @@ register struct	monst	*mtmp;
 
 		}
 
+		if (mtmp->data == &mons[PM_SUPER_MARIO_CONDOR]) (void) mongets(mtmp, SCR_SAND);
+
 		if (mtmp->data == &mons[PM_ARCEUS]) (void) mongets(mtmp, WAN_CHROMATIC_BEAM);
 		if (mtmp->data == &mons[PM_EXTRA_DONALD]) (void) mongets(mtmp, AMULET_OF_LIFE_SAVING);
 		if (mtmp->data == &mons[PM_KARIN_S_FLAT_SANDAL]) (void) mongets(mtmp, WEDGE_SANDALS);
@@ -6557,9 +6915,29 @@ register struct	monst	*mtmp;
 		if (mtmp->data == &mons[PM_KARIN_S_COMBAT_BOOT]) { (void) mongets(mtmp, BLOCK_HEELED_COMBAT_BOOT); (void) mongets(mtmp, HIPPIE_HEELS); }
 		if (mtmp->data == &mons[PM_KERSTIN_S_WOODEN_SANDAL]) { (void) mongets(mtmp, WEDGE_SANDALS); (void) mongets(mtmp, WOODEN_GETA); }
 
+		if (mtmp->data == &mons[PM_COM_BAT]) {
+			(void) mongets(mtmp, HAND_BLASTER);
+			m_initthrow(mtmp, BLASTER_BOLT, 50);
+		}
+
+		if (mtmp->data == &mons[PM_LAST_RAVEN]) {
+			(void) mongets(mtmp, RAYGUN);
+			m_initthrow(mtmp, BLASTER_BOLT, 50);
+			m_initthrow(mtmp, BLASTER_BOLT, 50);
+		}
+
+		if (mtmp->data == &mons[PM_KAPAPU_KAMUI]) {
+			(void) mongets(mtmp, BOW);
+			m_initthrow(mtmp, ARROW, 50);
+		}
+
 		break;
 
 	    case S_LIZARD:
+
+		if (mtmp->data == &mons[PM_GIANT_SWAMP_FROG]) (void) mongets(mtmp, SCR_MOORLAND);
+		if (mtmp->data == &mons[PM_GRAY_SLAAD]) (void) mongets(mtmp, TWO_HANDED_SWORD);
+		if (mtmp->data == &mons[PM_DEATH_SLAAD]) (void) mongets(mtmp, TWO_HANDED_SWORD);
 
 		if (mtmp->data == &mons[PM_POISON_ARROW_FROG]) {
 			(void) mongets(mtmp, CROSSBOW);
@@ -6585,6 +6963,10 @@ register struct	monst	*mtmp;
 		if (mtmp->data == &mons[PM_YOU_TROLL]) (void) mongets(mtmp, SCR_BAD_EQUIPMENT);
 		if (mtmp->data == &mons[PM_OFFSEEN_TROLL]) (void) mongets(mtmp, WAN_BAD_EQUIPMENT);
 
+		if (mtmp->data == &mons[PM_ANTJE_S_DANCING_SHOE]) {
+			(void) mongets(mtmp, DANCING_SHOES);
+			(void) mongets(mtmp, SCR_PAVING);
+		}
 		if (mtmp->data == &mons[PM_KICKASS_TROLL]) {
 			(void) mongets(mtmp, HIPPIE_HEELS);
 			(void) mongets(mtmp, ORCISH_HELM);
@@ -6763,6 +7145,7 @@ register struct	monst	*mtmp;
 		if (mtmp->data == &mons[PM_SIMONE_S_THICK_HUGGING_BOOT]) (void) mongets(mtmp, HUGGING_BOOT);
 
 		if (mtmp->data == &mons[PM_SONJA_S_TORN_SNEAKER]) (void) mongets(mtmp, SOFT_SNEAKERS);
+		if (ptr == &mons[PM_KLINGELING_WENCH]) (void) mongets(mtmp, YITH_TENTACLE);
 
 		if (mtmp->data == &mons[PM_POTION_MIMIC]) (void) mongets(mtmp, POT_FULL_HEALING);
 		if (mtmp->data == &mons[PM_SCROLL_MIMIC]) (void) mongets(mtmp, SCR_TELEPORTATION);
@@ -7013,6 +7396,7 @@ register struct	monst	*mtmp;
 	    case S_WORM_TAIL:
 
 		if (mtmp->data == &mons[PM_HILTED_POLEARM]) (void) mongets(mtmp, RANSEUR);
+		if (ptr == &mons[PM_OH__THERE_IS_A_STARLIT_SKY_]) (void) mongets(mtmp, WAN_FLEECY_TERRAIN);
 
 		if (mtmp->data == &mons[PM_BOW_ROW]) {
 			(void)mongets(mtmp, BOW);
@@ -7043,6 +7427,11 @@ register struct	monst	*mtmp;
 		if (mtmp->data == &mons[PM_CYBER_FLOWER]) {
 			(void)mongets(mtmp, ROCKET_LAUNCHER);
 			m_initthrow(mtmp, ROCKET, 25);
+		}
+
+		if (mtmp->data == &mons[PM_SKOGSRA]) {
+			(void)mongets(mtmp, BOW);
+			m_initthrow(mtmp, ARROW, 40);
 		}
 
 		if (mtmp->data == &mons[PM_GUARDIAN_O__THE_FOREST]) m_initthrow(mtmp, SPIRIT_THROWER, 5);
@@ -7076,12 +7465,14 @@ register struct	monst	*mtmp;
 
 	    case S_LIGHT:
 		if (mtmp->data == &mons[PM_FIERY_EFFULGENCE]) m_initthrow(mtmp, FRAG_GRENADE, 5);
+		if (mtmp->data == &mons[PM_SCISSOR_SHARPENER]) (void) mongets(mtmp, SCALPEL);
 
 		if (mtmp->data == &mons[PM_DENISE_S_GIRL_SHOE]) (void) mongets(mtmp, SOFT_SNEAKERS);
 
 		break;
 	    case S_GNOME:
 
+		if (mtmp->data == &mons[PM_ALIEN_PHALANX]) (void) mongets(mtmp, HALBERD);
 		if (mtmp->data == &mons[PM_GNOME_BADASS]) (void) mongets(mtmp, WAN_REMOVE_RESISTANCE);
 		if (mtmp->data == &mons[PM_GNOMISH_SLIME_MAGE]) (void) mongets(mtmp, POT_SLIME);
 		if (mtmp->data == &mons[PM_NASTY_GRIFFIN]) (void) mongets(mtmp, SCR_MEGALOAD);
@@ -7196,6 +7587,10 @@ register struct	monst	*mtmp;
 		if (ptr == &mons[PM_SNIPER_BUNDLE_HEAD]) {
 			(void) mongets(mtmp, SNIPER_RIFLE);
 	  		m_initthrow(mtmp, BULLET, 50);
+		}
+		if (ptr == &mons[PM_GIGANTIC_FAIRY]) {
+			(void) mongets(mtmp, BOW);
+	  		m_initthrow(mtmp, ARROW, 50);
 		}
 		if (ptr == &mons[PM_TEASING_NYMPH]) {
 	  		m_initthrow(mtmp, SPIKE, 50);
@@ -7354,6 +7749,11 @@ register struct	monst	*mtmp;
 	  		m_initthrow(mtmp, LASER_BEAM, 50);
 		}
 
+		if (ptr == &mons[PM_ESCAPEGOAT]) {
+			(void) mongets(mtmp, SNIPER_RIFLE);
+	  		m_initthrow(mtmp, BULLET, 50);
+		}
+
 		if (ptr == &mons[PM_DOBIEL]) {
 		  	(void) mongets(mtmp, BALLISTA);
 		  	m_initthrow(mtmp, CROSSBOW_BOLT, 50);
@@ -7361,6 +7761,7 @@ register struct	monst	*mtmp;
 		}
 
 		if (mtmp->data == &mons[PM_ARKTOUROS]) (void) mongets(mtmp, BARDICHE);
+		if (mtmp->data == &mons[PM_FARMING_COW]) (void) mongets(mtmp, SCR_FARMING);
 
 		if (mtmp->data == &mons[PM_PURE_CHAOS_HORDE]) (void) mongets(mtmp, SCR_CHAOS_TERRAIN);
 		if (mtmp->data == &mons[PM_CORINA_S_SPECIAL_COMBAT_BOOT]) (void) mongets(mtmp, BLOCK_HEELED_COMBAT_BOOT);
@@ -7420,6 +7821,22 @@ register struct	monst	*mtmp;
 
 		if (mtmp->data == &mons[PM_MARIKE_S_WORN_OUT_SNEAKER]) (void) mongets(mtmp, SOFT_SNEAKERS);
 		if (mtmp->data == &mons[PM_JEANETTA_S_LITTLE_GIRL_BOOT]) (void) mongets(mtmp, STURDY_PLATEAU_BOOT_FOR_GIRLS);
+		if (ptr == &mons[PM_CATERPILLAR_SNIPER]) {
+		  	(void) mongets(mtmp, SNIPER_RIFLE);
+		  	m_initthrow(mtmp, BULLET, 20);
+		}
+		if (ptr == &mons[PM_OMEGA_HERAKLES]) {
+		  	(void) mongets(mtmp, !rn2(3) ? ASSAULT_RIFLE : !rn2(2) ? SUBMACHINE_GUN : RIFLE);
+		  	m_initthrow(mtmp, BULLET, 50);
+		}
+		if (ptr == &mons[PM_CRAZY_IVAN]) {
+			if (!rn2(2)) m_initthrow(mtmp, FRAG_GRENADE, 30);
+			else {
+			  	(void) mongets(mtmp, KALASHNIKOV);
+			  	m_initthrow(mtmp, BULLET, 50);
+			  	m_initthrow(mtmp, BULLET, 50);
+			}
+		}
 
 		break;
 
@@ -7432,6 +7849,7 @@ register struct	monst	*mtmp;
 
 		if (mtmp->data == &mons[PM_HC_LADY]) (void) mongets(mtmp, FEMININE_PUMPS);
 		if(ptr == &mons[PM_HC_LANCE_CARRIER]) (void) mongets(mtmp, LANCE);
+		if(ptr == &mons[PM_CENTAUR_HIGHWAYMAN]) (void) mongets(mtmp, SCR_HIGHWAY);
 
 		break;
 
@@ -7449,6 +7867,11 @@ register struct	monst	*mtmp;
 		  	m_initthrow(mtmp, ANCIENT_ARROW, 35);
 		}
 
+		if (mtmp->data == &mons[PM_DOG_COP]) {
+			(void)mongets(mtmp, RUBBER_HOSE);
+			m_initthrow(mtmp, CREAM_PIE, 2);
+		}
+
 		break;
 
 	    case S_GHOST:
@@ -7458,6 +7881,7 @@ register struct	monst	*mtmp;
 		  	m_initthrow(mtmp, BULLET, 10);
 		}
 
+		if (mtmp->data == &mons[PM_FULL_NETHER_GHOST]) (void) mongets(mtmp, SCR_NETHER);
 		if (mtmp->data == &mons[PM_CACKLING_SPIRIT]) (void) mongets(mtmp, WAN_TRAP_CREATION);
 		if (mtmp->data == &mons[PM_HAUNTED_SPIRIT]) (void) mongets(mtmp, WAN_CURSE_ITEMS);
 		if (mtmp->data == &mons[PM_SUMMONING_SPIRIT]) (void) mongets(mtmp, SCR_SUMMON_GHOST);
@@ -7482,6 +7906,74 @@ register struct	monst	*mtmp;
 	    case S_PUDDING:
 
 		if (mtmp->data == &mons[PM_AQUA_PUDDING]) (void) mongets(mtmp, POT_SANITY);
+		if (mtmp->data == &mons[PM_BUBBLE_SLIME]) (void) mongets(mtmp, SCR_BUBBLE_BOBBLE);
+		if (ptr == &mons[PM_MILITARY_PUTIT]) {
+		  	(void) mongets(mtmp, FLINTLOCK);
+		  	m_initthrow(mtmp, BULLET, 15);
+		}
+		if (ptr == &mons[PM_PISTOL_PUDDING]) {
+		  	(void) mongets(mtmp, PISTOL);
+		  	m_initthrow(mtmp, BULLET, 40);
+		}
+		if (ptr == &mons[PM_RIFLE_PUDDING]) {
+		  	(void) mongets(mtmp, RIFLE);
+		  	m_initthrow(mtmp, BULLET, 50);
+		}
+		if (ptr == &mons[PM_SHOTTY_PUDDING]) {
+		  	(void) mongets(mtmp, SHOTGUN);
+		  	m_initthrow(mtmp, SHOTGUN_SHELL, 30);
+		}
+		if (ptr == &mons[PM_AUTOSHOT_PUDDING]) {
+		  	(void) mongets(mtmp, AUTO_SHOTGUN);
+		  	m_initthrow(mtmp, SHOTGUN_SHELL, 50);
+		}
+		if (ptr == &mons[PM_SMG_PUDDING]) {
+		  	(void) mongets(mtmp, SUBMACHINE_GUN);
+		  	m_initthrow(mtmp, BULLET, 30);
+		  	m_initthrow(mtmp, BULLET, 30);
+		}
+		if (ptr == &mons[PM_ASSAULT_PUDDING]) {
+		  	(void) mongets(mtmp, ASSAULT_RIFLE);
+		  	m_initthrow(mtmp, BULLET, 50);
+		  	m_initthrow(mtmp, BULLET, 50);
+		}
+		if (ptr == &mons[PM_HEAVY_WEAPON_PUDDING]) {
+		  	(void) mongets(mtmp, HEAVY_MACHINE_GUN);
+		  	m_initthrow(mtmp, BULLET, 50);
+		  	m_initthrow(mtmp, BULLET, 50);
+		  	m_initthrow(mtmp, BULLET, 50);
+		  	m_initthrow(mtmp, BULLET, 50);
+		}
+		if (ptr == &mons[PM_BIG_FUCKING_PUDDING]) {
+		  	(void) mongets(mtmp, BFG);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		}
+		if (ptr == &mons[PM_DOOMGUY_PUDDING]) {
+		  	(void) mongets(mtmp, BFG);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	m_initthrow(mtmp, BFG_AMMO, 50);
+		  	(void) mongets(mtmp, HEAVY_MACHINE_GUN);
+		  	m_initthrow(mtmp, BULLET, 50);
+		  	m_initthrow(mtmp, BULLET, 50);
+		  	m_initthrow(mtmp, BULLET, 50);
+		  	m_initthrow(mtmp, BULLET, 50);
+		  	m_initthrow(mtmp, BULLET, 50);
+		}
 
 		break;
 
@@ -7491,6 +7983,7 @@ register struct	monst	*mtmp;
 		if (mtmp->data == &mons[PM_PLEASING_WARP_FUNGUS]) (void) mongets(mtmp, WAN_IMMOBILITY);
 		if (mtmp->data == &mons[PM_PLEASING_PATCH]) (void) mongets(mtmp, SCR_EGOISM);
 		if (mtmp->data == &mons[PM_PLEASING_WARP_PATCH]) (void) mongets(mtmp, WAN_EGOISM);
+		if (ptr == &mons[PM_GWEN_ACTOR]) (void) mongets(mtmp, YITH_TENTACLE);
 
 		if (ptr == &mons[PM_RHED_MUSHROOM]) {
 		  	(void) mongets(mtmp, SLING);
@@ -7498,6 +7991,7 @@ register struct	monst	*mtmp;
 		}
 
 		if (mtmp->data == &mons[PM_YITHGUS]) (void) mongets(mtmp, WAN_INSANITY);
+		if (mtmp->data == &mons[PM_CURING_LEADER]) (void) mongets(mtmp, SCR_URINE);
 
 		if (mtmp->data == &mons[PM_NATALJE_S_PLATEAU_SANDAL]) { (void) mongets(mtmp, HIGH_HEELED_SANDAL); (void) mongets(mtmp, SCR_TRAP_CREATION); (void) mongets(mtmp, WEDGE_SANDALS); }
 
@@ -7787,6 +8281,10 @@ register struct	monst	*mtmp;
 
 		if (mtmp->data == &mons[PM_GLUTTONOUS_HULK]) (void) mongets(mtmp, WAN_STARVATION);
 		if (mtmp->data == &mons[PM_DENRYU]) (void) mongets(mtmp, KATANA);
+		if (mtmp->data == &mons[PM_CHAOS_HORROR]) (void) mongets(mtmp, WAN_CHAOS_TERRAIN);
+		if (mtmp->data == &mons[PM_ATHACH]) (void) mongets(mtmp, MORNING_STAR);
+		if (mtmp->data == &mons[PM_HAMMER_ATHACH]) (void) mongets(mtmp, WAR_HAMMER);
+		if (mtmp->data == &mons[PM_MACE_ATHACH]) (void) mongets(mtmp, MACE);
 
 		if (mtmp->data == &mons[PM_PSEUDO_EROTIC_SMOKER_BITCH]) {
 			(void) mongets(mtmp, SEXY_LEATHER_PUMP);
@@ -7824,6 +8322,15 @@ register struct	monst	*mtmp;
 
 	    case S_BLOB:
 
+		if (ptr == &mons[PM_DEEPSPAWN]) {
+			 (void) mongets(mtmp, WAN_CREATE_MONSTER);
+		}
+		if (ptr == &mons[PM_OUT_OF_DEEPSPAWN]) {
+			 (void) mongets(mtmp, WAN_CREATE_MONSTER);
+			 (void) mongets(mtmp, SCR_CREATE_MONSTER);
+			 (void) mongets(mtmp, WAN_CREATE_MONSTER);
+		}
+
 		if (ptr == &mons[PM_EXPLODING_GREASEBALL]) {
 			m_initthrow(mtmp, CREAM_PIE, 2);
 		}
@@ -7831,6 +8338,14 @@ register struct	monst	*mtmp;
 		if (ptr == &mons[PM_ONANOCTER__A]) {
 			 (void) mongets(mtmp, PISTOL);
 			 m_initthrow(mtmp, BULLET, 25);
+		}
+
+		if (ptr == &mons[PM_FORTRESSNAIL]) {
+			 (void) mongets(mtmp, HEAVY_MACHINE_GUN);
+			 m_initthrow(mtmp, BULLET, 50);
+			 m_initthrow(mtmp, BULLET, 50);
+			 m_initthrow(mtmp, BULLET, 50);
+			 m_initthrow(mtmp, BULLET, 50);
 		}
 
 		if (ptr == &mons[PM_ONANOCTER__B]) {
@@ -7907,6 +8422,7 @@ register struct	monst	*mtmp;
 	    case S_RUSTMONST:
 
 		if (mtmp->data == &mons[PM_MASTER_DISINTEGRATOR]) (void) mongets(mtmp, WAN_DISINTEGRATION);
+		if (mtmp->data == &mons[PM_HAR_HAR_DISENCHANTER]) (void) mongets(mtmp, WAN_DISENCHANTMENT);
 		if (mtmp->data == &mons[PM_DISINTEGRATOR_LORD]) (void) mongets(mtmp, WAN_DISINTEGRATION_BEAM);
 		if (mtmp->data == &mons[PM_GREAT_ACID_MONSTER]) (void) mongets(mtmp, WAN_CORROSION);
 		if (mtmp->data == &mons[PM_TANJA_S_SOFT_SNEAKER]) { (void) mongets(mtmp, SOFT_SNEAKERS); (void) mongets(mtmp, SOFT_GIRL_SNEAKER); }
@@ -7945,10 +8461,31 @@ register struct	monst	*mtmp;
 		if (mtmp->data == &mons[PM_THE_RAT_KING]) (void) mongets(mtmp, SCR_ROOT_PASSWORD_DETECTION);
 		if (ishaxor && mtmp->data == &mons[PM_THE_RAT_KING]) (void) mongets(mtmp, SCR_ROOT_PASSWORD_DETECTION);
 
+		if (mtmp->data == &mons[PM_HAM_TAIROU]) {
+			(void) mongets(mtmp, QUARTERSTAFF);
+			(void) mongets(mtmp, SHORT_SWORD);
+		}
+		if (mtmp->data == &mons[PM_DISASTER]) {
+			(void) mongets(mtmp, SLING);
+			(void) mongets(mtmp, SCYTHE);
+			m_initthrow(mtmp, ROCK, 50);
+		}
+		if (mtmp->data == &mons[PM_CARNAGE_RAT]) {
+			(void) mongets(mtmp, SLING);
+			m_initthrow(mtmp, ROCK, 50);
+			m_initthrow(mtmp, ROCK, 50);
+		}
+		if (mtmp->data == &mons[PM_SHOOTING_HAMSTER]) {
+			(void) mongets(mtmp, PISTOL);
+			m_initthrow(mtmp, BULLET, 30);
+		}
+
 		if (mtmp->data == &mons[PM_QUILL_RAT]) m_initthrow(mtmp, DART, 3);
 		if (mtmp->data == &mons[PM_PRICK_RAT]) m_initthrow(mtmp, DART, 3);
+		if (mtmp->data == &mons[PM_TERRORISM_SQUIRREL]) m_initthrow(mtmp, FRAG_GRENADE, 30);
 
 		if (mtmp->data == &mons[PM_HC_BITCH]) (void) mongets(mtmp, SOFT_SNEAKERS);
+		if (mtmp->data == &mons[PM_HUGE_TUNNEL_MOLE]) (void) mongets(mtmp, SCR_TUNNELS);
 
 		if (mtmp->data == &mons[PM_SPIKE_FIEND]) m_initthrow(mtmp, DART, 5);
 		if (mtmp->data == &mons[PM_THORN_BEAST]) m_initthrow(mtmp, DART, 7);
@@ -8012,6 +8549,8 @@ register struct	monst	*mtmp;
 
           case S_SNAKE:
 		if (mtmp->data == &mons[PM_CLOUD_CATTLE]) (void) mongets(mtmp, SCR_CLOUDS);
+		if (mtmp->data == &mons[PM_HC_STENGLER]) (void) mongets(mtmp, BARDICHE);
+		if (mtmp->data == &mons[PM_INDOCTRINATED_ALIEN]) (void) mongets(mtmp, NASTYPOLE);
 
 		if (mtmp->data == &mons[PM_ARMED_SNAKE]) { (void) mongets(mtmp, ORCISH_BOW); m_initthrow(mtmp, ARROW, 30);}
 
@@ -8067,6 +8606,12 @@ register struct	monst	*mtmp;
 			(void)mongets(mtmp, SLING);
 			(void)mongets(mtmp, ORCISH_HELM);
 		  	m_initthrow(mtmp, ROCK, 40);
+		}
+		if (ptr == &mons[PM_SLEEPING_GIANT]) {
+			(void)mongets(mtmp, SLING);
+		  	m_initthrow(mtmp, ROCK, 50);
+		  	m_initthrow(mtmp, ROCK, 50);
+		  	m_initthrow(mtmp, ROCK, 50);
 		}
 		if (ptr == &mons[PM_CHIHYU]) {
 			(void)mongets(mtmp, BOW);
@@ -8165,6 +8710,7 @@ register struct	monst	*mtmp;
 
 		if (ptr == &mons[PM_SABINE_S_BLOCK_HEELED_SANDAL]) (void)mongets(mtmp, HIGH_HEELED_SANDAL);
 		if (ptr == &mons[PM_BANG_GANG_GIRL]) (void)mongets(mtmp, DANCING_SHOES);
+		if (ptr == &mons[PM_CLIMBING_GIANT]) (void)mongets(mtmp, SCR_MOUNTAINS);
 
 		break;
 
@@ -8313,6 +8859,8 @@ register struct	monst	*mtmp;
 
 	    case S_EEL:
 
+		if (ptr == &mons[PM_CRYSTAL_FISH]) (void)mongets(mtmp, SCR_CRYSTALLIZATION);
+
 		if (ptr == &mons[PM_FRESHWATER_GIRL]) {
 			(void) mongets(mtmp, SOFT_GIRL_SNEAKER);
 			(void) mongets(mtmp, SOFT_SNEAKERS);
@@ -8322,6 +8870,15 @@ register struct	monst	*mtmp;
 		if (ptr == &mons[PM_FLINTFISH]) {
 			(void) mongets(mtmp, FLINTLOCK);
 	  		m_initthrow(mtmp, BULLET, 20);
+		}
+
+		if (ptr == &mons[PM_SNIPE_HERMIT]) {
+			(void) mongets(mtmp, SNIPER_RIFLE);
+	  		m_initthrow(mtmp, BULLET, 50);
+		}
+		if (ptr == &mons[PM_HECK_HERMIT]) {
+			(void) mongets(mtmp, SNIPER_RIFLE);
+	  		m_initthrow(mtmp, BULLET, 50);
 		}
 
 		if (ptr == &mons[PM_CUTTERFISH]) {
@@ -8401,9 +8958,11 @@ register struct	monst	*mtmp;
 				(void) mpickobj(mtmp, otmp, TRUE);
 			}
 		}
+		if (ptr == &mons[PM_WOODICLOUDY]) (void)mongets(mtmp, WOODEN_GETA);
 
 		if (ptr == &mons[PM_BLEACH_GHOST]) m_initthrow(mtmp, CALTROP, 50);
 		if (ptr == &mons[PM_SERBIAN_BOSS]) (void)mongets(mtmp, SWEET_MOCASSINS);
+		if (ptr == &mons[PM_GLAMOUR_HC_BITCH]) (void)mongets(mtmp, LEATHER_PEEP_TOES);
 		if (ptr == &mons[PM_SWARMING_GIRL]) (void)mongets(mtmp, HIGH_HEELED_SANDAL);
 		if (ptr == &mons[PM_GENTLE_GIRL]) (void)mongets(mtmp, BLOCK_HEELED_COMBAT_BOOT);
 
@@ -8514,9 +9073,19 @@ register struct	monst	*mtmp;
 		break;
 	    case S_FLYFISH:
 
+		if (mtmp->data == &mons[PM_FLYSH_EEL]) (void) mongets(mtmp, SCR_DIVING);
+
 		if (mtmp->data == &mons[PM_ANNE_S_SNEAKER]) {
 			(void) mongets(mtmp, SOFT_GIRL_SNEAKER);
 			(void) mongets(mtmp, SOFT_SNEAKERS);
+		}
+
+		if (mtmp->data == &mons[PM_CAPTAIN_SHARK]) {
+			m_initthrow(mtmp, FRAG_GRENADE, 25);
+		}
+
+		if (mtmp->data == &mons[PM_SAILOR_SHARK]) {
+			m_initthrow(mtmp, FRAG_GRENADE, 25);
 		}
 
 		if (mtmp->data == &mons[PM_GUNFISH]) {
@@ -8541,10 +9110,12 @@ register struct	monst	*mtmp;
 
 		if (mtmp->data == &mons[PM_SUESCHEN_S_COMBAT_BOOT]) { (void) mongets(mtmp, BLOCK_HEELED_COMBAT_BOOT); (void) mongets(mtmp, HIPPIE_HEELS); }
 
+		if (ptr == &mons[PM_PORT_LUNA]) (void) mongets(mtmp, SCR_RAIN);
 		if (ptr == &mons[PM_ELUSIVE_LICH]) (void) mongets(mtmp, SCR_ROOT_PASSWORD_DETECTION);
 		if (ishaxor && ptr == &mons[PM_ELUSIVE_LICH]) (void) mongets(mtmp, SCR_ROOT_PASSWORD_DETECTION);
 		if (ptr == &mons[PM_ORE_LICH]) (void) mongets(mtmp, WAN_SUMMON_UNDEAD);
 
+		if (ptr == &mons[PM_YICH]) (void) mongets(mtmp, YITH_TENTACLE);
 		if (ptr == &mons[PM_SWORD_LICH]) (void) mongets(mtmp, SHORT_SWORD);
 		if (ptr == &mons[PM_STARLICH]) (void) mongets(mtmp, MORNING_STAR);
 		if (ptr == &mons[PM_HELMLICH]) {
@@ -8982,6 +9553,7 @@ register struct	monst	*mtmp;
        case S_ZRUTY: /* case S_ZOUTHERN: */
 	      if (ptr == &mons[PM_BANNIK] && !rn2(5)) (void) mongets(mtmp, TOWEL);
 	      if (ptr == &mons[PM_LESHY]) (void) mongets(mtmp, APPLE);
+	      if (ptr == &mons[PM_DESERT_KANGAROO]) (void) mongets(mtmp, SCR_QUICKSAND);
 
 		if (ptr == &mons[PM_MUTATED_UNDEAD_POTATO]) (void) mongets(mtmp, rn2(10) ? POT_MUTATION : WAN_MUTATION);
 	      if (ptr == &mons[PM_FRANZI_S_WEDGE_SANDAL]) { mongets(mtmp, WEDGE_SANDALS); mongets(mtmp, WEDGED_LITTLE_GIRL_SANDAL); }
@@ -8994,6 +9566,8 @@ register struct	monst	*mtmp;
 		if (monsndx(ptr) == PM_NICHOLAS_D__WOLFWOOD) { (void) mongets(mtmp, ROCKET_LAUNCHER); m_initthrow(mtmp, ROCKET, 10); }
 	      if (ptr == &mons[PM_EVELINE_S_SNEAKER]) (void) mongets(mtmp, SOFT_SNEAKERS);
 	      if (ptr == &mons[PM_EVELINE_S_DANCING_SHOE]) (void) mongets(mtmp, DANCING_SHOES);
+	      if (ptr == &mons[PM_TRAM_VORTEX]) (void) mongets(mtmp, WAN_TREMBLING);
+	      if (ptr == &mons[PM_UNEXPECTED_WHIRLWIND]) (void) mongets(mtmp, NASTYPOLE);
 
 	    break;
 
@@ -9014,10 +9588,15 @@ register struct	monst	*mtmp;
 		if (ptr == &mons[PM_LAURA_S_SOFT_MOCASSIN]) (void) mongets(mtmp, SWEET_MOCASSINS);
 
 		if (ptr == &mons[PM_IMBA_WATER_ELEMENTAL]) (void) mongets(mtmp, WAN_TIDAL_WAVE);
+		if (ptr == &mons[PM_NORTHERN_HUSSY_GIRL]) (void) mongets(mtmp, NASTYPOLE);
 
 		if (ptr == &mons[PM_ULTRA_ELEMENTAL]) {
 			(void) mongets(mtmp, SCR_ELEMENTALISM);
 			(void) mongets(mtmp, SCR_ELEMENTALISM);
+		}
+		if (ptr == &mons[PM_WEDGE_BEAUTY]) {
+			(void) mongets(mtmp, WEDGE_SANDALS);
+			(void) mongets(mtmp, SCR_NASTY_CURSE);
 		}
 
 		/* evil patch idea by jonadab; he wants them to turn the tile a player is on into lava
@@ -9026,7 +9605,7 @@ register struct	monst	*mtmp;
 
 		if (ptr == &mons[PM_THEMATIC_ASTRAL_ELEMENTAL]) (void) mongets(mtmp, rn2(10) ? SCR_BAD_EFFECT : WAN_BAD_EFFECT);
 
-		break;	
+		break;
 	    case S_VAMPIRE:
 		/* [Lethe] Star and fire vampires don't get this stuff */
 		if (ptr == &mons[PM_STAR_VAMPIRE] || ptr == &mons[PM_VAMPIROID] || 
@@ -9035,22 +9614,27 @@ register struct	monst	*mtmp;
 	    	/* Get opera cloak */
 /*	    	otmp = readobjnam(opera_cloak);
 		if (otmp && otmp != &zeroobj) mpickobj(mtmp, otmp, TRUE);*/
-		for (i = STRANGE_OBJECT; i < NUM_OBJECTS; i++) {
-			register const char *zn;
-			if ((zn = OBJ_DESCR(objects[i])) && !strcmpi(zn, "opera cloak")) {
-				if (!OBJ_NAME(objects[i])) i = STRANGE_OBJECT;
-				break;
+
+		/* Amy edit: but only if the vampire is at least level 5 */
+		if (ptr->mlevel >= 5) {
+			for (i = STRANGE_OBJECT; i < NUM_OBJECTS; i++) {
+				register const char *zn;
+				if ((zn = OBJ_DESCR(objects[i])) && !strcmpi(zn, "opera cloak")) {
+					if (!OBJ_NAME(objects[i])) i = STRANGE_OBJECT;
+					break;
+				}
+				if ((zn = OBJ_DESCR(objects[i])) && !strcmpi(zn, "nakidka")) {
+					if (!OBJ_NAME(objects[i])) i = STRANGE_OBJECT;
+					break;
+				}
+				if ((zn = OBJ_DESCR(objects[i])) && !strcmpi(zn, "operasi plash")) {
+					if (!OBJ_NAME(objects[i])) i = STRANGE_OBJECT;
+					break;
+				}
 			}
-			if ((zn = OBJ_DESCR(objects[i])) && !strcmpi(zn, "nakidka")) {
-				if (!OBJ_NAME(objects[i])) i = STRANGE_OBJECT;
-				break;
-			}
-			if ((zn = OBJ_DESCR(objects[i])) && !strcmpi(zn, "operasi plash")) {
-				if (!OBJ_NAME(objects[i])) i = STRANGE_OBJECT;
-				break;
-			}
+			if (i != NUM_OBJECTS) (void)mongets(mtmp, i);
 		}
-		if (i != NUM_OBJECTS) (void)mongets(mtmp, i);
+
 		if (rn2(2)) {
 		    if ((int) mtmp->m_lev > rn2(30))
 			(void)mongets(mtmp, POT_VAMPIRE_BLOOD);
@@ -9059,6 +9643,7 @@ register struct	monst	*mtmp;
 		}
 
 		if(ptr == &mons[PM_SING_S_PLATEAU_BOOT]) (void) mongets(mtmp, STURDY_PLATEAU_BOOT_FOR_GIRLS);
+		if(ptr == &mons[PM_GRASS_VAMPIRE]) (void) mongets(mtmp, SCR_GRASSLAND);
 
 		if (ptr == &mons[PM_ANTI_VAMPIRE]) {
 			(void) mongets(mtmp, DEMON_CROSSBOW);
@@ -9113,6 +9698,7 @@ register struct	monst	*mtmp;
 		if(ptr == &mons[PM_FRIEDERIKE_S_SOFT_DANCING_SHOE]) (void) mongets(mtmp, DANCING_SHOES);
 		if(ptr == &mons[PM_FRIEDERIKE_S_LADY_PUMP]) { (void) mongets(mtmp, SEXY_LEATHER_PUMP); (void) mongets(mtmp, FEMININE_PUMPS); }
 		if(ptr == &mons[PM_VILE_DEMON]) (void) mongets(mtmp, SCR_VILENESS);
+		if(ptr == &mons[PM_PLANE_DEMON]) (void) mongets(mtmp, SCR_ASH);
 
 		if(ptr == &mons[PM_SPINED_REVIL]) (void) mongets(mtmp, IRON_SABER);
 		if(ptr == &mons[PM_PIRATE_DEVIL]) (void) mongets(mtmp, IRON_SABER);
@@ -9244,6 +9830,7 @@ register struct	monst	*mtmp;
 		if(ptr == &mons[PM_SUPER_DEMON]) (void) mongets(mtmp, SCR_DEMONOLOGY);
 		if(ptr == &mons[PM_SLOPPY_SLOTH]) (void) mongets(mtmp, WAN_INERTIA);
 
+		if(ptr == &mons[PM_HYBRID_BASTARD]) (void) mongets(mtmp, SCR_HYBRIDIZATION);
 		if(ptr == &mons[PM_DEADLY_SIN]) (void) mongets(mtmp, SCR_SIN);
 		if(ptr == &mons[PM_ICON_OF_SIN]) (void) mongets(mtmp, WAN_SIN);
 
@@ -9408,6 +9995,17 @@ register struct	monst	*mtmp;
 			 m_initthrow(mtmp, ROCKET, 10);
 		}
 
+		if (monsndx(ptr) == PM_CUPID_OF_LOVE) {
+			(void) mongets(mtmp,BOW);
+			 m_initthrow(mtmp, ARROW, 20);
+		}
+
+		if (monsndx(ptr) == PM_CUPID_OF_DEATH) {
+			(void) mongets(mtmp,BOW);
+			 m_initthrow(mtmp, ARROW, 50);
+			 m_initthrow(mtmp, ARROW, 50);
+		}
+
 		if (monsndx(ptr) == PM_MISS_GENTLE_BUNDLE) {
 			(void) mongets(mtmp, SOFT_GIRL_SNEAKER);
 			(void) mongets(mtmp, SWEET_MOCASSINS);
@@ -9416,6 +10014,7 @@ register struct	monst	*mtmp;
 		if (mtmp->data == &mons[PM_HC_SEX_PRINCESS]) (void) mongets(mtmp, HIPPIE_HEELS);
 
 		if (mtmp->data == &mons[PM_BATTIE]) (void) mongets(mtmp, IRON_SABER);
+		if (mtmp->data == &mons[PM_TERRARCHON]) (void) mongets(mtmp, WAN_CONTAMINATION);
 
 		if (mtmp->data == &mons[PM_SWINGATL]) {
 			(void) mongets(mtmp, SHORT_SWORD);
@@ -9524,6 +10123,7 @@ register struct	monst	*mtmp;
  
 	    case S_XAN:
 		if (ptr == &mons[PM_RANDOM_MONSTER_GENERATOR]) (void) mongets(mtmp, SCR_GROUP_SUMMONING);
+		if (ptr == &mons[PM_EXTREMELY_CONTAMINATED_BUG]) (void) mongets(mtmp, SCR_STYX);
 		if (ptr == &mons[PM_KATIA_S_LEATHER_BOOT]) { (void) mongets(mtmp, BLOCK_HEELED_COMBAT_BOOT); (void) mongets(mtmp, HIPPIE_HEELS); }
 
 		if (monsndx(ptr) == PM_DEEP_THOUGHT) {
@@ -9539,6 +10139,9 @@ register struct	monst	*mtmp;
 	    case S_WALLMONST:
 
 		if (ptr == &mons[PM_DILATIONAL_BLACK_HOLE]) (void) mongets(mtmp, SCR_ANTIMATTER);
+		if (ptr == &mons[PM_STARLIT_WALL]) (void) mongets(mtmp, WAN_FLEECY_TERRAIN);
+		if (ptr == &mons[PM_EXTRA_STARLIT_WALL]) (void) mongets(mtmp, WAN_FLEECY_TERRAIN);
+		if (ptr == &mons[PM_SYL_STARLIT_WALL]) (void) mongets(mtmp, WAN_FLEECY_TERRAIN);
 
  		break;
 
@@ -9550,6 +10153,8 @@ register struct	monst	*mtmp;
 		if (ptr == &mons[PM_KATI_S_HIGH_HEELED_BOOT]) { (void) mongets(mtmp, INKA_BOOT); (void) mongets(mtmp, HIPPIE_HEELS); }
 		if (ptr == &mons[PM_KATI_S_PLATEAU_BOOT]) (void) mongets(mtmp, STURDY_PLATEAU_BOOT_FOR_GIRLS);
 		if (ptr == &mons[PM_KATI_S_BALLERINA]) (void) mongets(mtmp, SWEET_MOCASSINS);
+
+		if (ptr == &mons[PM_HIBERNAL_YETI]) (void) mongets(mtmp, SCR_SNOW);
 
 		if (monsndx(ptr) == PM_ZAPHOD_BREEBLEBROX) {
 			otmp = mksobj(POT_PAN_GALACTIC_GARGLE_BLASTE,FALSE,FALSE);
@@ -9589,6 +10194,7 @@ register struct	monst	*mtmp;
 		if (ptr == &mons[PM_DWARVEN_MESSENGER]) (void) mongets(mtmp, SCR_SUMMON_BOSS);
 		if (ptr == &mons[PM_LEGENDARY_HOBBIT_ROGUE]) (void) mongets(mtmp, SCR_TRAP_CREATION);
 		if (ptr == &mons[PM_CZECH_GIRL]) (void) mongets(mtmp, HIPPIE_HEELS);
+		if (ptr == &mons[PM_YITHIAN_MIND_FLAYER]) (void) mongets(mtmp, YITH_TENTACLE);
 		if (ptr == &mons[PM_VIETNAMESE_BEAUTY]) (void) mongets(mtmp, HIGH_STILETTOS);
 		if (ptr == &mons[PM_SWEET_SISTER]) (void) mongets(mtmp, SOFT_SNEAKERS);
 		if (ptr == &mons[PM_PSEUDO_MERMAID]) (void) mongets(mtmp, STURDY_PLATEAU_BOOT_FOR_GIRLS);
@@ -9663,6 +10269,7 @@ register struct	monst	*mtmp;
 	    case S_EYE:
 		if (ptr == &mons[PM_OAK_SAGE]) (void) mongets(mtmp, POT_FULL_HEALING);
 		if (ptr == &mons[PM_VISOR]) (void) mongets(mtmp, WAN_MAKE_VISIBLE);
+		if (ptr == &mons[PM_NASTY_HC_GIRL]) (void) mongets(mtmp, NASTYPOLE);
 
 		if (ptr == &mons[PM_BANG_BAG]) m_initthrow(mtmp, FRAG_GRENADE, 7);
 
@@ -9694,8 +10301,21 @@ register struct	monst	*mtmp;
 
  		break;
 	    case S_SPIDER:
-		if (ptr == &mons[PM_CAMPER_ASSHOLE]) { (void)mongets(mtmp, SNIPER_RIFLE);
-			 m_initthrow(mtmp, BULLET, 10);
+		if (ptr == &mons[PM_CAMPER_ASSHOLE]) {
+			(void)mongets(mtmp, SNIPER_RIFLE);
+			m_initthrow(mtmp, BULLET, 10);
+
+		}
+		if (ptr == &mons[PM_EK_CHUAH]) {
+			(void)mongets(mtmp, CROSSBOW);
+			m_initthrow(mtmp, CROSSBOW_BOLT, 50);
+
+		}
+
+		if (ptr == &mons[PM_KALACHNOTRON]) {
+			(void)mongets(mtmp, KALASHNIKOV);
+			m_initthrow(mtmp, BULLET, 50);
+			m_initthrow(mtmp, BULLET, 50);
 
 		}
 
@@ -9729,6 +10349,7 @@ register struct	monst	*mtmp;
 		}
 
 		if (mtmp->data == &mons[PM_HC_MODEL]) (void) mongets(mtmp, DANCING_SHOES);
+		if (mtmp->data == &mons[PM_FEMMY_IN_PLATFORM_BOOTS]) (void) mongets(mtmp, HIPPIE_HEELS);
 
 		if (ptr == &mons[PM_RICHEST_MAN_OF_THE_WORLD]) {
 		    mtmp->mgold += (long)rn1(20, 200);
@@ -14647,6 +15268,7 @@ xchar x, y;	/* clone's preferred location or 0 (near mon) */
 	m2->my = mm.y;
 
 	m2->minvent = (struct obj *) 0; /* objects don't clone */
+	MON_NOWEP(m2); /* stupid monster weapon pointer was causing phantom crash bugs on hdf-us! --Amy */
 	m2->mleashed = FALSE;
 #ifndef GOLDOBJ
 	m2->mgold = 0L;
@@ -14717,6 +15339,9 @@ xchar x, y;	/* clone's preferred location or 0 (near mon) */
 	    }
 	}
 	set_malign(m2);
+
+	/* found by Antichthon: the new monster says it's saddled when it really isn't? --Amy */
+	m2->misc_worn_check &= ~W_SADDLE;
 
 	return m2;
 }
@@ -14893,9 +15518,10 @@ register int	mmflags;
 	   mtmp->m_lev = (1 + rn2(base_you) + rn2(base_lev) / 2)+1;
 	}
 
-	if (ptr == &mons[PM_BLACKY] || ptr == &mons[PM_WHITLEVEL_KOP] || ptr == &mons[PM_BLAKLEVEL_KOP] || ptr == &mons[PM_GREYLEVEL_KOP] || ptr == &mons[PM_RNGED_KOP] || ptr == &mons[PM_EXMINATOR_KOP]) {
+	if (ptr == &mons[PM_BLACKY] || ptr == &mons[PM_EROTICLOUDY] || ptr == &mons[PM_WOODICLOUDY] || ptr == &mons[PM_SCENTICLOUDY] || ptr == &mons[PM_WHITLEVEL_KOP] || ptr == &mons[PM_BLAKLEVEL_KOP] || ptr == &mons[PM_GREYLEVEL_KOP] || ptr == &mons[PM_RNGED_KOP] || ptr == &mons[PM_EXMINATOR_KOP]) {
 	   /* blacky too --Amy */
 	   /* and specific kop types */
+	   /* and the claudia trap monsters */
 	   int base_you, base_lev;
 	   base_you = (u.ulevel / 2)+1;
 	   base_lev = level_difficulty()+1;
@@ -15048,6 +15674,7 @@ register int	mmflags;
 	place_monster(mtmp, x, y);
 	mtmp->mcansee = mtmp->mcanmove = TRUE;
 	mtmp->mpeaceful = (mmflags & MM_ANGRY) ? FALSE : peace_minded(ptr);
+	if (!mtmp->mpeaceful && (mmflags & MM_FRENZIED) && !rn2(3)) mtmp->mfrenzied = TRUE;
 	mtmp->mtraitor  = FALSE;
 	mtmp->masleep = 0;
 
@@ -15113,6 +15740,8 @@ register int	mmflags;
 	/* maybe generate a sleeping monster */
 
 	if (!rn2(Aggravate_monster ? 500 : 100) && (!u.uhave.amulet || (!u.amuletcompletelyimbued && rn2(3)))) mtmp->msleeping = 1;
+
+	if (ptr == &mons[PM_SLEEPING_GIANT]) mtmp->msleeping = 1;
 
 	/* or an invisible one, based on an evil patch idea by jonadab */
 
@@ -15559,6 +16188,7 @@ register int	mmflags;
 		case S_IMP:
 			if (mndx == PM_COCOON_IMP) set_mimic_sym(mtmp);
 			if (mndx == PM_HIDDEN_RUTTERKIN) set_mimic_sym(mtmp);
+			if (mndx == PM_BERBALANG_GHOST) {mtmp->minvis = TRUE; mtmp->perminvis = TRUE;}
 
 			break;
 		case S_LIZARD:
@@ -16111,6 +16741,7 @@ register int	mmflags;
 			break;
 		case S_QUADRUPED:
 			if (mtmp->data == &mons[PM_BLENDING_TITANOTHERE]) set_mimic_sym(mtmp);
+			if (mndx == PM_ASTRAY_SHEEP) {mtmp->minvis = TRUE; mtmp->perminvis = TRUE;}
 			break;
 		case S_VORTEX:
 			if (mtmp->data == &mons[PM_MIMIC_VORTEX]) set_mimic_sym(mtmp);
@@ -16170,7 +16801,7 @@ register int	mmflags;
 			break;
 		case S_LIGHT:
 		case S_ELEMENTAL:
-			if (mndx == PM_STALKER || mndx == PM_FORCE_STALKER || mndx == PM_STONE_STALKER || mndx == PM_THE_HIDDEN || mndx == PM_INVISIBLE_BADGUY || mndx == PM_UNSEEN_POTATO || mndx == PM_CAMOUFLAGED_WATCHER || mndx == PM_UNSEEN_SERVANT || mndx == PM_HIDDEN_TRACKER || mndx == PM_SILENT_KILLER || mndx == PM_ILLUSION_WEAVER || mndx == PM_PAIN_MASTER || mndx == PM_PAIN_MISTER || mndx == PM_BLACK_LIGHT || mndx == PM_WEREBLACKLIGHT || mndx == PM_CHEATING_BLACK_LIGHT || mndx == PM_INVISIBLE_SPIRIT || mndx == PM_BLACK_LASER || mndx == PM_BLACK_BULB || mndx == PM_BLACK_BOOMER || mndx == PM_BLACK_STAR || mndx == PM_BLACK_BEAM || mndx == PM_BLACK_RAY || mndx == PM_POLTERGEIST || mndx == PM_WERESTALKER) {
+			if (mndx == PM_STALKER || mndx == PM_FORCE_STALKER || mndx == PM_STONE_STALKER || mndx == PM_THE_HIDDEN || mndx == PM_INVISIBLE_BADGUY || mndx == PM_UNSEEN_POTATO || mndx == PM_CAMOUFLAGED_WATCHER || mndx == PM_UNSEEN_SERVANT || mndx == PM_SCHEDAU_STALKER || mndx == PM_HIDDEN_TRACKER || mndx == PM_SILENT_KILLER || mndx == PM_ILLUSION_WEAVER || mndx == PM_PAIN_MASTER || mndx == PM_PAIN_MISTER || mndx == PM_BLACK_LIGHT || mndx == PM_WEREBLACKLIGHT || mndx == PM_CHEATING_BLACK_LIGHT || mndx == PM_INVISIBLE_SPIRIT || mndx == PM_BLACK_LASER || mndx == PM_BLACK_BULB || mndx == PM_BLACK_BOOMER || mndx == PM_BLACK_STAR || mndx == PM_BLACK_BEAM || mndx == PM_BLACK_RAY || mndx == PM_POLTERGEIST || mndx == PM_WERESTALKER) {
 			    mtmp->perminvis = TRUE;
 			    mtmp->minvis = TRUE;
 			}
@@ -16229,6 +16860,7 @@ register int	mmflags;
 			if (mtmp->data == &mons[PM_FLYING_CAMO_FISH]) set_mimic_sym(mtmp);
 			if (ptr == &mons[PM_STALKISH]) {mtmp->minvis = TRUE; mtmp->perminvis = TRUE;}
 			if (ptr == &mons[PM_UBER_STALKISH]) {mtmp->minvis = TRUE; mtmp->perminvis = TRUE;}
+			if (ptr == &mons[PM_JELLYFISH_KRAKEN]) {mtmp->minvis = TRUE; mtmp->perminvis = TRUE;}
 			break;
 		case S_PUDDING:
 			if (ptr == &mons[PM_PHANTOM]) {mtmp->minvis = TRUE; mtmp->perminvis = TRUE;}
@@ -16349,7 +16981,7 @@ register int	mmflags;
 
 			if (rn2(5) && (!u.uhave.amulet || (!u.amuletcompletelyimbued && rn2(3)) )) mtmp->msleeping = 1;
 
-			if (mndx == PM_PIXIE || mndx == PM_HIDING_PIXIE || mndx == PM_ARMPIXIE || mndx == PM_PIXIE_ARCHER) {        
+			if (mndx == PM_PIXIE || mndx == PM_ELOPIXIE || mndx == PM_HIDING_PIXIE || mndx == PM_ARMPIXIE || mndx == PM_PIXIE_ARCHER) {        
   			    mtmp->perminvis = TRUE;
   			    mtmp->minvis = TRUE;
 			}
@@ -16526,7 +17158,7 @@ register int	mmflags;
 		mitem = CANDELABRUM_OF_INVOCATION;
 	} else if (mndx == PM_CROESUS) {
 		mitem = TWO_HANDED_SWORD;
-	} else if (ptr->msound == MS_NEMESIS && ptr->mlet != S_NEMESE && mndx != PM_TRUE_MISSINGNO && mndx != PM_ETHEREAL_MISSINGNO && mndx != PM_STARLIT_SKY && mndx != PM_MISNAMED_STARLIT_SKY && mndx != PM_WRONG_NAMED_STARLIT_SKY && mndx != PM_ERRONEOUS_STARLIT_SKY && mndx != PM_DARK_STARLIT_SKY && mndx != PM_BLACK_STARLIT_SKY && mndx != PM_RED_STARLIT_SKY && mndx != PM_BROWN_STARLIT_SKY && mndx != PM_GREEN_STARLIT_SKY && mndx != PM_PURPLE_STARLIT_SKY && mndx != PM_YELLOW_STARLIT_SKY && mndx != PM_ORANGE_STARLIT_SKY && mndx != PM_CYAN_STARLIT_SKY && mndx != PM_VIOLET_STARLIT_SKY && mndx != PM_POLYINITOR && mndx != PM_DESTABILIZER && mndx >= PM_LORD_CARNARVON && mndx <= PM_UPPER_BULL) {
+	} else if (ptr->msound == MS_NEMESIS && mndx >= PM_LORD_CARNARVON && mndx <= PM_UPPER_BULL) {
 		mitem = BELL_OF_OPENING; /* prevent new random nemesis monsters from dropping the bell --Amy */
 	} else if (mndx == PM_PESTILENCE) {
 		mitem = POT_SICKNESS;
@@ -17598,6 +18230,8 @@ loopback:
 		if (ct > 0 && (Race_if(PM_DESTABILIZER) && dmgtype(ptr, AD_LITT))) ct += 1;
 		if (ct > 0 && (Race_if(PM_DOPPELGANGER) && dmgtype(ptr, AD_RNG))) ct += 2;
 		if (ct > 0 && (Race_if(PM_HEMI_DOPPELGANGER) && dmgtype(ptr, AD_RNG))) ct += 1;
+		if (ct > 0 && (Race_if(PM_PLAYER_GOLEM) && dmgtype(ptr, AD_FAMN))) ct += 20;
+		if (ct > 0 && (Race_if(PM_PLAYER_JABBERWOCK) && bigmonst(ptr))) ct += 1;
 		if (ct > 0 && (Race_if(PM_HERBALIST) && dmgtype(ptr, AD_LITT))) ct += 4;
 		if (ct > 0 && (Race_if(PM_HERBALIST) && (ptr->msound == MS_STENCH))) ct += 5;
 		if (ct > 0 && (Race_if(PM_RODNEYAN) && (ptr->msound == MS_STENCH))) ct += 4;
@@ -17643,6 +18277,27 @@ loopback:
 		if (ct > 0 && (Role_if(PM_GANG_SCHOLAR) && (ptr->msound == MS_STENCH) )) ct += 50;
 		if (ct > 0 && (Role_if(PM_GANG_SCHOLAR) && is_jokemonster(ptr) )) ct += 100;
 		if (ct > 0 && (Role_if(PM_GANG_SCHOLAR) && is_cowmonster(ptr) )) ct += 20;
+		if (ct > 0 && (Role_if(PM_WALSCHOLAR) && is_jokemonster(ptr) )) ct += 20;
+		if (ct > 0 && (Role_if(PM_WALSCHOLAR) && (ptr->msound == MS_FART_NORMAL) )) ct += 5;
+		if (ct > 0 && (Role_if(PM_WALSCHOLAR) && (ptr->msound == MS_FART_QUIET) )) ct += 5;
+		if (ct > 0 && (Role_if(PM_WALSCHOLAR) && (ptr->msound == MS_FART_LOUD) )) ct += 5;
+		if (ct > 0 && (Role_if(PM_WALSCHOLAR) && (ptr->msound == MS_STENCH) )) ct += 20;
+		if (ct > 0 && (Role_if(PM_WALSCHOLAR) && (ptr->msound == MS_CONVERT) )) ct += 5;
+		if (ct > 0 && (Role_if(PM_WALSCHOLAR) && (ptr->msound == MS_HCALIEN) )) ct += 5;
+		if (ct > 0 && (Role_if(PM_CELLAR_CHILD) && is_angbandmonster(ptr) )) ct += 20;
+		if (ct > 0 && (Role_if(PM_DEMAGOGUE) && (ptr->mlet == S_KOP))) ct += 5;
+		if (ct > 0 && (Role_if(PM_DEMAGOGUE) && (ptr->mresists & MR_PLUSFOUR))) ct += 1;
+		if (ct > 0 && (Role_if(PM_SOCIAL_JUSTICE_WARRIOR) && (ptr->mflags2 & M2_DEMON) )) ct += 5;
+		if (ct > 0 && (Role_if(PM_DEMAGOGUE) && (ptr->mflags3 & M3_NOTAME) )) ct += 2;
+		if (ct > 0 && (Race_if(PM_DEMAGOGUE) && dmgtype(ptr, AD_WTHR) )) ct += 2;
+		if (ct > 0 && (Race_if(PM_DEMAGOGUE) && dmgtype(ptr, AD_LETH) )) ct += 1;
+		if (ct > 0 && (Race_if(PM_DEMAGOGUE) && dmgtype(ptr, AD_CNCL) )) ct += 2;
+		if (ct > 0 && (Race_if(PM_DEMAGOGUE) && dmgtype(ptr, AD_SIN) )) ct += 2;
+		if (ct > 0 && (Race_if(PM_DEMAGOGUE) && dmgtype(ptr, AD_DEST) )) ct += 2;
+		if (ct > 0 && (Race_if(PM_DEMAGOGUE) && dmgtype(ptr, AD_AGGR) )) ct += 5;
+		if (ct > 0 && (Race_if(PM_CELLAR_CHILD) && dmgtype(ptr, AD_SANI) )) ct += 5;
+		if (ct > 0 && (Race_if(PM_SOCIAL_JUSTICE_WARRIOR) && dmgtype(ptr, AD_BANI) )) ct += 1;
+		if (ct > 0 && (Race_if(PM_SOCIAL_JUSTICE_WARRIOR) && dmgtype(ptr, AD_DFOO) )) ct += 2;
 		if (ct > 0 && (Race_if(PM_HUMANOID_ANGEL) && is_evilpatchmonster(ptr))) ct += 5;
 		if (ct > 0 && (Role_if(PM_PSION) && is_evilpatchmonster(ptr))) ct += 10;
 		if (ct > 0 && (Race_if(PM_DOPPELGANGER) && is_evilpatchmonster(ptr))) ct += 2;
@@ -18396,6 +19051,8 @@ int     spc;
 		if ((Race_if(PM_DESTABILIZER) && dmgtype(&mons[last], AD_LITT))) num += 1;
 		if ((Race_if(PM_DOPPELGANGER) && dmgtype(&mons[last], AD_RNG))) num += 2;
 		if ((Race_if(PM_HEMI_DOPPELGANGER) && dmgtype(&mons[last], AD_RNG))) num += 1;
+		if ((Race_if(PM_PLAYER_GOLEM) && dmgtype(&mons[last], AD_FAMN))) num += 20;
+		if ((Race_if(PM_PLAYER_JABBERWOCK) && bigmonst(&mons[last]))) num += 1;
 		if ((Race_if(PM_HERBALIST) && dmgtype(&mons[last], AD_LITT))) num += 4;
 		if ((Race_if(PM_HERBALIST) && (mons[last].msound == MS_STENCH))) num += 5;
 		if ((Race_if(PM_RODNEYAN) && (mons[last].msound == MS_STENCH))) num += 4;
@@ -18441,6 +19098,28 @@ int     spc;
 		if ((Role_if(PM_GANG_SCHOLAR) && (mons[last].msound == MS_STENCH) )) num += 50;
 		if ((Role_if(PM_GANG_SCHOLAR) && is_jokemonster(&mons[last]) )) num += 100;
 		if ((Role_if(PM_GANG_SCHOLAR) && is_cowmonster(&mons[last]) )) num += 20;
+
+		if ((Role_if(PM_WALSCHOLAR) && is_jokemonster(&mons[last]) )) num += 20;
+		if ((Role_if(PM_WALSCHOLAR) && (mons[last].msound == MS_FART_NORMAL) )) num += 5;
+		if ((Role_if(PM_WALSCHOLAR) && (mons[last].msound == MS_FART_QUIET) )) num += 5;
+		if ((Role_if(PM_WALSCHOLAR) && (mons[last].msound == MS_FART_LOUD) )) num += 5;
+		if ((Role_if(PM_WALSCHOLAR) && (mons[last].msound == MS_STENCH) )) num += 20;
+		if ((Role_if(PM_WALSCHOLAR) && (mons[last].msound == MS_CONVERT) )) num += 5;
+		if ((Role_if(PM_WALSCHOLAR) && (mons[last].msound == MS_HCALIEN) )) num += 5;
+		if ((Role_if(PM_CELLAR_CHILD) && is_angbandmonster(&mons[last]) )) num += 20;
+		if ((Role_if(PM_DEMAGOGUE) && (mons[last].mresists & MR_PLUSFOUR))) num += 1;
+		if ((Role_if(PM_SOCIAL_JUSTICE_WARRIOR) && (mons[last].mflags2 & M2_DEMON) )) num += 5;
+		if ((Role_if(PM_DEMAGOGUE) && (mons[last].mflags3 & M3_NOTAME) )) num += 2;
+		if ((Race_if(PM_DEMAGOGUE) && dmgtype(&mons[last], AD_WTHR) )) num += 2;
+		if ((Race_if(PM_DEMAGOGUE) && dmgtype(&mons[last], AD_LETH) )) num += 1;
+		if ((Race_if(PM_DEMAGOGUE) && dmgtype(&mons[last], AD_CNCL) )) num += 2;
+		if ((Race_if(PM_DEMAGOGUE) && dmgtype(&mons[last], AD_SIN) )) num += 2;
+		if ((Race_if(PM_DEMAGOGUE) && dmgtype(&mons[last], AD_DEST) )) num += 2;
+		if ((Race_if(PM_DEMAGOGUE) && dmgtype(&mons[last], AD_AGGR) )) num += 5;
+		if ((Race_if(PM_CELLAR_CHILD) && dmgtype(&mons[last], AD_SANI) )) num += 5;
+		if ((Race_if(PM_SOCIAL_JUSTICE_WARRIOR) && dmgtype(&mons[last], AD_BANI) )) num += 1;
+		if ((Race_if(PM_SOCIAL_JUSTICE_WARRIOR) && dmgtype(&mons[last], AD_DFOO) )) num += 2;
+
 		if ((Race_if(PM_HUMANOID_ANGEL) && is_evilpatchmonster(&mons[last]))) num += 5;
 		if ((Role_if(PM_PSION) && is_evilpatchmonster(&mons[last]))) num += 10;
 		if ((Race_if(PM_DOPPELGANGER) && is_evilpatchmonster(&mons[last]))) num += 2;
@@ -18910,6 +19589,8 @@ int     spc;
 		if ((Race_if(PM_DESTABILIZER) && dmgtype(&mons[first], AD_LITT))) num -= 1;
 		if ((Race_if(PM_DOPPELGANGER) && dmgtype(&mons[first], AD_RNG))) num -= 2;
 		if ((Race_if(PM_HEMI_DOPPELGANGER) && dmgtype(&mons[first], AD_RNG))) num -= 1;
+		if ((Race_if(PM_PLAYER_GOLEM) && dmgtype(&mons[first], AD_FAMN))) num -= 20;
+		if ((Race_if(PM_PLAYER_JABBERWOCK) && bigmonst(&mons[first]))) num -= 1;
 		if ((Race_if(PM_HERBALIST) && dmgtype(&mons[first], AD_LITT))) num -= 4;
 		if ((Race_if(PM_HERBALIST) && (mons[first].msound == MS_STENCH))) num -= 5;
 		if ((Race_if(PM_RODNEYAN) && (mons[first].msound == MS_STENCH))) num -= 4;
@@ -18955,6 +19636,28 @@ int     spc;
 		if ((Role_if(PM_GANG_SCHOLAR) && (mons[first].msound == MS_STENCH) )) num -= 50;
 		if ((Role_if(PM_GANG_SCHOLAR) && is_jokemonster(&mons[first]) )) num -= 100;
 		if ((Role_if(PM_GANG_SCHOLAR) && is_cowmonster(&mons[first]) )) num -= 20;
+
+		if ((Role_if(PM_WALSCHOLAR) && is_jokemonster(&mons[first]) )) num -= 20;
+		if ((Role_if(PM_WALSCHOLAR) && (mons[first].msound == MS_FART_NORMAL) )) num -= 5;
+		if ((Role_if(PM_WALSCHOLAR) && (mons[first].msound == MS_FART_QUIET) )) num -= 5;
+		if ((Role_if(PM_WALSCHOLAR) && (mons[first].msound == MS_FART_LOUD) )) num -= 5;
+		if ((Role_if(PM_WALSCHOLAR) && (mons[first].msound == MS_STENCH) )) num -= 20;
+		if ((Role_if(PM_WALSCHOLAR) && (mons[first].msound == MS_CONVERT) )) num -= 5;
+		if ((Role_if(PM_WALSCHOLAR) && (mons[first].msound == MS_HCALIEN) )) num -= 5;
+		if ((Role_if(PM_CELLAR_CHILD) && is_angbandmonster(&mons[first]) )) num -= 20;
+		if ((Role_if(PM_DEMAGOGUE) && (mons[first].mresists & MR_PLUSFOUR))) num -= 1;
+		if ((Role_if(PM_SOCIAL_JUSTICE_WARRIOR) && (mons[first].mflags2 & M2_DEMON) )) num -= 5;
+		if ((Role_if(PM_DEMAGOGUE) && (mons[first].mflags3 & M3_NOTAME) )) num -= 2;
+		if ((Race_if(PM_DEMAGOGUE) && dmgtype(&mons[first], AD_WTHR) )) num -= 2;
+		if ((Race_if(PM_DEMAGOGUE) && dmgtype(&mons[first], AD_LETH) )) num -= 1;
+		if ((Race_if(PM_DEMAGOGUE) && dmgtype(&mons[first], AD_CNCL) )) num -= 2;
+		if ((Race_if(PM_DEMAGOGUE) && dmgtype(&mons[first], AD_SIN) )) num -= 2;
+		if ((Race_if(PM_DEMAGOGUE) && dmgtype(&mons[first], AD_DEST) )) num -= 2;
+		if ((Race_if(PM_DEMAGOGUE) && dmgtype(&mons[first], AD_AGGR) )) num -= 5;
+		if ((Race_if(PM_CELLAR_CHILD) && dmgtype(&mons[first], AD_SANI) )) num -= 5;
+		if ((Race_if(PM_SOCIAL_JUSTICE_WARRIOR) && dmgtype(&mons[first], AD_BANI) )) num -= 1;
+		if ((Race_if(PM_SOCIAL_JUSTICE_WARRIOR) && dmgtype(&mons[first], AD_DFOO) )) num -= 2;
+
 		if ((Race_if(PM_HUMANOID_ANGEL) && is_evilpatchmonster(&mons[first]))) num -= 5;
 		if ((Role_if(PM_PSION) && is_evilpatchmonster(&mons[first]))) num -= 10;
 		if ((Race_if(PM_DOPPELGANGER) && is_evilpatchmonster(&mons[first]))) num -= 2;
@@ -19365,12 +20068,27 @@ golemhp(type)
 int type;
 {
 	switch(type) {
+		case PM_BABY_SHOE: return 10;
 		case PM_KARAKASA: return 30;
 		case PM_RETARDED_GOLEM: return 30;
 		case PM_FLEECY_LEATHER_GOLEM: return 80;
 		case PM_DENT_GOLEM: return 100;
+		case PM_ELOBLOOD_GOLEM: return 500;
+		case PM_MUSCLE_GOLEM: return 600;
+		case PM_ELOWOODEN_GOLEM: return 100;
+		case PM_SKY_GOLEM: return 250;
+		case PM_ULTIMATE_GOLEM: return 750;
+		case PM_MAD_MUD_GOLEM: return 850;
+		case PM_ELOLAVA_GOLEM: return 1000;
+		case PM_ELOMITHRIL_GOLEM: return 200;
+		case PM_ELOADAMANTIUM_GOLEM: return 300;
+		case PM_PETTY_ELOADAMANTIUM_GOLEM: return 300;
+		case PM_GOLDEN_GOLEM: return 180;
+		case PM_ELOSTONE_GOLEM: return 125;
+		case PM_ELOSTEEL_GOLEM: return 150;
 		case PM_PIX_GOLEM: return 80;
 		case PM_LANCE_GOLEM: return 100;
+		case PM_HC_DENTER: return 100;
 		case PM_ANIMATED_LIMB: return 30;
 		case PM_DARK_FEMALE_ANDROID: return 30;
 		case PM_LIVING_IRON_CHAIN: return 30;
@@ -19445,6 +20163,7 @@ int type;
 		case PM_TIN_SOLDIER: return 60;
 		case PM_CLAY_SOLDIER: return 60;
 		case PM_LEATHER_GOLEM: return 80;
+		case PM_LULTHER_GOLEM: return 80;
 		case PM_STUDDED_GOLEM: return 100;
 		case PM_RING_GOLEM: return 120;
 		case PM_SCALE_GOLEM: return 150;
@@ -19509,6 +20228,7 @@ int type;
 		case PM_UNHOLY_WATER_GOLEM: return 200;
 		case PM_DOOMED_WATER_GOLEM: return 200;
 		case PM_MIRROR_GOLEM: return 210;
+		case PM_ONIJI_TANKOBO: return 420;
 		case PM_TITANIUM_GOLEM: return 230;
 		case PM_DANCING_BLADE: return 230;
 		case PM_BRONZE_COLOSSUS: return 270;
@@ -19818,6 +20538,7 @@ register struct permonst *ptr;
 	if (ptr->mlet == S_CENTAUR && Race_if(PM_HUMANOID_CENTAUR) && !Role_if(PM_CONVICT) && rn2(100)) return TRUE;
 	if (ptr->mlet == S_DRAGON && Race_if(PM_HUMANLIKE_DRAGON) && !Role_if(PM_CONVICT) && rn2(100)) return TRUE;
 	if (ptr->mlet == S_NAGA && Race_if(PM_HUMANLIKE_NAGA) && !Role_if(PM_CONVICT) && rn2(100)) return TRUE;
+	if (ptr->mlet == S_QUADRUPED && Race_if(PM_ENGCHIP) && !Role_if(PM_CONVICT) && !rn2(10)) return TRUE;
 
 	if (uarmh && uarmh->oartifact == ART_CLAUDIA_S_SEXY_SCENT && ptr->msound == MS_STENCH && rn2(100)) return TRUE;
 

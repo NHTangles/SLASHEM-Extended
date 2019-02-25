@@ -229,7 +229,13 @@ nh_timeout()
 	if (u.negativeprotection < 0) u.negativeprotection = 0; /* fail safe */
 	if (u.tremblingamount && !rn2(1000)) u.tremblingamount--;
 	if (u.tremblingamount < 0) u.tremblingamount = 0; /* fail safe */
-	if (u.usanity && !isevilvariant && !rn2(isfriday ? 2500 : 1000)) {
+
+	if (SimeoutBug || u.uprops[SIMEOUT_BUG].extrinsic || have_simeoutstone()) {
+		if (!rn2(2500)) {
+			u.usanity += (YouGetLotsOfSanity ? rnd(20) : 1);
+			if (flags.showsanity) flags.botl = 1;
+		}
+	} else if (u.usanity && !isevilvariant && !rn2(isfriday ? 2500 : 1000)) {
 		u.usanity--;
 		if (flags.showsanity) flags.botl = 1;
 	}
@@ -254,6 +260,17 @@ nh_timeout()
 		if (u.sokosolveboulder < 0) u.sokosolveboulder = 0; /* fail safe */
 	}
 
+	if (u.walscholarpass) {
+		u.walscholarpass--;
+		if (!u.walscholarpass) pline("You can no longer pass through grave walls.");
+		if (u.walscholarpass < 0) u.walscholarpass = 0; /* fail safe */
+	}
+
+	if (u.cellargravate) {
+		u.cellargravate--;
+		if (u.cellargravate < 0) u.cellargravate = 0; /* fail safe */
+	}
+
 	if (u.sokosolveuntrap) {
 		u.sokosolveuntrap--;
 		if (!u.sokosolveuntrap && issokosolver) pline("You're capable of using #monster to remove adjacent traps.");
@@ -276,6 +293,12 @@ nh_timeout()
 		u.powerfailure--;
 		if (u.powerfailure < 0) u.powerfailure = 0; /* fail safe */
 		if (!u.powerfailure) pline("Your power comes back online.");
+	}
+
+	if (u.demagogueabilitytimer) {
+		u.demagogueabilitytimer--;
+		if (u.demagogueabilitytimer < 0) u.demagogueabilitytimer = 0; /* fail safe */
+		if (!u.demagogueabilitytimer && isdemagogue) pline("You're capable of using #monster to temporarily change your role.");
 	}
 
 	if (u.hussyperfume) {
@@ -339,6 +362,25 @@ nh_timeout()
 			init_uasmon();
 
 		}
+	}
+
+	if (u.demagoguerecursiontime) {
+
+		if (u.demagoguerecursiontime < 0) u.demagoguerecursiontime = 1; /* fail safe */
+		if (In_endgame(&u.uz)) u.demagoguerecursiontime = 1; /* can't use it to ascend as something else --Amy */
+
+		u.demagoguerecursiontime--;
+		if (!u.demagoguerecursiontime) {
+			u.demagoguerecursion = 0;
+			if (u.oldrecursionrole != -1) {
+				urole = roles[u.oldrecursionrole];
+				flags.initrole = u.oldrecursionrole;
+			}
+			u.oldrecursionrole = -1;
+			pline("You appear to be a %s %s again.", urace.noun, (flags.female && urole.name.f) ? urole.name.f : urole.name.m);
+			init_uasmon();
+		}
+
 	}
 
 	if (u.fumbleduration) u.fumbleduration--;
@@ -558,7 +600,7 @@ nh_timeout()
 		    if (!rn2(10) && has_head(youmonst.data) && !Role_if(PM_COURIER) ) {
 
 			if (rn2(50)) {
-				adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE);
+				adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE, TRUE);
 			} else {
 				You_feel("dizzy!");
 				forget(1 + rn2(5));
@@ -633,7 +675,7 @@ nh_timeout()
 			    if (!rn2(1000) && has_head(youmonst.data) && !Role_if(PM_COURIER) ) {
 
 				if (rn2(50)) {
-					adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE);
+					adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE, TRUE);
 				} else {
 					You_feel("dizzy!");
 					forget(1 + rn2(5));
@@ -659,7 +701,7 @@ nh_timeout()
 			    if (!rn2(1000) && has_head(youmonst.data) && !Role_if(PM_COURIER) ) {
 
 				if (rn2(50)) {
-					adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE);
+					adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE, TRUE);
 				} else {
 					You_feel("dizzy!");
 					forget(1 + rn2(5));
@@ -685,7 +727,7 @@ nh_timeout()
 			    if (!rn2(1000) && has_head(youmonst.data) && !Role_if(PM_COURIER) ) {
 
 				if (rn2(50)) {
-					adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE);
+					adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE, TRUE);
 				} else {
 					You_feel("dizzy!");
 					forget(1 + rn2(5));
@@ -711,7 +753,7 @@ nh_timeout()
 			    if (!rn2(1000) && has_head(youmonst.data) && !Role_if(PM_COURIER) ) {
 
 				if (rn2(50)) {
-					adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE);
+					adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE, TRUE);
 				} else {
 					You_feel("dizzy!");
 					forget(1 + rn2(5));
@@ -737,7 +779,7 @@ nh_timeout()
 			    if (!rn2(1000) && has_head(youmonst.data) && !Role_if(PM_COURIER) ) {
 
 				if (rn2(50)) {
-					adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE);
+					adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE, TRUE);
 				} else {
 					You_feel("dizzy!");
 					forget(1 + rn2(5));
@@ -1110,8 +1152,8 @@ nh_timeout()
 					    }
 					}
 					/* adjattrib gives dunce cap message when appropriate */
-					if (!rn2(10)) (void) adjattrib(A_INT, -rnd(2), FALSE);
-					else if (!rn2(2)) (void) adjattrib(A_INT, -1, FALSE);
+					if (!rn2(10)) (void) adjattrib(A_INT, -rnd(2), FALSE, TRUE);
+					else if (!rn2(2)) (void) adjattrib(A_INT, -1, FALSE, TRUE);
 					if (!rn2(issoviet ? 2 : 3)) forget_levels(rnd(issoviet ? 25 : 10));	/* lose memory of 25% of levels */
 					if (!rn2(issoviet ? 3 : 5)) forget_objects(rnd(issoviet ? 25 : 10));	/* lose memory of 25% of objects */
 					exercise(A_WIS, FALSE);
@@ -1417,7 +1459,7 @@ nh_timeout()
 
 	}
 
-	if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && (goodimplanteffect(uimplant) == TRAP_REVEALING) ) {
+	if (powerfulimplants() && uimplant && (goodimplanteffect(uimplant) == TRAP_REVEALING) ) {
 
 	    struct trap *t;
 
@@ -1457,6 +1499,19 @@ nh_timeout()
 	}
 
 	if (!rn2(1000) && Race_if(PM_WEAPON_TRAPPER)) { /* Harder than hard race that gets random nasty trap effects. --Amy */
+
+		nastytrapdur = (Role_if(PM_GRADUATE) ? 6 : Role_if(PM_GEEK) ? 12 : 24);
+		if (!nastytrapdur) nastytrapdur = 24; /* fail safe */
+		blackngdur = (Role_if(PM_GRADUATE) ? 2000 : Role_if(PM_GEEK) ? 1000 : 500);
+		if (!blackngdur ) blackngdur = 500; /* fail safe */
+
+		if (!rn2(100)) pline("You have a bad feeling in your %s.",body_part(STOMACH) );
+
+		randomnastytrapeffect(rnz(nastytrapdur * (monster_difficulty() + 1)), blackngdur - (monster_difficulty() * 3));
+
+	}
+
+	if (!rn2(5000) && Role_if(PM_SOCIAL_JUSTICE_WARRIOR)) {
 
 		nastytrapdur = (Role_if(PM_GRADUATE) ? 6 : Role_if(PM_GEEK) ? 12 : 24);
 		if (!nastytrapdur) nastytrapdur = 24; /* fail safe */
@@ -1574,6 +1629,19 @@ nh_timeout()
 	}
 
 	if (!rn2(1000) && NastinessProblem) {
+
+		nastytrapdur = (Role_if(PM_GRADUATE) ? 6 : Role_if(PM_GEEK) ? 12 : 24);
+		if (!nastytrapdur) nastytrapdur = 24; /* fail safe */
+		blackngdur = (Role_if(PM_GRADUATE) ? 2000 : Role_if(PM_GEEK) ? 1000 : 500);
+		if (!blackngdur ) blackngdur = 500; /* fail safe */
+
+		if (!rn2(100)) pline("You have a bad feeling in your %s.",body_part(STOMACH) );
+
+		randomnastytrapeffect(rnz(nastytrapdur * (monster_difficulty() + 1)), blackngdur - (monster_difficulty() * 3));
+
+	}
+
+	if (!rn2(1000) && uamul && uamul->oartifact == ART_SATAN_S_FINAL_TRICK) {
 
 		nastytrapdur = (Role_if(PM_GRADUATE) ? 6 : Role_if(PM_GEEK) ? 12 : 24);
 		if (!nastytrapdur) nastytrapdur = 24; /* fail safe */
@@ -2015,6 +2083,30 @@ nh_timeout()
 
 		 break;
 
+		 case FEMTRAP_SARAH:
+
+			pline("Apparently the farting gas is depleted.");
+
+		 break;
+
+		 case FEMTRAP_CLAUDIA:
+
+			pline("Your sexy butt cheek wood confusion ends.");
+
+		 break;
+
+		 case FEMTRAP_LUDGERA:
+
+			pline("At last the disgusting toilet noises ceased.");
+
+		 break;
+
+		 case FEMTRAP_KATI:
+
+			pline("You vow to never clean a girl's shoes again.");
+
+		 break;
+
 		 case FEMTRAP_ANASTASIA:
 
 			pline("You come back to your senses and realize that stepping into a heap of shit is, well, shit.");
@@ -2414,7 +2506,7 @@ nh_timeout()
 			    if (!rn2(1000) && has_head(youmonst.data) && !Role_if(PM_COURIER) ) {
 
 				if (rn2(50)) {
-					adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE);
+					adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE, TRUE);
 				} else {
 					You_feel("dizzy!");
 					forget(1 + rn2(5));
@@ -2714,7 +2806,7 @@ unpoly_obj(arg, timeout)
 
 	(void) stop_timer(UNPOLY_OBJ, (void *) obj);
 
-	obj = poly_obj(obj, oldobj);
+	obj = poly_obj(obj, oldobj, FALSE);
 
 	if (obj->otyp == WAN_CANCELLATION || Is_mbag(obj)) {
 	    otmp = obj;

@@ -278,7 +278,7 @@ dosit()
 
 			if (uarmu && uarmu->oartifact == ART_KATIA_S_SOFT_COTTON) {
 				You("produce very erotic noises.");
-				if (!rn2(10)) adjattrib(rn2(A_CHA), 1, -1);
+				if (!rn2(10)) adjattrib(rn2(A_CHA), 1, -1, TRUE);
 			}
 			else if (Role_if(PM_BARBARIAN) || Role_if(PM_CAVEMAN)) You("miss...");
 			else You("grunt.");
@@ -309,7 +309,7 @@ dosit()
 	    /* must be WWalking */
 	    You(sit_message, "lava");
 	    burn_away_slime();
-	    if (likes_lava(youmonst.data) || (uarmf && OBJ_DESCR(objects[uarmf->otyp]) && ( !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "hot boots") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "goryachiye botinki") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "issiq chizilmasin") ) ) || (uamul && uamul->otyp == AMULET_OF_D_TYPE_EQUIPMENT) || (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_RUBBER_SHOALS) || Race_if(PM_PLAYER_SALAMANDER) || (uwep && uwep->oartifact == ART_EVERYTHING_MUST_BURN) || (uwep && uwep->oartifact == ART_MANUELA_S_PRACTICANT_TERRO) || (uarm && uarm->oartifact == ART_LAURA_CROFT_S_BATTLEWEAR) || (uarm && uarm->oartifact == ART_D_TYPE_EQUIPMENT) ) {
+	    if (likes_lava(youmonst.data) || (uarmf && OBJ_DESCR(objects[uarmf->otyp]) && ( !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "hot boots") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "goryachiye botinki") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "issiq chizilmasin") ) ) || (uamul && uamul->otyp == AMULET_OF_D_TYPE_EQUIPMENT) || (powerfulimplants() && uimplant && uimplant->oartifact == ART_RUBBER_SHOALS) || Race_if(PM_PLAYER_SALAMANDER) || (uwep && uwep->oartifact == ART_EVERYTHING_MUST_BURN) || (uwep && uwep->oartifact == ART_MANUELA_S_PRACTICANT_TERRO) || (uarm && uarm->oartifact == ART_LAURA_CROFT_S_BATTLEWEAR) || (uarm && uarm->oartifact == ART_D_TYPE_EQUIPMENT) ) {
 		pline_The("lava feels warm.");
 		return 1;
 	    }
@@ -424,11 +424,11 @@ dosit()
 
 		switch (rnd(20))  {
 		    case 1:
-			(void) adjattrib(rn2(A_MAX), -rn1(4,3), FALSE);
+			(void) adjattrib(rn2(A_MAX), -rn1(4,3), FALSE, TRUE);
 			losehp(rnd(10), "cursed throne", KILLED_BY_AN);
 			break;
 		    case 2:
-			(void) adjattrib(rn2(A_MAX), 1, FALSE);
+			(void) adjattrib(rn2(A_MAX), 1, FALSE, TRUE);
 			break;
 		    case 3:
 			pline("A%s electric shock shoots through your body!",
@@ -462,7 +462,7 @@ dosit()
 				    You_feel("your luck is changing.");
 				if (PlayerHearsSoundEffects) pline(issoviet ? "Kha, vy ne poluchite zhelaniye, potomu chto eto Sovetskaya Rossiya, gde kazhdyy poluchayet odinakovoye kolichestvo zhelaniy! I vy uzhe boleye chem dostatochno, teper' ochered' drugikh personazhey'!" : "DSCHUEueUEueUEueUEueUEue...");
 				    change_luck(5);
-				} else	    makewish();
+				} else	    makewish(evilfriday ? FALSE : TRUE);
 			} else {
 				othergreateffect();
 			}
@@ -909,6 +909,47 @@ skillcaploss()
 
 }
 
+void
+skillcaploss_specific(skilltoreduce)
+int skilltoreduce;
+{
+
+	int tryct, tryct2;
+	int i = 0;
+
+	if (P_MAX_SKILL(skilltoreduce) >= P_BASIC) {
+		P_MAX_SKILL(skilltoreduce) = P_ISRESTRICTED;
+	}
+
+	tryct = 2000;
+	tryct2 = 10;
+
+	while (u.skills_advanced && tryct && (P_SKILL(skilltoreduce) > P_MAX_SKILL(skilltoreduce)) ) {
+		lose_weapon_skill(1);
+		i++;
+		tryct--;
+	}
+
+	while (i) {
+		if (evilfriday) pline("This is the evil variant. Your skill point is lost forever.");
+		else u.weapon_slots++;  /* because every skill up costs one slot --Amy */
+		i--;
+	}
+
+	/* still higher than the cap? that probably means you started with some knowledge of the skill... */
+	while (tryct2 && P_SKILL(skilltoreduce) > P_UNSKILLED) {
+		P_SKILL(skilltoreduce) -= 1;
+		if (evilfriday) pline("This is the evil variant. Your skill point is lost forever.");
+		else u.weapon_slots++;
+		tryct2--;
+	}
+
+	P_SKILL(skilltoreduce) = P_ISRESTRICTED;
+
+	return;
+
+}
+
 /* skill cap loss trap: slowly but steadily reduces training of all skills --Amy */
 void
 skillcaploss_severe()
@@ -1098,7 +1139,7 @@ rndcurse()			/* curse a few inventory items at random! */
 void
 attrcurse()			/* remove a random INTRINSIC ability */
 {
-	switch(rnd(213)) {
+	switch(rnd(215)) {
 	case 1 : 
 	case 2 : 
 	case 3 : 
@@ -1939,6 +1980,24 @@ attrcurse()			/* remove a random INTRINSIC ability */
 		if (HTechnicality & TIMEOUT) {
 			HTechnicality &= ~TIMEOUT;
 			You_feel("less capable of using your techniques...");
+		}
+		break;
+	case 211: if (HHalf_spell_damage & INTRINSIC) {
+			HHalf_spell_damage &= ~INTRINSIC;
+			You_feel("vulnerable to spells!");
+		}
+		if (HHalf_spell_damage & TIMEOUT) {
+			HHalf_spell_damage &= ~TIMEOUT;
+			You_feel("vulnerable to spells!");
+		}
+		break;
+	case 212: if (HHalf_physical_damage & INTRINSIC) {
+			HHalf_physical_damage &= ~INTRINSIC;
+			You_feel("vulnerable to damage!");
+		}
+		if (HHalf_physical_damage & TIMEOUT) {
+			HHalf_physical_damage &= ~TIMEOUT;
+			You_feel("vulnerable to damage!");
 		}
 		break;
 	default: break;

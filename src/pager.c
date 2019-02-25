@@ -271,6 +271,7 @@ lookat(x, y, buf, monbuf)
 				    Blind ? "a monster" : a_monnam(u.ustuck));
 	pm = u.ustuck->data;
     } else if (glyph_is_monster(glyph)) {
+
 	bhitpos.x = x;
 	bhitpos.y = y;
 	mtmp = m_at(x,y);
@@ -523,6 +524,8 @@ lookat(x, y, buf, monbuf)
 		    ways_seen++;
 		if (uarmc && uarmc->oartifact == ART_BUGNOSE && (mtmp->data->mlet == S_ANT || mtmp->data->mlet == S_XAN) )
 		    ways_seen++;
+		if (uwep && uwep->oartifact == ART_EGRID_BUG && mtmp->data->mlet == S_XAN)
+		    ways_seen++;
 		if (uarmf && uarmf->oartifact == ART_BOOTS_OF_THE_MACHINE && (mtmp->data->mlet == S_GOLEM || nonliving(mtmp->data) ) )
 		    ways_seen++;
 		if (uarmf && uarmf->oartifact == ART_FD_DETH && (mtmp->data->mlet == S_DOG || mtmp->data->mlet == S_FELINE) )
@@ -692,6 +695,10 @@ lookat(x, y, buf, monbuf)
 		    }
 		    if (uarmc && uarmc->oartifact == ART_BUGNOSE && (mtmp->data->mlet == S_ANT || mtmp->data->mlet == S_XAN) ) {
 			strcat(monbuf, "bugnose");
+			if (ways_seen-- > 1) strcat(monbuf, ", ");
+		    }
+		    if (uwep && uwep->oartifact == ART_EGRID_BUG && mtmp->data->mlet == S_XAN) {
+			strcat(monbuf, "egrid bug");
 			if (ways_seen-- > 1) strcat(monbuf, ", ");
 		    }
 		    if (uarmf && uarmf->oartifact == ART_BOOTS_OF_THE_MACHINE && (mtmp->data->mlet == S_GOLEM || nonliving(mtmp->data) ) ) {
@@ -1212,6 +1219,9 @@ do_look(quick)
     boolean hit_trap;		/* true if found trap explanation */
     int skipped_venom;		/* non-zero if we ignored "splash of venom" */
     static const char *mon_interior = "the interior of a monster";
+    boolean mojibakeflag;
+
+    mojibakeflag = 0;
 
     if (quick) {
 	from_screen = TRUE;	/* yes, we want to use the cursor */
@@ -1564,7 +1574,7 @@ do_look(quick)
 		found += append_str(out_str, "boulder");
 	    }
 	}
-	
+
 	/*
 	 * If we are looking at the screen, follow multiple possibilities or
 	 * an ambiguous explanation by something more detailed.
@@ -1586,6 +1596,16 @@ do_look(quick)
 
 		if (pm) {
 		    struct monst *mtmpX = m_at(cc.x, cc.y);
+
+		    /* mojibake was leaking info... argh --Amy */
+		    if (!mtmpX && !(u.ux == cc.x && u.uy == cc.y)) goto blaone;
+		    if (mtmpX && !sensemon(mtmpX) && !canseemon(mtmpX) && !(u.ux == cc.x && u.uy == cc.y) && !((mtmpX->m_ap_type != M_AP_NOTHING) && Protection_from_shape_changers && !permamimic(mtmpX->data) && !(mtmpX->egotype_permamimic)) ) {
+
+				int glyphX = glyph_at(cc.x,cc.y);
+				if (glyph_is_monster(glyphX) && !(u.ux == cc.x && u.uy == cc.y) ) mojibakeflag = 1;
+				goto blaone;
+		    }
+
 		    if (mtmpX) {
 			sprintf(temp_buf, " (base level %d)", mtmpX->data->mlevel);
 			(void)strncat(out_str, temp_buf, BUFSZ-strlen(out_str)-1);
@@ -1597,6 +1617,8 @@ do_look(quick)
 
 		    }
 		}
+
+blaone:
 
 		if (monbuf[0]) {
 		    sprintf(temp_buf, " [seen: %s]", monbuf);
@@ -1615,6 +1637,12 @@ do_look(quick)
 
 #ifdef EXTENDED_INFO
 		if(flags.pokedex && (pm != (struct permonst *) 0) ) {
+
+		    struct monst *mtmpX = m_at(cc.x, cc.y);
+
+		    if (!mtmpX && !(u.ux == cc.x && u.uy == cc.y)) goto blatwo;
+		    if (mtmpX && !sensemon(mtmpX) && !canseemon(mtmpX) && !(u.ux == cc.x && u.uy == cc.y) && !((mtmpX->m_ap_type != M_AP_NOTHING) && !(Protection_from_shape_changers && !permamimic(mtmpX->data) && !(mtmpX->egotype_permamimic) ) ) ) goto blatwo;
+
 			append_newline_to_pline_string(out_str);
 			temp_buf[0]='\0';
 			get_description_of_monster_type(pm, temp_buf);
@@ -1624,6 +1652,8 @@ do_look(quick)
 
 	    }
 	}
+
+blatwo:
 
 	/* Finally, print out our explanation. */
 	if (found && !RMBLoss && !u.uprops[RMB_LOST].extrinsic && !(uarmh && uarmh->oartifact == ART_NO_RMB_VACATION) && !(uarmh && uarmh->oartifact == ART_WOLF_KING) && !(uamul && uamul->oartifact == ART_BUEING) && !(uimplant && uimplant->oartifact == ART_ARABELLA_S_SEXY_CHARM) && !(uamul && uamul->oartifact == ART_YOU_HAVE_UGH_MEMORY) && !have_rmbstone()) {
@@ -1642,7 +1672,7 @@ do_look(quick)
 		strcpy(temp_buf, level.flags.lethe 
 					&& !strcmp(firstmatch, "water")?
 				"lethe" : firstmatch);
-		checkfile(temp_buf, pm, FALSE, (boolean)(ans == LOOK_VERBOSE));
+		if (!mojibakeflag) checkfile(temp_buf, pm, FALSE, (boolean)(ans == LOOK_VERBOSE));
 	    }
 	} else {
 	    if (!RMBLoss && !u.uprops[RMB_LOST].extrinsic && !(uarmh && uarmh->oartifact == ART_NO_RMB_VACATION) && !(uarmh && uarmh->oartifact == ART_WOLF_KING) && !(uamul && uamul->oartifact == ART_BUEING) && !(uimplant && uimplant->oartifact == ART_ARABELLA_S_SEXY_CHARM) && !(uamul && uamul->oartifact == ART_YOU_HAVE_UGH_MEMORY) && !have_rmbstone()) pline("I've never heard of such things.");
@@ -3745,6 +3775,40 @@ static const char * const gangscholarverbs[] = {
 "laughs: ", "sneers: ", "bickers: ", "chortles: ", "giggles: ", "hisses: ", "shouts: ", "screams: ", "says: ", "grins: ", "bellows: ", "thunders: ", "booms: ", "snickers: ", "announces: ", "whispers: ", "barks: ", "snarls: ", "mutters: ", "threatens: ", "tells: ", "boasts: ", "messages: ", "grumbles: ", "states: ", "yells: ", "speaks: ", "gloats: ", "growls: ", "remarks: ",
 };
 
+static NEARDATA const char * const demagoguelines[] = {
+"This country is going down the tubes, I tell you!",
+"We gotta take a tally of those agitators!",
+"We gotta account for with those heretics!",
+"The people have no food! And it's all because of the government!",
+"This government shall be usurped!",
+"All that the politicians ever do is to prey on the citizens!",
+"There's too many aliens in this country!",
+"Do not vote for the current government! Vote for me instead!",
+"Unemployment can only be defeated if we get rid of the current chancellor!",
+"I certainly know what I want, and it's NO type of ice block and NO bang gang!",
+"I shall become president, and then, where other countries merely survive, we will THRIVE!",
+"We need to declare war to our neighboring countries!",
+"If things get too bad, we'll launch our nuke to eradicate our enemies!",
+"The tax-a-drivers are evil! Shoot them on sight!",
+"Man you can't trust the law!",
+"All the police in this country are corrupt!",
+"All the politicians are corrupt and working for some lobbies instead of working for the citizens!",
+"Well have you looked at that other country? They have a system that works! It's much better than ours!",
+"We should have abolished monarchy while we still had the chance!",
+"Everyone who is against us will be removed! For good!",
+"All the illegal potatoes shall be removed!",
+"Someone should shut down the government!",
+"Someone needs to stop that group of people! Regardless of who does it!",
+"None of the current politicians were lawfully elected! They all bribed their way to the top!",
+"Man you can't get anywhere without bribing in this country!",
+"Why do we keep exporting guns and tanks to other countries?",
+"Why can't we just nuke all the rogue states?",
+"Diplomacy is worthless, we finally have to declare WAR on other countries again like in the good old times!",
+"What? Our former war enemies are requesting reparations? If I were in charge, I'd tell them where they can stick their fucking reparations...",
+"Climate protection? Bah! We shouldn't waste our time with that!",
+"Vote for my party or I'll send some assassins to snipe you on the way to the voting office!",
+};
+
 static NEARDATA const char * const longinglines[] = {
 "You just can't stop thinking about the sexy %s.",
 "%s has such sexy butt cheeks... mmmmmmmm!",
@@ -3880,6 +3944,9 @@ static NEARDATA const char * const longinglines[] = {
 "%s loves it if you caress her butt cheeks while she's on the toilet.",
 "It feels very lovely to be bitten in the earlobe by %s.",
 "Did you see %s? She's a giiiiirl! And a very beautiful one too!",
+"You absolutely love the fact that %s can perform the 'asian kick', where she drives her stiletto heels up her opponent's nuts and gives him a distortion fracture. (Don't google that though, you don't want to know what it is.)",
+"You hope that no one manages to take your beloved %s away from you.",
+"If you're really nice, %s may even allow you to lick her face!",
 };
 
 static NEARDATA const char * const soviettaunts[] = {
@@ -4344,6 +4411,86 @@ static NEARDATA const char * const bangganglines_femaleonly[] = {
 "My fingernails will eviscerate you!",
 "I can't wait to tear you up with my woman's fingernails and draw lots of blood.",
 "I'll totally rip you to shreds with my female fingernails and gleefully watch you bleed to death.",
+};
+
+static NEARDATA const char * const hussylines_wal[] = {
+"You will fall prey to our trap! There's no escape!",
+"My body odor will cause you to fall over unconscious!",
+"You can't resist my feminine charms. No one can.",
+"Like you were capable of defeating our Hussy Club.",
+"Go and get your useless teachers, they won't be able to stop the Hussies either!",
+"You can do whatever you want to try to protect the diamonds. We'll steal them anyway.",
+"Well I found one of the walls you set up to 'protect' your diamonds. Since you're not there to defend it, I'll just kick the wall repeatedly until it breaks down.",
+"You and your 'superschool speaker' can suck it! We're a lot of hussies while you are just a handful of weakling men! And we'll steal all of your diamonds!",
+"Now look, I found another of your 'diamond protection' walls. I'll produce very beautiful farting noises and direct the gas at the wall, which will probably destroy it. And then the diamonds are mine.",
+"Prepare to get your butt kicked by me, wimpy 'walscholar'.",
+"Your 'mission' to protect the diamonds will end in a catastrophic failure.",
+"Walt and his loser teachers can suck it! Us Hussies are not bound to their commands in any way!",
+"Yes, continue thinking that Walt can protect you. The diamonds exist to be stolen by me, and he knows that too!",
+"No teacher tells ME what to do! I'll make it my mission to break any and all rules they try to set up because they can just kiss my beautiful female ass!",
+"You will live in poverty, because all of your diamonds will become my diamonds soon.",
+"Hahaha, that will be expensive for you to buy so many diamonds to replace the ones I just stole.",
+"The school will fall! Walt's protection is inadequate!",
+"I'll use my sexy butt cheeks to destroy Walt's source of power!",
+"This school has way too much teacher scum and it's about time that girls like me overthrow them and seize the power.",
+"If you aren't bludgeoned by me, the hola-hola brigade will take care of you.",
+"Good thing our converters will take care of stray walscholars.",
+"And if you think I'm the only danger for you, wait until you hear the 'Wouwou' taunts!",
+"Resistance is futile! Both the Hussies and our mercenaries will hunt you down!",
+"I just pulled down the trousers of your protector! You're up next, hahaha!",
+"It's boring, walscholars like you are so easy to defeat. Send me your speaker so I have a challenge.",
+"The day will come when there's no male person attending this school anymore.",
+"Us Hussies don't like male persons! And we especially don't like male teachers. They shall all be removed from this school.",
+"We're gonna introduce diversity here. You and that bastard Walt want to turn this school into an all-male club, but the Hussies and the hola-hola brigade have rights too, and we'll fight to get those rights!",
+"No one has ever been able to stop the hussies and you certainly won't be the first!",
+"Hussy power is supreme! A mere walscholar ain't got no chance!",
+"Of course a walscholar can't deal with my scentful perfume.",
+"Can a walscholar really stand against the lovely scent of femininity? I think not.",
+"I cannot suffer you! And that means I will fight you to the death!",
+"You're fully the loser!",
+"The hussies are a million times better than you!",
+"This school is not for scum like you! We, the Hussies, are the only ones allowed here!",
+};
+
+static NEARDATA const char * const hussylines_wal_specific[] = {
+"%s, you will lose to a girl today.",
+"What, you say your name is %s? That's a stupid name!",
+"Poor %s, your parents must have hated you because they gave you such a retarded name? Hahaha!",
+"Listen up, %s: your failure is imminent!",
+"Apparently Walt is sending %s to do the dirty tasks for him. I guess if he doesn't have anyone better, this will be easy for me.",
+"Walt is a fool for making that %s weakling into a 'guard' for the diamonds.",
+"Alright, I found a diamond wall set up by %s! I'll squeak a lot of farting gas out of my butt to break it!",
+"%s, yet again you didn't secure the diamonds! Know that I just stole them, ha ha ha!",
+"%s, you made the mistake to trust me, and now I decided to show my true face. Yes, I'm a hussy, and I'll knock you out now.",
+"Who in their right mind would call their child '%s'?",
+"%s, your name is on the official Hussy wanted list! We will hunt you down!",
+"All the hussies will sit on you, %s!",
+"Us Hussies can never be defeated by %s!",
+"%s, better go back to your Walt 'protector' and polish his shoes, for you certainly ain't no match for the Hussies.",
+"What'cha gonna do, %s, run to your parents and cry? Hahaha!",
+"It won't be long until the hola-hola brigade will convert %s.",
+"I've sent a couple converters up your ass, %s! Can you escape them? Ha ha ha!",
+"You can't escape from our mercenaries, %s. Their 'Wouwou' taunts will strike fear into the very heart of you!",
+"Just so you know, %s: we've hired help. There's no way for you to escape because we're many more than you.",
+"Did you know that I just knocked out and stole the possessions of one of your walscholar colleagues, %s?",
+"%s, all of the other walscholars are already being tortured in our prison chamber. Now it's time for you to join them.",
+"Why would you want to be a walscholar anyway? %s, if you join us Hussies we might let you get away, but if not, we'll turn your life into hell!",
+"%s, you bootlicker! You obey the commands of male teachers? I'd never stoop that low myself.",
+"%s apparently didn't get the memo that the future is female.",
+"We must remove %s for being friends with men! All those teachers are no good and walscholars who support them need to either be converted or knocked out!",
+"Did you know that your teachers are pigs? Yes, that's right, %s, there are no exceptions.",
+"%s, you and your exclusive boys club! We're the Hussies and our rightful female anger will crush you!",
+"%s, why do you think you could stop the hussies when there have been so many others who failed to defeat us?",
+"Accept the fact that you're only a walscholar, %s! Your mission is doomed to fail because the Hussies are unstoppable!",
+"%s, I'll spray my perfume right into your face now!",
+"Tomorrow people will be reading in the newspaper that I defeated %s with my lovely odor.",
+"%s! You got some nerve to show up here!",
+"You're never gonna make it, %s!",
+"The weakling of a %s is trying it again! We're gonna defeat them very easily.",
+"This is the end, %s - your quest ends here. With your defeat.",
+"%s, you forgot to take the short bus to school! We'll eliminate you now!",
+"Why do we even have to waste our time with %s? We want to get the teachers, those are priority targets!",
+"%s is just another name on my hit list.",
 };
 
 static NEARDATA const char * const bosstaunts[] = {
@@ -22667,6 +22814,127 @@ static NEARDATA const char * const fake_plines[] = {
 	"You wish you had brought your towel to the sauna.",
 	"You wish you had brought your towel to the sauna, because you're a fucking prude who is mortally scared of other people seeing his penis. Wimp.",
 	"You hear sexy licking noises!",
+	"You feel sad.",
+	"You wonder why you had to do that.",
+	"You feel grief.",
+	"Bits of bone assemble into a skeleton!",
+	"You feel bad about breaking the atheist conduct.",
+	"Due to all of your conduct violations, the gods declare you dead. Goodbye.",
+	"The elemantian wisp have to burn up flame of bunish.",
+	"The gods don't allow you to be male.",
+	"Not now! They're looking!",
+	"Someone watched you change clothes...",
+	"Oh no - you had sex before your marriage. The gods are certainly angry now.",
+	"Becoming pregnant before you're married is a grave sin, and the gods are really angry.",
+	"bhaak demands 400,000 zorkmids for safe passage. Pay? (y/n)", /* by Luxidream */
+	"You give bhaak four Mini-Croesus trophies. Bhaak vanishes, laughing 'See you in June.'", /* by aosdict */
+	"You start talking to the scale mail. You feel stupid. The scale mail asks about the weather outside. Wait, it's a mimic!",
+	"Apparently the farting gas is depleted.",
+	"Your sexy butt cheek wood confusion ends.",
+	"At last the disgusting toilet noises ceased.",
+	"You vow to never clean a girl's shoes again.",
+	"You can already imagine the farting noises you're gonna hear.",
+	"Suddenly you feel a little confused, and also feel like stroking the sexy butt cheeks of a woman in wooden sandals.",
+	"You'll certainly like to listen to the disgusting toilet noises.",
+	"You feel like being kicked by sexy girls and cleaing their shoes.",
+	"Whoops, you're getting really dizzy.",
+	"Are you a blonde by any chance?",
+	"You feel vulnerable to spells!",
+	"You feel vulnerable to damage!",
+	"The message is broadcast all over the dungeon!",
+	"Since your weapon has taken too much damage, you can't smash the bars with it.",
+	"Incoming message for Player 1. The message is from 'Annie'. It reads: 'Aucune ecoliere inferieure ne peut me donner l'eau. Maintenant, vous avez une lecon que vous n'oublierez pas de sitot, petite fille!'",
+	"The iron bars hiss quietly but remain intact.",
+	"Maybe you should buy a bottle of drum stint reluctance perfume.",
+	"You feel like a miserably hussy.",
+	"You feel like a miserably hussy. Are you going to crap right on the walkway in the hopes that someone else steps into your shit?",
+	"You feel like a miserably hussy. Oh my god, I guess you plan to wear the same pair of socks for two weeks straight now.",
+	"You're not skilled enough to tell if there is a useful ward here.",
+	"You hear a distant file being deleted.",
+	"Your drive has been encrypted! If you can ascend this game of nethack, it will unlock your computer.",
+	"Uninstall which program? You can't. It is cursed.",
+	"The pop-up hits. You feel your computer slowing down.",
+	"You get tyrannosaurus rekt by percents.",
+	"You kill your grandfather! You look strangely transparent. You turn into a quantom mechanic. Time lies still as you and your mother stop existing. I *told* you not to mess with that time machine, kid...", /* Yes the "quantom" is not an error, it's a literal quote :P --Amy */
+	"the wizard of yendor rubs his hands furiously on his sweater! he touches you; you are jolted with electricity! You die...", /* by K2 */
+	"It's time for our super-special commercial announcement: Sluicehack, the NetHack variant that tries to find out how long we can keep the chain of words going!",
+	"It's time for our super-special commercial announcement: Licehack, with lots of 'a' added!",
+	"It's time for our super-special commercial announcement: Icehack, the variant that has lots of ice levels, sheol ported, and cold themed monsters!",
+	"It's time for our super-special commercial announcement: Nicehack! We finally got it - the variant that does NOT want you dead!",
+	"It's time for our super-special commercial announcement: Vicehack, letting you explore all the bad habits in game!",
+	"It's time for our super-special commercial announcement: The all-new Micehack variant, where monsters consist of mice and elephants only!",
+	"It's time for our super-special commercial announcement: Ricehack, for our vegetarian players. Although a doenerteller versace is soooo tasty. You should definitely eat meat, it's great and definitely not poisonous no matter what the health apostles are trying to tell you!",
+	"It's time for our super-special commercial announcement: Dicehack! Lots of gambling in this variant!",
+	"It's time for our super-special commercial announcement: Tricehack, the NetHack variant where all enemies can stone you!",
+	"It's time for our super-special commercial announcement: Juicehack, yet another variant! Key feature: you can apply fruit to create potions of fruit juice!",
+	"It's time for our super-special commercial announcement: Twicehack - after you ascend, you are mysteriously teleported back down to DL 1 of a new dungeon!",
+	"It's time for our super-special commercial announcement: Spicehack - a full cooking patch is implemented!",
+	"It's time for our super-special commercial announcement: Pricehack - introducing the shopkeeper role!",
+	"The wall listens intently, but doesn't reply. (Walls have ears, not mouths.)",
+	"You could murder a curry!",
+	"You burp... like a clap of thunder!",
+	"Wow! It tastest like super hot chili!",
+	"Tangy! It's full of lemonade!",
+	"Maybe I'm nuts, but it tastes like marzipan!",
+	"Cool! It's an ice cream cone!",
+	"Next time, watch out for slime!",
+	"Next time, what out for slime!", /* sic */
+	"You are poisoned on contact.",
+	"You feel unhealthy.",
+	"You feel unhealthy. That's because you only eat vegetables. You need meat, dammit!",
+	"Your limbs are shaking.",
+	"Your limbs are shaking. I guess something triggered you.",
+	"Your limbs are paralyzed.",
+	"Your limbs are paralyzed. Apparently someone injected a neurotoxin into your veins.",
+	"You are unable to move.",
+	"You are unable to move. Drop that ultra heavy iron ball, dummy!",
+	"You are suffocating.",
+	"You are suffocating. Quick! Bite through that plastic bag over your head or you die!",
+	"You collapse, poisoned...",
+	"Your potato grew moldy! Yuck! You drop it in disgust.",
+	"You hear an ice cream van!",
+	"You hear a speedboat.",
+	"You hear a squeaking rubber duck!",
+	"You hear a squeaking rubber duck! Or at least that's what it sounds like, but in reality it's Sandra producing distorted farting noises with her sexy butt.",
+	"You hear a toilet flush!",
+	"You hear the shower running.",
+	"You hear a loud advert for Tide.",
+	"You hear a commercial for protein bars.",
+	"You hear a shark jumping!",
+	"You hear a C major chord.",
+	"You hear a C major chord. Apparently you're playing Nethack 3.6.0, where squeaky boards do such things.",
+	"You hear a dripping tap.",
+	"You hear something fishy happening.",
+	"You hear a gull asking for a bite of your sandwich.",
+	"You hear a foghorn!",
+	"You hear a sea shell exploding!",
+	"You hear a C-shell script running.",
+	"You are dancing in the rain.",
+	"You're still dreaming.",
+	"You can't really believe it.",
+	"You pinched yourself very painfully.",
+	"Ina continuously tries to kick you in the shins because she's such a nice girl.",
+	"Don't be so anorexic and eat a boerek without salad - order a doenerteller versace instead!",
+	"You don't know how to write a proper conclusion.",
+	"You're being hunted by the grammar police.",
+	"Did you know that Porkman scored the first notdnethack ascension ever?",
+	"You sense some questing power!",
+	"You detect the presence of the subquest portal!",
+	"A lot of force seems to be in the air.",
+	"You listen to the taunts of your nemesis who wants a rematch!",
+	"You suddenly fear that you'll face your nemesis again and lose!",
+	"You have a vision of your home being burned to the ground by the person you despise the most!",
+	"Something tells you that the only thing you can depend on is your family, and even that not always!",
+	"You hear a voice announce: \"Morn', player. I'm Sean Gonorrhea. I like my coffee black, my women slutty, and my mucosa membranes inflamed.\"",
+	"Tough luck! The technique that you would have learned happens to be one you already know.",
+	"The code malfunctioned.",
+	"The code malfunctioned. It must have been written by an apprentice programmer.",
+	"The build has errored.",
+	"The build has errored. Let a coding master look at it, maybe he can fix the bugs!",
+	"You hear thunder in the distance...",
+	"You hear thunder in the distance... but then decide that the gods can fuck you, they certainly have better things to do than being angry at you for some petty reason.",
+	"You try to whistle your pets here...",
+	"You try to whistle your pets here... which doesn't work, because their AI is so ultra stupid.",
 
 };
 
@@ -22693,6 +22961,12 @@ const char *
 longingmessage()
 {
 	return (longinglines[rn2(SIZE(longinglines))]);
+}
+
+const char *
+demagoguemessage()
+{
+	return (demagoguelines[rn2(SIZE(demagoguelines))]);
 }
 
 const char *
@@ -22725,11 +22999,31 @@ gangscholartaunt_specific2()
 	return (bangganglines_specific[rn2(SIZE(bangganglines_specific))]);
 }
 
+const char *
+walscholartaunt()
+{
+	return (hussylines_wal[rn2(SIZE(hussylines_wal))]);
+}
+
+const char *
+walscholartaunt2()
+{
+	return (hussylines_wal_specific[rn2(SIZE(hussylines_wal_specific))]);
+}
+
 void
 longingtrapeffect()
 {
 	char buf[BUFSZ];
 	pline(longingmessage(), longinggirls[rn2(SIZE(longinggirls))]);
+
+}
+
+void
+demagogueparole()
+{
+	char buf[BUFSZ];
+	verbalize(demagoguemessage());
 
 }
 
@@ -22779,6 +23073,33 @@ gangscholarmessage()
 			break;
 
 	}
+}
+
+void
+walscholarmessage()
+{
+
+	char buf[BUFSZ];
+
+	switch (rnd(2)) {
+
+		case 1:
+			sprintf(buf, "%s %s", hussynames[rn2(SIZE(hussynames))], gangscholarverbs[rn2(SIZE(gangscholarverbs))]);
+			sprintf(eos(buf), "'");
+			sprintf(eos(buf), "%s", walscholartaunt());
+			sprintf(eos(buf), "'");
+			pline("%s", buf);
+			break;
+		case 2:
+			sprintf(buf, "%s %s", hussynames[rn2(SIZE(hussynames))], gangscholarverbs[rn2(SIZE(gangscholarverbs))]);
+			sprintf(eos(buf), "'");
+			sprintf(eos(buf), walscholartaunt2(), playeraliasname);
+			sprintf(eos(buf), "'");
+			pline("%s", buf);
+			break;
+
+	}
+
 }
 
 /*pager.c*/

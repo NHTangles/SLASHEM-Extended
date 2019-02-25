@@ -210,7 +210,8 @@ static const char * const shktools[] = {
 	"Ahtariz", "Tlov", "Sohtilixitirk", "Nasrekir", "Owthtiek",
 	"Ledanagan", "Yoreel", "Garena", "Tsitonpyh", "Esoreci",
 	"Ikustodam", "Elomacaug Gnimalf", "Qretep", "Blevap", "Tnepocard",
-	"Plug Itna", "Oirdna", "Etinatem", "Lyrebyerg",
+	"Plug Itna", "Oirdna", "Etinatem", "Lyrebyerg", "Nossllep",
+	"Esulcer",
 
     0
 };
@@ -1085,6 +1086,8 @@ struct mkroom	*sroom;
 	sroom->resident = shk;
 	ESHK(shk)->shoptype = sroom->rtype;
 	assign_level(&(ESHK(shk)->shoplevel), &u.uz);
+	ESHK(shk)->creditlimit = (5000 + (depth(&u.uz) * 1000) );
+	ESHK(shk)->totalcredit = 0;
 	ESHK(shk)->shd.x = doors[sh].x;
 	ESHK(shk)->shd.y = doors[sh].y;
 	ESHK(shk)->shk.x = sx;
@@ -1334,7 +1337,7 @@ register int sh;
 	  if (typ==MAGIC_LAMP) {
 	    otmp->spe = 0;
 	  }
-	  if (typ==SCR_WISHING || typ==SCR_ACQUIREMENT || typ==SCR_ENTHRONIZATION || typ==SCR_FOUNTAIN_BUILDING || typ==SCR_SINKING || typ==SCR_WC) {
+	  if (typ==SCR_WISHING || typ==SCR_ACQUIREMENT || typ==SCR_ENTHRONIZATION || typ==SCR_MAKE_PENTAGRAM || typ==SCR_FOUNTAIN_BUILDING || typ==SCR_SINKING || typ==SCR_WC) {
 	    typ = SCR_BLANK_PAPER;
 	  }
 

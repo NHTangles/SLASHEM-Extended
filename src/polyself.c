@@ -1822,6 +1822,39 @@ dospinweb()
 		case ELDER_TENTACLING_TRAP:
 		case FOOTERER_TRAP:
 
+		case GRAVE_WALL_TRAP:
+		case TUNNEL_TRAP:
+		case FARMLAND_TRAP:
+		case MOUNTAIN_TRAP:
+		case WATER_TUNNEL_TRAP:
+		case CRYSTAL_FLOOD_TRAP:
+		case MOORLAND_TRAP:
+		case URINE_TRAP:
+		case SHIFTING_SAND_TRAP:
+		case STYX_TRAP:
+		case PENTAGRAM_TRAP:
+		case SNOW_TRAP:
+		case ASH_TRAP:
+		case SAND_TRAP:
+		case PAVEMENT_TRAP:
+		case HIGHWAY_TRAP:
+		case GRASSLAND_TRAP:
+		case NETHER_MIST_TRAP:
+		case STALACTITE_TRAP:
+		case CRYPTFLOOR_TRAP:
+		case BUBBLE_TRAP:
+		case RAIN_CLOUD_TRAP:
+
+		case ITEM_NASTIFICATION_TRAP:
+		case SANITY_INCREASE_TRAP:
+		case PSI_TRAP:
+		case GAY_TRAP:
+
+		case SARAH_TRAP:
+		case CLAUDIA_TRAP:
+		case LUDGERA_TRAP:
+		case KATI_TRAP:
+
 			You("have triggered a trap!");
 			dotrap(ttmp, 0);
 			return(1);
@@ -2088,6 +2121,9 @@ dospinweb()
 		case SOUND_EFFECT_TRAP:
 		case KOP_CUBE:
 		case BOSS_SPAWNER:
+		case SANITY_TREBLE_TRAP:
+		case STAT_DECREASE_TRAP:
+		case SIMEOUT_TRAP:
 
 			dotrap(ttmp, 0);
 			return(1);
@@ -2930,6 +2966,7 @@ boolean
 polyskillchance()
 {
 	register int percentualchance = 0;
+	register int enchantplant = 0;
 
 	if (PlayerCannotUseSkills) return FALSE;
 	else switch (P_SKILL(P_POLYMORPHING)) {
@@ -2945,8 +2982,34 @@ polyskillchance()
 	}
 
 	if (rn2(100) < percentualchance) return TRUE;
+
+	else if (powerfulimplants() && uimplant && objects[uimplant->otyp].oc_charged && uimplant->spe > 0 ) {
+		enchantplant = uimplant->spe;
+		while (enchantplant > 0) {
+			if (!rn2(10)) return TRUE;
+			enchantplant--;
+			if (enchantplant < 0) enchantplant = 0; /* fail safe, should never happen */
+		}
+	}
+
 	else return FALSE;
 
+}
+
+/* are you eligible for the "handless" effects of implants? If you don't have hands and aren't a transformer, yes.
+ * But some other races are handicapped enough that I decide they deserve this bonus too. --Amy */
+boolean
+powerfulimplants()
+{
+	if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER)) return TRUE;
+	if (Race_if(PM_WEAPON_BUG) && !Upolyd) return TRUE; /* the movement restriction is a big handicap */
+	if (Race_if(PM_JELLY) && !Upolyd) return TRUE; /* permablind and can't pick up items */
+	if (Race_if(PM_OCTOPODE)) return TRUE; /* can't wear armor, even while polymorphed! */
+	if (Race_if(PM_SATRE) && !Upolyd) return TRUE; /* equipment restrictions */
+	if (Race_if(PM_ELONA_SNAIL) && !Upolyd) return TRUE; /* equipment restrictions */
+	if (Race_if(PM_HUMAN_WRAITH)) return TRUE; /* loses maxHP permanently when equipping stuff */
+
+	return FALSE;
 }
 
 static void

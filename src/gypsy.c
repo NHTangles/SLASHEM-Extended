@@ -313,7 +313,7 @@ fortune (mtmp)
 	if (card_istrump(card))
 		switch (card_trump(card)) {
 		case 0:	/* the Fool */
-			adjattrib(A_WIS, -1, 0);
+			adjattrib(A_WIS, -1, 0, TRUE);
 			change_luck(-3);
 			break;
 		case 1:	/* the Magician */
@@ -345,12 +345,12 @@ fortune (mtmp)
 			if (gypsy_offer(mtmp, 5000L,
 					"teleport you to a level of your choosing")) {
 				incr_itimeout(&HTeleport_control, 1);
-				    if (!flags.lostsoul && !flags.uberlostsoul && !(flags.wonderland && !(u.wonderlandescape)) && !(u.uprops[STORM_HELM].extrinsic) && !(In_bellcaves(&u.uz)) && !(In_subquest(&u.uz)) && !(In_voiddungeon(&u.uz)) && !(In_netherrealm(&u.uz))) level_tele();
+				    if (!flags.lostsoul && !flags.uberlostsoul && !(flags.wonderland && !(u.wonderlandescape)) && !(flags.zapem && !(u.zapemescape)) && !(u.uprops[STORM_HELM].extrinsic) && !(In_bellcaves(&u.uz)) && !(In_subquest(&u.uz)) && !(In_voiddungeon(&u.uz)) && !(In_netherrealm(&u.uz))) level_tele();
 				else pline("But unfortunately you aren't allowed to level teleport.");
 			}
 			break;
 		case 6: /* Strength */
-			adjattrib(A_STR, 1, 0);
+			adjattrib(A_STR, 1, 0, TRUE);
 			incr_itimeout(&HHalf_physical_damage, rn1(500, 500));
 			break;
 		case 7: /* the Hermit */
@@ -382,7 +382,7 @@ fortune (mtmp)
 			summon_minion(A_NONE, TRUE);
 			break;
 		case 12: /* Sorcery */
-			adjattrib(urole.spelstat, 1, 0);
+			adjattrib(urole.spelstat, 1, 0, TRUE);
 			incr_itimeout(&HHalf_spell_damage, rn1(500, 500));
 			break;
 		case 13: /* Death */
@@ -465,7 +465,7 @@ fortune (mtmp)
 				mongone(mtmp);
 			} else if (gypsy_offer(mtmp, 10000L, "grant you a wish")) {
 				mtmp->mcan = TRUE;
-				makewish();
+				makewish(TRUE);
 			}
 			break;
 		default:

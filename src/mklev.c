@@ -1059,14 +1059,16 @@ makecorridors()
 	boolean any = TRUE;
 
 	int style = 0;
-	if (!rn2(5)) style = rnd(4);
+	if (!rn2(5)) style = rnd(6);
 #ifdef BIGSLEX
-	style = rnd(4);
+	/* bigslex levels have many more rooms, and the default mechanism is annoying because it constantly makes
+	 * large vertical pathways... make it more random --Amy */
+	style = rnd(6);
 #endif
 
 	/* sporkhack code to have different join mechanisms */
 	switch (style) {
-	default: /* vanilla style */
+	default: /* case 4, vanilla style */
 
 	for(a = 0; a < nroom-1; a++) {
 		join(a, a+1, FALSE);
@@ -1116,14 +1118,50 @@ makecorridors()
 		}
 	    }
 	    break;
-	case 3: /* all roads lead to rome. or to the first room. */
-	    if (nroom > 1) {
-		b = 0;
-		for (a = 1; a < nroom; a++) {
-		    join(a, b, FALSE);
-		}
-	    }
+	case 3: /* all roads lead to rome. or to the first room. Amy edit: one random room, not always the leftmost */
+        if (nroom > 1) {
+            b = rn2(nroom);
+            for (a = 0; a < nroom; a++) {
+                if (b != a) join(a, b, FALSE);
+            }
+	  }
 	    break;
+    case 5: /* by Amy - join random rooms, then make sure that every room has at least one door */
+        if (nroom > 1) {
+            int rmcnt = nroom;
+            rmcnt += rnd(rmcnt);
+            while (rmcnt > 1) {
+                rmcnt--;
+                a = rn2(nroom);
+                b = rn2(nroom);
+                while (b == a) b = rn2(nroom);
+                join(a, b, FALSE);
+            }
+        }
+        for (a = 0; a < nroom; a++) {
+            if (!rooms[a].doorct) {
+                b = rn2(nroom);
+                while (b == a) b = rn2(nroom);
+                join(a, b, FALSE);
+            }
+        }
+    
+        break;
+    case 6:
+        if (nroom > 1) {
+            for (a = 0; a < nroom; a++) {
+                b = rn2(nroom);
+                while (b == a) b = rn2(nroom);
+                join(a, b, FALSE);
+            }
+            for (a = 0; a < nroom; a++) {
+                b = rn2(nroom);
+                while (b == a) b = rn2(nroom);
+                join(a, b, FALSE);
+            }
+        }
+        break;
+
 	}
 
 }
@@ -3196,7 +3234,7 @@ ghnhom2:
 	    case 92:
 	    case 93:
 
-		switch (rnd(630)) {
+		switch (rnd(655)) {
 
 			case 1: makemaz("Aci-1"); return;
 			case 2: makemaz("Aci-2"); return;
@@ -3828,6 +3866,31 @@ ghnhom2:
 			case 628: makemaz("Mas-3"); return;
 			case 629: makemaz("Mas-4"); return;
 			case 630: makemaz("Mas-5"); return;
+			case 631: makemaz("Gre-1"); return;
+			case 632: makemaz("Gre-2"); return;
+			case 633: makemaz("Gre-3"); return;
+			case 634: makemaz("Gre-4"); return;
+			case 635: makemaz("Gre-5"); return;
+			case 636: makemaz("Cel-1"); return;
+			case 637: makemaz("Cel-2"); return;
+			case 638: makemaz("Cel-3"); return;
+			case 639: makemaz("Cel-4"); return;
+			case 640: makemaz("Cel-5"); return;
+			case 641: makemaz("Wal-1"); return;
+			case 642: makemaz("Wal-2"); return;
+			case 643: makemaz("Wal-3"); return;
+			case 644: makemaz("Wal-4"); return;
+			case 645: makemaz("Wal-5"); return;
+			case 646: makemaz("Soc-1"); return;
+			case 647: makemaz("Soc-2"); return;
+			case 648: makemaz("Soc-3"); return;
+			case 649: makemaz("Soc-4"); return;
+			case 650: makemaz("Soc-5"); return;
+			case 651: makemaz("Dem-1"); return;
+			case 652: makemaz("Dem-2"); return;
+			case 653: makemaz("Dem-3"); return;
+			case 654: makemaz("Dem-4"); return;
+			case 655: makemaz("Dem-5"); return;
 
 		}
 		break;
@@ -4960,7 +5023,7 @@ ghnhom2:
 	    case 92:
 	    case 93:
 
-		switch (rnd(630)) {
+		switch (rnd(655)) {
 
 			case 1: makemaz("Aci-6"); return;
 			case 2: makemaz("Aci-7"); return;
@@ -5592,6 +5655,31 @@ ghnhom2:
 			case 628: makemaz("Mas-8"); return;
 			case 629: makemaz("Mas-9"); return;
 			case 630: makemaz("Mas-0"); return;
+			case 631: makemaz("Gre-6"); return;
+			case 632: makemaz("Gre-7"); return;
+			case 633: makemaz("Gre-8"); return;
+			case 634: makemaz("Gre-9"); return;
+			case 635: makemaz("Gre-0"); return;
+			case 636: makemaz("Cel-6"); return;
+			case 637: makemaz("Cel-7"); return;
+			case 638: makemaz("Cel-8"); return;
+			case 639: makemaz("Cel-9"); return;
+			case 640: makemaz("Cel-0"); return;
+			case 641: makemaz("Wal-6"); return;
+			case 642: makemaz("Wal-7"); return;
+			case 643: makemaz("Wal-8"); return;
+			case 644: makemaz("Wal-9"); return;
+			case 645: makemaz("Wal-0"); return;
+			case 646: makemaz("Soc-6"); return;
+			case 647: makemaz("Soc-7"); return;
+			case 648: makemaz("Soc-8"); return;
+			case 649: makemaz("Soc-9"); return;
+			case 650: makemaz("Soc-0"); return;
+			case 651: makemaz("Dem-6"); return;
+			case 652: makemaz("Dem-7"); return;
+			case 653: makemaz("Dem-8"); return;
+			case 654: makemaz("Dem-9"); return;
+			case 655: makemaz("Dem-0"); return;
 		}
 		break;
 
@@ -7146,7 +7234,7 @@ ghnhom4:
 	    case 92:
 	    case 93:
 
-		switch (rnd(630)) {
+		switch (rnd(655)) {
 
 			case 1: makemaz("Aci-1"); return;
 			case 2: makemaz("Aci-2"); return;
@@ -7778,6 +7866,31 @@ ghnhom4:
 			case 628: makemaz("Mas-3"); return;
 			case 629: makemaz("Mas-4"); return;
 			case 630: makemaz("Mas-5"); return;
+			case 631: makemaz("Gre-1"); return;
+			case 632: makemaz("Gre-2"); return;
+			case 633: makemaz("Gre-3"); return;
+			case 634: makemaz("Gre-4"); return;
+			case 635: makemaz("Gre-5"); return;
+			case 636: makemaz("Cel-1"); return;
+			case 637: makemaz("Cel-2"); return;
+			case 638: makemaz("Cel-3"); return;
+			case 639: makemaz("Cel-4"); return;
+			case 640: makemaz("Cel-5"); return;
+			case 641: makemaz("Wal-1"); return;
+			case 642: makemaz("Wal-2"); return;
+			case 643: makemaz("Wal-3"); return;
+			case 644: makemaz("Wal-4"); return;
+			case 645: makemaz("Wal-5"); return;
+			case 646: makemaz("Soc-1"); return;
+			case 647: makemaz("Soc-2"); return;
+			case 648: makemaz("Soc-3"); return;
+			case 649: makemaz("Soc-4"); return;
+			case 650: makemaz("Soc-5"); return;
+			case 651: makemaz("Dem-1"); return;
+			case 652: makemaz("Dem-2"); return;
+			case 653: makemaz("Dem-3"); return;
+			case 654: makemaz("Dem-4"); return;
+			case 655: makemaz("Dem-5"); return;
 		}
 		break;
 
@@ -8906,7 +9019,7 @@ ghnhom4:
 	    case 92:
 	    case 93:
 
-		switch (rnd(630)) {
+		switch (rnd(655)) {
 
 			case 1: makemaz("Aci-6"); return;
 			case 2: makemaz("Aci-7"); return;
@@ -9538,6 +9651,31 @@ ghnhom4:
 			case 628: makemaz("Mas-8"); return;
 			case 629: makemaz("Mas-9"); return;
 			case 630: makemaz("Mas-0"); return;
+			case 631: makemaz("Gre-6"); return;
+			case 632: makemaz("Gre-7"); return;
+			case 633: makemaz("Gre-8"); return;
+			case 634: makemaz("Gre-9"); return;
+			case 635: makemaz("Gre-0"); return;
+			case 636: makemaz("Cel-6"); return;
+			case 637: makemaz("Cel-7"); return;
+			case 638: makemaz("Cel-8"); return;
+			case 639: makemaz("Cel-9"); return;
+			case 640: makemaz("Cel-0"); return;
+			case 641: makemaz("Wal-6"); return;
+			case 642: makemaz("Wal-7"); return;
+			case 643: makemaz("Wal-8"); return;
+			case 644: makemaz("Wal-9"); return;
+			case 645: makemaz("Wal-0"); return;
+			case 646: makemaz("Soc-6"); return;
+			case 647: makemaz("Soc-7"); return;
+			case 648: makemaz("Soc-8"); return;
+			case 649: makemaz("Soc-9"); return;
+			case 650: makemaz("Soc-0"); return;
+			case 651: makemaz("Dem-6"); return;
+			case 652: makemaz("Dem-7"); return;
+			case 653: makemaz("Dem-8"); return;
+			case 654: makemaz("Dem-9"); return;
+			case 655: makemaz("Dem-0"); return;
 		}
 		break;
 
@@ -12656,6 +12794,15 @@ selecttrap:
 		    case TIMERUN_TRAP:
 			if (!Role_if(PM_CAMPERSTRIKER) && !NastyTrapNation && rn2(Role_if(PM_SPACEWARS_FIGHTER) ? 15 : 30 )) goto selecttrap;
 			break;
+		    case SANITY_TREBLE_TRAP:
+			if (!Role_if(PM_CAMPERSTRIKER) && !NastyTrapNation && rn2(Role_if(PM_SPACEWARS_FIGHTER) ? 25 : 51 )) goto selecttrap;
+			break;
+		    case STAT_DECREASE_TRAP:
+			if (!Role_if(PM_CAMPERSTRIKER) && !NastyTrapNation && rn2(Role_if(PM_SPACEWARS_FIGHTER) ? 10 : 20 )) goto selecttrap;
+			break;
+		    case SIMEOUT_TRAP:
+			if (!Role_if(PM_CAMPERSTRIKER) && !NastyTrapNation && rn2(Role_if(PM_SPACEWARS_FIGHTER) ? 50 : 100 )) goto selecttrap;
+			break;
 		    case BAD_PART_TRAP:
 			if (!Role_if(PM_CAMPERSTRIKER) && !NastyTrapNation && rn2(Role_if(PM_SPACEWARS_FIGHTER) ? 10 : 20 )) goto selecttrap;
 			break;
@@ -13436,6 +13583,12 @@ selecttrap:
 		    case OUTTA_DEPTH_TRAP:
 			if (rn2(evilfriday ? 10 : 50) && !NastyTrapNation) goto selecttrap;
 			break;
+		    case ITEM_NASTIFICATION_TRAP:
+			if (rn2(evilfriday ? 20 : 200) && !NastyTrapNation) goto selecttrap;
+			break;
+		    case GAY_TRAP:
+			if (rn2(evilfriday ? 10 : 50) && !NastyTrapNation) goto selecttrap;
+			break;
 		    case BOON_TRAP:
 			if (rn2(200)) goto selecttrap;
 			break;
@@ -13453,6 +13606,18 @@ selecttrap:
 			if (!Role_if(PM_FEMINIST) && rn2(5) && !NastyTrapNation) goto selecttrap;
 			break;
 		    case MARLENA_TRAP:
+			if (!Role_if(PM_FEMINIST) && rn2(5) && !NastyTrapNation) goto selecttrap;
+			break;
+		    case SARAH_TRAP:
+			if (!Role_if(PM_FEMINIST) && rn2(5) && !NastyTrapNation) goto selecttrap;
+			break;
+		    case CLAUDIA_TRAP:
+			if (!Role_if(PM_FEMINIST) && rn2(5) && !NastyTrapNation) goto selecttrap;
+			break;
+		    case LUDGERA_TRAP:
+			if (!Role_if(PM_FEMINIST) && rn2(5) && !NastyTrapNation) goto selecttrap;
+			break;
+		    case KATI_TRAP:
 			if (!Role_if(PM_FEMINIST) && rn2(5) && !NastyTrapNation) goto selecttrap;
 			break;
 		    case ANASTASIA_TRAP:

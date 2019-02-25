@@ -400,7 +400,7 @@ castmu(mtmp, mattk, thinks_it_foundyou, foundyou)
 	}
 
 	/* monster unable to cast spells? */
-	if (mtmp->mcan || (RngeAntimagicA && !rn2(10)) || (RngeAntimagicB && !rn2(5)) || (RngeAntimagicC && !rn2(2)) || (RngeAntimagicD) || (RngeSpellDisruption && !rn2(5)) || mtmp->m_en < 5 || mtmp->mspec_used || !ml || u.antimagicshell || (uarmc && uarmc->oartifact == ART_SHELLY && (moves % 3 == 0)) || (uarmc && uarmc->oartifact == ART_BLACK_VEIL_OF_BLACKNESS) || (uarmc && uarmc->oartifact == ART_ARABELLA_S_WAND_BOOSTER) || (uarmu && uarmu->oartifact == ART_ANTIMAGIC_SHELL) || (uarmu && uarmu->oartifact == ART_ANTIMAGIC_FIELD) || Role_if(PM_UNBELIEVER) || (uarmc && OBJ_DESCR(objects[uarmc->otyp]) && (!strcmp(OBJ_DESCR(objects[uarmc->otyp]), "void cloak") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "nedeystvitel'nym plashch") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "haqiqiy emas plash") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "shell cloak") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "plashch obolochki") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "qobiq plash") ) && !rn2(5))  ) {
+	if (mtmp->mcan || (RngeAntimagicA && !rn2(10)) || (RngeAntimagicB && !rn2(5)) || (RngeAntimagicC && !rn2(2)) || (RngeAntimagicD) || (RngeSpellDisruption && !rn2(5)) || mtmp->m_en < 5 || mtmp->mspec_used || !ml || u.antimagicshell || (uarmh && uarmh->otyp == HELM_OF_ANTI_MAGIC) || (uarmc && uarmc->oartifact == ART_SHELLY && (moves % 3 == 0)) || (uarmc && uarmc->oartifact == ART_BLACK_VEIL_OF_BLACKNESS) || (uarmc && uarmc->oartifact == ART_ARABELLA_S_WAND_BOOSTER) || (uarmu && uarmu->oartifact == ART_ANTIMAGIC_SHELL) || (uarmu && uarmu->oartifact == ART_ANTIMAGIC_FIELD) || Role_if(PM_UNBELIEVER) || (uarmc && OBJ_DESCR(objects[uarmc->otyp]) && (!strcmp(OBJ_DESCR(objects[uarmc->otyp]), "void cloak") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "nedeystvitel'nym plashch") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "haqiqiy emas plash") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "shell cloak") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "plashch obolochki") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "qobiq plash") ) && !rn2(5))  ) {
 	    cursetxt(mtmp, is_undirected_spell(mattk->adtyp, spellnum));
 	    return(0);
 	}
@@ -614,8 +614,8 @@ castmu(mtmp, mattk, thinks_it_foundyou, foundyou)
 			losexp("psionic drain", FALSE, TRUE);
 		}
 		if (!rn2(200)) {
-			adjattrib(A_INT, -1, 1);
-			adjattrib(A_WIS, -1, 1);
+			adjattrib(A_INT, -1, 1, TRUE);
+			adjattrib(A_WIS, -1, 1, TRUE);
 		}
 		if (!rn2(200)) {
 			pline("You scream in pain!");
@@ -761,6 +761,7 @@ int spellnum;
 	if ((otmp = mksobj(LOADSTONE, TRUE, FALSE)) != (struct obj *)0) {
 	pline(Hallucination ? "Aww, something's killing your good feelings!" : "You feel burdened");
 	otmp->quan = 1;
+	otmp->owt = weight(otmp);
 	if (pickup_object(otmp, 1, FALSE, TRUE) <= 0) {
 	obj_extract_self(otmp);
 	place_object(otmp, u.ux, u.uy);
@@ -841,11 +842,11 @@ int spellnum;
 
 	case MGC_CALL_UNDEAD:
 	{
-		coord mm;   
-		mm.x = u.ux;   
-		mm.y = u.uy;   
+		coord mm;
+		mm.x = u.ux;
+		mm.y = u.uy;
 		pline("Undead creatures are called forth from the grave!");   
-		mkundead(&mm, FALSE, 0);   
+		mkundead(&mm, FALSE, 0, FALSE);
 	}
 	dmg = 0;   
 	break;   
@@ -1065,7 +1066,7 @@ int spellnum;
 	    if (issoviet) dmg = mtmp->m_lev - rnd(5);
 	    if (Half_spell_damage && rn2(2) ) dmg = (dmg + 1) / 2;
 	    if (StrongHalf_spell_damage && rn2(2) ) dmg = (dmg + 1) / 2;
-	    losestr(rnd(dmg));
+	    losestr(rnd(dmg), TRUE);
 	    if (u.uhp < 1)
 		done_in_by(mtmp);
 	}
@@ -1133,7 +1134,8 @@ int spellnum;
 	    if (canseemon(mtmp))
 		pline("%s looks better.", Monnam(mtmp));
 	    /* note: player healing does 6d4; this used to do 1d8 */
-	    if ((mtmp->mhp += d(3,6)) > mtmp->mhpmax)
+		/* Amy note: boosted it so that it's no longer completely useless
+	    if ((mtmp->mhp += (d(3,6) + rnz(1 + (mtmp->m_lev * 3)) )) > mtmp->mhpmax)
 		mtmp->mhp = mtmp->mhpmax;
 	    dmg = 0;
 	}
@@ -1888,7 +1890,7 @@ int spellnum;
 	    if (issoviet) dmg = mtmp->m_lev - rnd(7);
 	    if (Half_spell_damage && rn2(2) ) dmg = (dmg + 1) / 2;
 	    if (StrongHalf_spell_damage && rn2(2) ) dmg = (dmg + 1) / 2;
-	    adjattrib(rn2(A_MAX), -dmg, 0);
+	    adjattrib(rn2(A_MAX), -dmg, 0, TRUE);
 	}
 	dmg = 0;
 	break;
@@ -1898,7 +1900,7 @@ int spellnum;
 	    if (canseemon(mtmp))
 		pline("%s looks better.", Monnam(mtmp));
 	    /* note: player healing does 6d4; this used to do 1d8 */
-	    if ((mtmp->mhp += d(3,6)) > mtmp->mhpmax)
+	    if ((mtmp->mhp += (d(3,6) + rnz(1 + (mtmp->m_lev * 3)) )) > mtmp->mhpmax)
 		mtmp->mhp = mtmp->mhpmax;
 	    dmg = 0;
 	}
@@ -2163,7 +2165,7 @@ buzzmu(mtmp, mattk)		/* monster uses spell (ranged) */
 	if ((mattk->adtyp > AD_SPC2) || (mattk->adtyp < AD_MAGM))
 	    return(0);
 
-	if (mtmp->mcan || (RngeAntimagicA && !rn2(10)) || (RngeAntimagicB && !rn2(5)) || (RngeAntimagicC && !rn2(2)) || (RngeAntimagicD) || (RngeSpellDisruption && !rn2(5)) || u.antimagicshell || (uarmc && uarmc->oartifact == ART_SHELLY && (moves % 3 == 0)) || (uarmc && uarmc->oartifact == ART_BLACK_VEIL_OF_BLACKNESS) || (uarmc && uarmc->oartifact == ART_ARABELLA_S_WAND_BOOSTER) || (uarmu && uarmu->oartifact == ART_ANTIMAGIC_SHELL) || (uarmu && uarmu->oartifact == ART_ANTIMAGIC_FIELD) || Role_if(PM_UNBELIEVER) || (uarmc && OBJ_DESCR(objects[uarmc->otyp]) && (!strcmp(OBJ_DESCR(objects[uarmc->otyp]), "void cloak") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "nedeystvitel'nym plashch") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "haqiqiy emas plash") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "shell cloak") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "plashch obolochki") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "qobiq plash") ) && !rn2(5)) ) {
+	if (mtmp->mcan || (RngeAntimagicA && !rn2(10)) || (RngeAntimagicB && !rn2(5)) || (RngeAntimagicC && !rn2(2)) || (RngeAntimagicD) || (RngeSpellDisruption && !rn2(5)) || u.antimagicshell || (uarmh && uarmh->otyp == HELM_OF_ANTI_MAGIC) || (uarmc && uarmc->oartifact == ART_SHELLY && (moves % 3 == 0)) || (uarmc && uarmc->oartifact == ART_BLACK_VEIL_OF_BLACKNESS) || (uarmc && uarmc->oartifact == ART_ARABELLA_S_WAND_BOOSTER) || (uarmu && uarmu->oartifact == ART_ANTIMAGIC_SHELL) || (uarmu && uarmu->oartifact == ART_ANTIMAGIC_FIELD) || Role_if(PM_UNBELIEVER) || (uarmc && OBJ_DESCR(objects[uarmc->otyp]) && (!strcmp(OBJ_DESCR(objects[uarmc->otyp]), "void cloak") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "nedeystvitel'nym plashch") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "haqiqiy emas plash") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "shell cloak") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "plashch obolochki") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "qobiq plash") ) && !rn2(5)) ) {
 	    cursetxt(mtmp, FALSE);
 	    return(0);
 	}

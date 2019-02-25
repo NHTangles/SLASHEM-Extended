@@ -2826,6 +2826,108 @@ STATIC_OVL struct Jitem Soviet_items[] = {
 	{ COMPLETELY_BAD_PART_STONE, "polnost'yu plokhaya chast' kamnya" },
 	{ EVIL_VARIANT_STONE, "zloy variant kamnya" },
 
+	{ SANE_TREBLE_STONE, "vmenyayemyy troynoy kamen'" },
+	{ STATCREASE_STONE, "kamen' dlya pokhudeniya" },
+	{ SIMEOUT_STONE, "vytashchit' kamen'" },
+	{ AMULET_OF_SANITY_TREBLE, "amulet of troystvennost' zdravomysliya" },
+	{ RIN_STAT_DECREASE, "umen'sheniye statov" },
+	{ RIN_SANITY_TIMEOUT, "vremya ozhidaniya" },
+
+	{ LIZARD_SCALE_MAIL, "yashcheritsa masshtabnaya pochta" },
+	{ LIZARD_SCALES, "vesy yashcheritsy" },
+	{ FLAME_MOUNTAIN, "gora plameni" },
+	{ BEAM_REFLECTOR_GUN, "luch otrazhatelya" },
+	{ TENNIS_RACKET, "tennisnaya raketka" },
+	{ ENERGY_SAP, "zhivitsa" },
+
+	{ SCR_NASTY_CURSE, "protivnoye proklyatiye" },
+	{ SCR_HYBRIDIZATION, "gibridizatsiya" },
+	{ SCR_SECURE_CURSE_REMOVAL, "bezopasnoye snyatiye proklyatiya" },
+
+	{ WAN_DISENCHANTMENT, "razocharovaniye" },
+	{ WAN_CONTAMINATION, "zagryazneniye" },
+	{ WAN_TREMBLING, "drozh'" },
+
+	{ SCR_MAKE_PENTAGRAM, "sdelat' pentagrammu" },
+	{ SCR_WELL_BUILDING, "stroitel'stvo skvazhin" },
+	{ SCR_DRIVING, "vozhdeniye" },
+	{ SCR_TABLE_FURNITURE, "nastol'naya mebel'" },
+	{ SCR_EMBEDDING, "vlozheniya" },
+	{ SCR_MATTRESS_SLEEPING, "spal'nyy matras" },
+
+	{ SCR_GRAVE, "mogila" },
+	{ SCR_TUNNELS, "tunneli" },
+	{ SCR_FARMING, "sel'skoye khozyaystvo" },
+	{ SCR_MOUNTAINS, "gory" },
+	{ SCR_DIVING, "dayving" },
+	{ SCR_CRYSTALLIZATION, "kristallizatsiya" },
+	{ SCR_MOORLAND, "vereshchatnik" },
+	{ SCR_URINE, "mocha" },
+	{ SCR_QUICKSAND, "plyvun" },
+	{ SCR_STYX, "stiks" },
+	{ SCR_SNOW, "sneg" },
+	{ SCR_ASH, "yasen'" },
+	{ SCR_SAND, "pesok" },
+	{ SCR_PAVING, "moshcheniye" },
+	{ SCR_HIGHWAY, "shosse" },
+	{ SCR_GRASSLAND, "lug" },
+	{ SCR_NETHER, "nizhniy" },
+	{ SCR_STALACTITE, "stalaktit" },
+	{ SCR_CRYPT, "kripta" },
+	{ SCR_BUBBLE_BOBBLE, "puzyr'" },
+	{ SCR_RAIN, "dozhd'" },
+
+	{ WAN_CHAOS_TERRAIN, "khaos mestnosti" },
+	{ WAN_FLEECY_TERRAIN, "vorsistyy rel'yef" },
+
+	{ SPE_GRAVE, "mogila" },
+	{ SPE_TUNNELS, "tunneli" },
+	{ SPE_FARMING, "sel'skoye khozyaystvo" },
+	{ SPE_MOUNTAINS, "gory" },
+	{ SPE_DIVING, "dayving" },
+	{ SPE_CRYSTALLIZATION, "kristallizatsiya" },
+	{ SPE_MOORLAND, "vereshchatnik" },
+	{ SPE_URINE, "mocha" },
+	{ SPE_QUICKSAND, "plyvun" },
+	{ SPE_STYX, "stiks" },
+	{ SPE_ATTUNE_MAGIC, "magiya nastroyki" },
+	{ SPE_SNOW, "sneg" },
+	{ SPE_ASH, "yasen'" },
+	{ SPE_SAND, "pesok" },
+	{ SPE_PAVING, "moshcheniye" },
+	{ SPE_HIGHWAY, "shosse" },
+	{ SPE_GRASSLAND, "lug" },
+	{ SPE_NETHER_MIST, "nizhniy tuman" },
+	{ SPE_STALACTITE, "stalaktit" },
+	{ SPE_CRYPT, "kripta" },
+	{ SPE_BUBBLE_BOBBLE, "puzyr'" },
+	{ SPE_RAIN, "dozhd'" },
+	{ DARK_BAR, "temnaya polosa" },
+	{ YITH_TENTACLE, "shchupal'tse" },
+	{ BOHEMIAN_EAR_SPOON, "bogemnaya ushnaya lozhka" },
+	{ POLE_LANTERN, "fonarnyy stolb" },
+	{ NASTYPOLE, "protivnyy stolb" },
+	{ SPE_GAIN_SPACT, "poluchit' tolchok" },
+	{ SPE_METAL_GUARD, "metallicheskaya zashchita" },
+	{ SCR_MISSING_CODE, "nedostayushchiy kod" },
+	{ YOGA_PANTS, "shtany dlya yogi" },
+	{ WINDMILL_BLADE, "lezviye vetryanoy mel'nitsy" },
+	{ GRAIN_SCYTHE, "zernovaya kosa" },
+	{ ORNATE_MACE, "bogato ukrashennaya bulava" },
+	{ RAZOR_WHIP, "britva knut" },
+	{ HELM_OF_OPAQUE_THOUGHTS, "shlem neprozrachnykh mysley" },
+	{ SECOND_SKIN, "vtoraya kozha" },
+	{ CLOAK_OF_FLIGHT, "plashch poleta" },
+	{ HIDE_SHIELD, "spryatat' shchit" },
+	{ ROGUES_GLOVES, "zhul'nicheskiye perchatki" },
+	{ GREEN_GOWN, "zelenoye plat'ye" },
+	{ HELM_OF_ANTI_MAGIC, "shlem antimagii" },
+	{ OILSKIN_COIF, "kapyushon" },
+	{ KALASHNIKOV, "russkaya shturmovaya vintovka" },
+	{ SPE_MAGIC_WHISTLING, "volshebnyy svist" },
+	{ RIN_JUMPING, "pryzhki" },
+	{ RIN_ILLNESS, "bolezn'" },
+
 	/* todo area */
 
 	{0, "" }
@@ -5120,6 +5222,108 @@ STATIC_OVL struct Jitem Ancient_items[] = {
 	{ COMPLETELY_BAD_PART_STONE, "butunlay yomon qism tosh" },
 	{ EVIL_VARIANT_STONE, "yomon har xil tosh" },
 
+	{ SANE_TREBLE_STONE, "yupqa tosh" },
+	{ STATCREASE_STONE, "toshni toshga aylantirish" },
+	{ SIMEOUT_STONE, "toshdan tashqariga chiqish" },
+	{ AMULET_OF_SANITY_TREBLE, "amulet of aktyorlik yuqori" },
+	{ RIN_STAT_DECREASE, "holat pasayishi" },
+	{ RIN_SANITY_TIMEOUT, "aql-idrok vaqt tugadi" },
+
+	{ LIZARD_SCALE_MAIL, "kertenkele o'lchamli pochta" },
+	{ LIZARD_SCALES, "kertenkele o'lchamlari" },
+	{ FLAME_MOUNTAIN, "olov tog'i" },
+	{ BEAM_REFLECTOR_GUN, "nurli reflektorli qurol" },
+	{ TENNIS_RACKET, "tennis raketasi" },
+	{ ENERGY_SAP, "po'st teskari o'girish oq osti" },
+
+	{ SCR_NASTY_CURSE, "yomon la'nat" },
+	{ SCR_HYBRIDIZATION, "hibridizatsiya" },
+	{ SCR_SECURE_CURSE_REMOVAL, "xavfsiz lanetalarni yo'q qilish" },
+
+	{ WAN_DISENCHANTMENT, "noqulaylik" },
+	{ WAN_CONTAMINATION, "ifloslanish" },
+	{ WAN_TREMBLING, "titroq" },
+
+	{ SCR_MAKE_PENTAGRAM, "besh nuqta yulduz qilish" },
+	{ SCR_WELL_BUILDING, "yaxshi bino" },
+	{ SCR_DRIVING, "haydash" },
+	{ SCR_TABLE_FURNITURE, "stol mebellari" },
+	{ SCR_EMBEDDING, "joylashtirish" },
+	{ SCR_MATTRESS_SLEEPING, "to'shakda yotish" },
+
+	{ SCR_GRAVE, "qabr" },
+	{ SCR_TUNNELS, "tunnellar" },
+	{ SCR_FARMING, "qishloq xo'jaligi" },
+	{ SCR_MOUNTAINS, "tog'lar" },
+	{ SCR_DIVING, "sho'ng'in" },
+	{ SCR_CRYSTALLIZATION, "kristallanish" },
+	{ SCR_MOORLAND, "tog'li erlar" },
+	{ SCR_URINE, "siydik" },
+	{ SCR_QUICKSAND, "bilqillama qumloq" },
+	{ SCR_STYX, "stiks" },
+	{ SCR_SNOW, "qor" },
+	{ SCR_ASH, "kul" },
+	{ SCR_SAND, "qum" },
+	{ SCR_PAVING, "slaydni yopish" },
+	{ SCR_HIGHWAY, "avtomobil yo'li" },
+	{ SCR_GRASSLAND, "chorvachilik" },
+	{ SCR_NETHER, "o'shanda" },
+	{ SCR_STALACTITE, "sarkitit" },
+	{ SCR_CRYPT, "yer ostidagi sag'ana" },
+	{ SCR_BUBBLE_BOBBLE, "kabarcikli noto'g'ri ziplatma" },
+	{ SCR_RAIN, "yomg'ir" },
+
+	{ WAN_CHAOS_TERRAIN, "betartiblik joy" },
+	{ WAN_FLEECY_TERRAIN, "gavyum erlar" },
+
+	{ SPE_GRAVE, "qabr" },
+	{ SPE_TUNNELS, "tunnellar" },
+	{ SPE_FARMING, "qishloq xo'jaligi" },
+	{ SPE_MOUNTAINS, "tog'lar" },
+	{ SPE_DIVING, "sho'ng'in" },
+	{ SPE_CRYSTALLIZATION, "kristallanish" },
+	{ SPE_MOORLAND, "tog'li erlar" },
+	{ SPE_URINE, "siydik" },
+	{ SPE_QUICKSAND, "bilqillama qumloq" },
+	{ SPE_STYX, "stiks" },
+	{ SPE_ATTUNE_MAGIC, "hamohang qilmoq sehrli" },
+	{ SPE_SNOW, "qor" },
+	{ SPE_ASH, "kul" },
+	{ SPE_SAND, "qum" },
+	{ SPE_PAVING, "slaydni yopish" },
+	{ SPE_HIGHWAY, "avtomobil yo'li" },
+	{ SPE_GRASSLAND, "chorvachilik" },
+	{ SPE_NETHER_MIST, "o'tkir tuman" },
+	{ SPE_STALACTITE, "sarkitit" },
+	{ SPE_CRYPT, "yer ostidagi sag'ana" },
+	{ SPE_BUBBLE_BOBBLE, "kabarcikli noto'g'ri ziplatma" },
+	{ SPE_RAIN, "yomg'ir" },
+	{ DARK_BAR, "qora satr" },
+	{ YITH_TENTACLE, "paypaslagich bilan" },
+	{ BOHEMIAN_EAR_SPOON, "bohem quloq qoshiq" },
+	{ POLE_LANTERN, "qutbli chiroq" },
+	{ NASTYPOLE, "yomon qutb" },
+	{ SPE_GAIN_SPACT, "kuch-qudratga ega bo'lish" },
+	{ SPE_METAL_GUARD, "metall muhofazachi" },
+	{ SCR_MISSING_CODE, "etishmayotgan kod" },
+	{ YOGA_PANTS, "yoga jinsida" },
+	{ WINDMILL_BLADE, "shamol tegirmoni" },
+	{ GRAIN_SCYTHE, "donli shiling" },
+	{ ORNATE_MACE, "bezak mahsuli" },
+	{ RAZOR_WHIP, "ustara qamchi" },
+	{ HELM_OF_OPAQUE_THOUGHTS, "shaffof fikrlarning boshlig'i" },
+	{ SECOND_SKIN, "ikkinchi teri" },
+	{ CLOAK_OF_FLIGHT, "parvozning plashi" },
+	{ HIDE_SHIELD, "qalqonni yashiring" },
+	{ ROGUES_GLOVES, "nogironlar qo'lqoplari" },
+	{ GREEN_GOWN, "yashil libos" },
+	{ HELM_OF_ANTI_MAGIC, "sehrgarlikning hukmdori" },
+	{ OILSKIN_COIF, "yog 'qatlami" },
+	{ KALASHNIKOV, "rus avtomashinasi" },
+	{ SPE_MAGIC_WHISTLING, "sehrli hushtak" },
+	{ RIN_JUMPING, "o'tish" },
+	{ RIN_ILLNESS, "kasallik" },
+
 	/* todo area */
 
 	{0, "" }
@@ -5448,6 +5652,10 @@ register struct obj *obj;
 		/* If we use an() here we'd have to remember never to use */
 		/* it whenever calling doname() or xname(). */
 		if (typ == FIGURINE && !PlayerUninformation)
+		    sprintf(eos(buf), " of a%s %s",
+			index(vowels,*(mons[obj->corpsenm].mname)) ? "n" : "",
+			mons[obj->corpsenm].mname);
+		if (typ == ENERGY_SAP && !PlayerUninformation)
 		    sprintf(eos(buf), " of a%s %s",
 			index(vowels,*(mons[obj->corpsenm].mname)) ? "n" : "",
 			mons[obj->corpsenm].mname);
@@ -5982,6 +6190,15 @@ register struct obj *obj;
 		if (!PlayerUninformation) add_erosion_words(obj, prefix);
 		if(obj->owornmask & W_IMPLANT)
 			strcat(bp, " (being worn)");
+
+		if (Hallucination)
+			break;
+
+		if(obj->known && objects[obj->otyp].oc_charged) {
+			strcat(prefix, sitoa(obj->spe));
+			strcat(prefix, " ");
+		}
+
 		break;
 	case WEAPON_CLASS:
 		if(ispoisoned && !PlayerUninformation)
@@ -8326,7 +8543,7 @@ typfnd:
 	    typ = OIL_LAMP;
 
 	/* obviously don't allow wishing for scrolls of wishing --Amy */
-	if ((typ == SCR_WISHING || typ == SCR_ASTRALCENSION || typ == SCR_ARTIFACT_CREATION || typ == SCR_ARTIFACT_JACKPOT || typ == SCR_RESURRECTION || typ == SCR_ACQUIREMENT || typ == SCR_ENTHRONIZATION || typ == SCR_FOUNTAIN_BUILDING)
+	if ((typ == SCR_WISHING || typ == SCR_ASTRALCENSION || typ == SCR_ARTIFACT_CREATION || typ == SCR_ARTIFACT_JACKPOT || typ == SCR_RESURRECTION || typ == SCR_ACQUIREMENT || typ == SCR_ENTHRONIZATION || typ == SCR_MAKE_PENTAGRAM || typ == SCR_FOUNTAIN_BUILDING)
 #ifdef WIZARD
 				&& !wizard
 #endif
@@ -8471,6 +8688,7 @@ typfnd:
 			}
 			break;
 		case FIGURINE:
+		case ENERGY_SAP:
                         if
 # ifdef WIZARD
                                 ((wizard) ||
@@ -8740,6 +8958,11 @@ rnd_class(first,last)
 int first,last;
 {
 	int i, x, sum=0;
+
+	if (first > last) {
+		impossible("rnd_class called with invalid values. first = %d, last = %d", first, last);
+		return 0;
+	}
 
 	if (first == last)
 	    return (first);

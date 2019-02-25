@@ -144,14 +144,16 @@ boolean restore;
 			}
 			if (otmp) {
 
-				if(rn2(2)) curse(otmp);
+				if(!rn2(3)) curse(otmp);
 
 				/* still blessed? Roll for a chance to make it uncursed. --Amy */
-				if(rn2(2) && otmp->blessed) unbless(otmp);
+				if(!rn2(3) && otmp->blessed) unbless(otmp);
 
 				/* degrade everything to reduce the # of free stuff the finder will get */
-				if (otmp->spe > 2) otmp->spe /= 2;
-				else if (otmp->spe > -20) otmp->spe--;
+				if (rn2(2)) {
+					if (otmp->spe > 2) otmp->spe /= 2;
+					else if (otmp->spe > -20) otmp->spe--;
+				}
 
 			}
 		}
@@ -286,7 +288,7 @@ struct obj *corpse;
 	    if (DEADMONSTER(mtmp)) continue;
 	    mptr = mtmp->data;
 	    if (mtmp->iswiz || mptr == &mons[PM_MEDUSA] ||
-		    (mptr->msound == MS_NEMESIS &&  mptr->mlet != S_NEMESE && mptr != &mons[PM_STARLIT_SKY] && mptr != &mons[PM_MISNAMED_STARLIT_SKY] && mptr != &mons[PM_WRONG_NAMED_STARLIT_SKY] && mptr != &mons[PM_ERRONEOUS_STARLIT_SKY] && mptr != &mons[PM_DARK_STARLIT_SKY] && mptr != &mons[PM_BLACK_STARLIT_SKY] && mptr != &mons[PM_RED_STARLIT_SKY] && mptr != &mons[PM_BROWN_STARLIT_SKY] && mptr != &mons[PM_GREEN_STARLIT_SKY] && mptr != &mons[PM_PURPLE_STARLIT_SKY] && mptr != &mons[PM_YELLOW_STARLIT_SKY] && mptr != &mons[PM_ORANGE_STARLIT_SKY] && mptr != &mons[PM_CYAN_STARLIT_SKY] && mptr != &mons[PM_VIOLET_STARLIT_SKY] && mptr != &mons[PM_TRUE_MISSINGNO] && mptr != &mons[PM_ETHEREAL_MISSINGNO] && mptr != &mons[PM_DESTABILIZER] && mptr != &mons[PM_POLYINITOR]) || mptr->msound == MS_LEADER ||
+		    (mptr->msound == MS_NEMESIS && mtmp->mnum >= PM_LORD_CARNARVON && mtmp->mnum <= PM_UPPER_BULL) || mptr->msound == MS_LEADER ||
 		    mptr == &mons[PM_VLAD_THE_IMPALER] ||
 		    mptr == &mons[PM_NIGHTMARE] ||
 		    mptr == &mons[PM_BEHOLDER] || mptr == &mons[PM_VECNA] ||

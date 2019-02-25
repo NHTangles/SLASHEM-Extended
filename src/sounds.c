@@ -93,12 +93,14 @@ dosounds()
 		"a slow drip.",
 		"a gurgling noise.",
 		"a metallic plinking sound.",
+		"a toilet flush!",
+		"a dripping tap.",
 		"dripping water.",
 		"dishes being washed!",
 		"a neverending dripping sound that is driving you crazy!",
 		"someone getting in on the action with a hot foocubus!",
 	};
-	You_hear("%s", sink_msg[rn2(4+hallu*3)]);
+	You_hear("%s", sink_msg[rn2(6+hallu*3)]);
     }
 #endif
     if (level.flags.has_court && !rn2(200)) {
@@ -535,8 +537,9 @@ dosounds()
 			"can smell the mildew on the walls.",
 			"listen to the type of ice block laughing all the time. Harharharharharharhar!",
 			"know that if you're walking on ice all the time, you'll unlearn the ability to walk on a non-slippery floor.",
+			"hear an ice cream van!",
 		};
-		You("%s", coolingchamber_msg[rn2(5+hallu*5)]);
+		You("%s", coolingchamber_msg[rn2(5+hallu*6)]);
 		return;
 	    }
 
@@ -1018,7 +1021,9 @@ dosounds()
 	    if (level.flags.has_showerroom && !rn2(200)) {
 		static const char *showerroom_msg[] = {
 			"hear water currents.",
+			"feel like dancing in the rain.",
 			"listen to a mix of splashes.",
+			"hear the shower running.",
 			"inhale the smell of brine.",
 			"hear a thunderous rumble.",
 			"listen to the emergency service trying to repair a broken water pipe.",
@@ -1026,7 +1031,7 @@ dosounds()
 			"realize that the sorcery adept doesn't know how to stop the water...", /* some poem that I forgot the name off, maybe "the mage adept"? the poor sap wants to fill the bathtub with water by using a spell but forgot how to stop the helpers he summoned */
 			"detect a flooding on this sub level.",
 		};
-		You("%s", showerroom_msg[rn2(4+hallu*4)]);
+		You("%s", showerroom_msg[rn2(6+hallu*4)]);
 		return;
 	    }
 	    if (level.flags.has_greencrossroom && !rn2(200)) {
@@ -1053,6 +1058,7 @@ dosounds()
 		static const char *ruinedchurch_msg[] = {
 			"feel a haunting presence.",
 			"hear a chiming bell.",
+			"a C major chord.",
 			"feel that all sanctity of this place has been lost.",
 			"are sure that the dead are floating around here.",
 			"hear an orchestral melody that goes 'Daaaaa... daaaaaa... DAAAAAAAAAAAAAAA!!!'",
@@ -1060,7 +1066,7 @@ dosounds()
 			"remember the bible saying that you should do unto others what you want others to do unto you.",
 			"know that practice makes perfect. Yeah, yeah.",
 		};
-		You("%s", ruinedchurch_msg[rn2(4+hallu*4)]);
+		You("%s", ruinedchurch_msg[rn2(5+hallu*4)]);
 		return;
 	    }
 	    if (level.flags.has_gamecorner && !rn2(200)) {
@@ -1176,6 +1182,7 @@ dosounds()
 		static const char *riverroom_msg[] = {
 			"hear seagulls.",
 			"hear waves on sand.",
+			"hear something fishy happening.",
 			"hear the trickle of water.",
 			"sense a watery smell mixed with grass.",
 			"listen to an unusual ambient sound.",
@@ -1188,8 +1195,17 @@ dosounds()
 			"get the dreaded 'Can't write to save file' error. Bullshit.",
 			"hear burly voices singing shanties.",
 			"here someone ask about warez.",
+			"hear a speedboat.",
+			"hear a squeaking rubber duck!",
+			"hear a loud advert for Tide.",
+			"hear a commercial for protein bars.",
+			"hear a shark jumping!",
+			"hear a gull asking for a bite of your sandwich.",
+			"hear a foghorn!",
+			"hear a sea shell exploding!",
+			"hear a C-shell script running.",
 		};
-		You("%s", riverroom_msg[rn2(7+hallu*7)]);
+		You("%s", riverroom_msg[rn2(8+hallu*16)]);
 		return;
 	    }
 
@@ -1362,6 +1378,22 @@ dosounds()
 	  "You know that on the flipside they have a cat AND a dog!",
       };
       pline("%s", alignquest_msg[rn2(4+hallu*4)]);
+    }
+
+	/* finding the subquest is even more annoying because you have to do it */
+    if ( at_dgn_entrance("The Subquest") && u.silverbellget && !rn2(500) ) {
+      static const char *subquest_msg[] = {
+	  "You sense some questing power!",
+	  "You detect the presence of the subquest portal!",
+	  "A lot of force seems to be in the air.",
+	  "You listen to the taunts of your nemesis who wants a rematch!",
+	  "You suddenly fear that you'll face your nemesis again and lose!",
+	  "You have a vision of your home being burned to the ground by the person you despise the most!",
+	  "Something tells you that the only thing you can depend on is your family, and even that not always!",
+	  "You hear a voice announce: \"Morn', player. I'm Sean Gonorrhea. I like my coffee black, my women slutty, and my mucosa membranes inflamed.\"",
+      };
+      pline("%s", subquest_msg[rn2(4+hallu*4)]);
+
     }
 
 }
@@ -1998,7 +2030,7 @@ register struct monst *mtmp;
 				mtmp->mcan = TRUE;
 
 				if (u.uevent.udemigod || u.uhave.amulet || CannotTeleport || (u.usteed && mon_has_amulet(u.usteed)) ) { pline("You shudder for a moment."); (void) safe_teleds(FALSE); break;}
-				if (flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) {
+				if (flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) {
 				pline("For some reason you resist the banishment!"); break;}
 
 				make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
@@ -2035,6 +2067,10 @@ register struct monst *mtmp;
 		if (mtmp->mpeaceful) {
 			if (flags.female) verbl_msg = "Selamlar, kiz kardes.";
 			else verbl_msg = "Selamlar, erkek kardes.";
+
+			break;
+
+		} else if (Race_if(PM_TURMENE) || Race_if(PM_HC_ALIEN)) {
 
 			break;
 
@@ -2193,7 +2229,7 @@ register struct monst *mtmp;
 				adjalign(-25);
 				godvoice(mtmp->data->maligntyp, "Suffer, infidel!");
 				change_luck(-5);
-				(void) adjattrib(A_WIS, -2, TRUE);
+				(void) adjattrib(A_WIS, -2, TRUE, TRUE);
 				angrygods(mtmp->data->maligntyp);
 
 			}
@@ -2213,6 +2249,10 @@ register struct monst *mtmp;
 
 			break;
 
+		}
+
+		if (Race_if(PM_TURMENE) || Race_if(PM_HC_ALIEN)) {
+			break;
 		}
 
 		static const char *hcalien_msgs[] = {
@@ -2339,6 +2379,9 @@ register struct monst *mtmp;
 		case PM_GEEK:
 		    verbl_msg = "Enematzu memalezu!";
 		    break;
+		case PM_GOFF:
+		    verbl_msg = "britny is a prep!!!111";
+		    break;
 		case PM_UNBELIEVER:
 		    verbl_msg = "Gods are nonexistant. People should stop believing in them.";
 		    break;
@@ -2350,6 +2393,9 @@ register struct monst *mtmp;
 		    break;
 		case PM_GANG_SCHOLAR:
 		    verbl_msg = "I'm constantly being bullied by the Bang Gang and Anna's hussies...";
+		    break;
+		case PM_WALSCHOLAR:
+		    verbl_msg = "Hidden diamonds are like tree bark.";
 		    break;
 		case PM_TRANSVESTITE:
 		    verbl_msg = "Look at my heels! Do you think they're beautiful?";
@@ -2927,7 +2973,7 @@ register struct monst *mtmp;
 							if (yn("Pay for erosionproofing?") == 'y') {
 								u.ugold -= u.durienchantcost;
 								u.durienchantcost += 2000;
-								if (!stack_too_big(repairobj)) {
+								if (!stack_too_big(proofobj)) {
 									proofobj->oerodeproof = 1;
 									verbalize("Your item is untouchable now!");
 								} else verbalize("Bad luck, %s - proofing such a large stack of items can fail, and it seems you didn't get lucky this time.", flags.female ? "gal" : "lad");
@@ -2991,6 +3037,23 @@ dotalk()
 	pline("The chat command is currently unavailable!");
 	if (flags.moreforced && !MessagesSuppressed) display_nhwindow(WIN_MESSAGE, TRUE);    /* --More-- */
 	return 0;
+	}
+
+	if (HardcoreAlienMode) {
+
+		static const char *hcalien_msgs[] = {
+			"Wouwou.",
+			"Wouuu.",
+			"Www-wouwou.",
+			"Wwouwwouww.",
+			"Wowou.",
+			"Wwwouu.",
+		};
+		verbalize("%s", hcalien_msgs[rn2(SIZE(hcalien_msgs))]);
+		wake_nearby();
+
+		return 1;
+
 	}
 
     int result;

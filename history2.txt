@@ -1,6 +1,68 @@
 Changelog for SLASH'EM Extended, written by Amy, given in reverse chronological order
 
+2.4.5 - January 2019
+- Shapeshifters are now less likely to polymorph into monsters whose levels are much higher than the base shapeshifter form's level.
+- Frenzied monsters deal less damage on average (but still more than non-frenzied ones).
+- Fixed the error that caused automore trap effects to persist even after the trap's effect has timed out.
+- Polymorphing an object will now only degrade it if it's being done via wand/spell.
+- If the player commits unallowed cannibalism, sanity will now increase.
+- Fix the oversight where invisible/nownsible trap effects were swapped.
+- Using traps via > is now possible even if the trap is invisible.
+- Increased the to-hit reduction of the wild slashing technique.
+- Fixed segfaults and bus errors when passive banishment attacks trigger.
+- Fixed a bug that could cause items to have the wrong weight, especially loadstones (possible game-ending bug).
+- Leaving bones or polypiling no longer unconditionally degrades items.
+- Dipping a too large stack of items into a potion of gain level will now correctly use up the potion.
+- A weapon that is thoroughly eroded can't be used to bash down iron bars anymore.
+
+2.4.4 - December 2018
+- Nerfed the power of the map level spell.
+- Using the search command should reveal the adjacent squares even if the player is not blind, useful when certain nasty traps are in effect.
+- Fixed the jousting chances with lances, which were broken in an earlier version by mistake.
+- The artifact bell's effect was nerfed.
+- Fixed a crash associated with Duri's services.
+- Nasty traps that can hinder movement in specific directions can no longer be circumvented by certain commands.
+- Writing a spellbook now keeps the original spellbook's charge count.
+- The automore trap now blocks the use of Ctrl-P.
+- Really fixed the error message spam caused by farting monsters, the earlier bugfix wasn't working.
+- If the player is standing on sand terrain, all damage is reduced by 20%.
+- Shopkeepers now have a credit limit depending on the depth of their shop. Trying to get credit past that amount will always fail.
+- Fixed the savegame error that could be caused by the game checking for a cursed called cloak when doing the ripe tree fruit check upon saving, introduced when that cloak type was added.
+- Added a playable ZAPM mode, activated via the OPTIONS=zapem option. This causes the player to start in the Space Base.
+- The intrinsic change effect should have an effect more often. It may now be slightly skewed towards losing an intrinsic.
+
+2.4.3 - December 2018
+- Fixed a potential corner case bug with the calm steed technique.
+- In evilvariant mode, certain wish sources can only be used for nonmagical items and don't break the wishless conduct.
+- The xlogfile now tracks the player's starting role and race.
+- Fixed the SLASH'EM bug that caused lightsabers to recharge over time when the player puts them in an ice box.
+- Fixed the SLASH'EM bug that caused cloned monsters to not have their weapon pointer emptied. This probably never happened in SLASH'EM because no multiplying monsters with weapon attacks existed.
+- Fixed the regions in the edited Vlad's Tower levels, and tried to make it harder to get to the items behind the artifact doors if you lack the keys.
+- The Gauntlet Key artifact door in Vlad's Tower no longer automatically unlocks.
+- Picking up the candelabrum or book of the dead should give the full-screen message only once.
+- Fixed a previously introduced bug that caused certain artifact effects to apply unconditionally even when they should be targetting specific monster types only.
+- Certain monster-summoning mechanisms can now also create frenzied monsters.
+- The presence of a weird-looking room makes teleport control likely to fail.
+- Teleport control allows the player to teleport on traps, which are triggered in the process.
+- Certain playable races get the good bonuses from implants despite having hands.
+- Fixed a previously introduced bug that caused all characters without the implants skill to have worse AC.
+- Displacing a peaceful monster should no longer result in drowning without a prompt.
+- Fixed bugs with monsters that use nemesis taunts without actually being the real quest nemesis.
+- Clockwork automaton speed was changed to be less slow.
+- The damage done by the water flame and volt rock spells is lower, and water flame also costs more mana to cast.
+- It should no longer be possible to restore strength loss caused by being weak from hunger when the player's mithril equipment prevented the strength loss from happening.
+- The damage done to the player by falling piercers now scales with the monster's level.
+- Snow reduces the player's speed by a lower amount if the player isn't moving, and can cause the freeze status effect.
+
 2.4.2 - December 2018
+- Trap disarming effects redraw the screen now to reflect the removal of traps.
+- Fixed the bug that caused alias name prompts to always say the character was neutral.
+- Fixed the bug that caused cloned saddled monsters to be impossible to saddle.
+- Fixed a bug that allowed octopodes to wear cloaks.
+- Permamimics and other problematic steeds can now be mounted.
+- If a pentagram unlocks a skill based on how much it has been used, the cap is now randomized.
+- Fixed some phantom crash bugs that were occurring on Ubuntu 18.04.
+- Some passive attacks that the player can have were affecting monsters that should be immune, this has been fixed.
 - Nerfed the scaling of summon team ant and booze techniques.
 - Fixed a segfault that could happen when trying to start the game with certain character classes.
 - Fixed the bug where feminist player characters with negative alignment could cause the game to freeze.

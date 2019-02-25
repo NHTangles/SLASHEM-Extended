@@ -328,6 +328,15 @@ struct monst *mtmp;
 
 	}
 
+	if (Role_if(PM_CELLAR_CHILD) &&
+	    (!mtmp->mcanmove || mtmp->msleeping ||
+	     (mtmp->mflee && !mtmp->mavenge)) &&
+	    u.ualign.record > -10) {
+	    You("caitiff!");
+	    adjalign(-5);
+
+	}
+
 	if (Race_if(PM_VEELA) &&
 	    (!mtmp->mcanmove || mtmp->msleeping ||
 	     (mtmp->mflee && !mtmp->mavenge)) &&
@@ -587,6 +596,7 @@ register struct monst *mtmp;
 	}
 
 	if (uwep && is_lightsaber(uwep) && uwep->lamplit && u.twoweap && uswapwep && is_lightsaber(uswapwep) && uswapwep->lamplit && tech_inuse(T_WILD_SLASHING)) {
+		if (tmp > 1) tmp -= (tmp * 2 / 3);
 		tmp -= 10;
 		tmp -= rn2(21);
 	}
@@ -659,7 +669,7 @@ register struct monst *mtmp;
 	if (uarmc && uarmc->oartifact == ART_ENEMIES_SHALL_LAUGH_TOO) tmp += 10;
 	if (uimplant && uimplant->oartifact == ART_ACTUAL_PRECISION) tmp += 5;
 	if (uimplant && uimplant->oartifact == ART_RHEA_S_MISSING_EYESIGHT) tmp -= rnd(20);
-	if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_ACTUAL_PRECISION) tmp += 5;
+	if (powerfulimplants() && uimplant && uimplant->oartifact == ART_ACTUAL_PRECISION) tmp += 5;
 	if (uleft && uleft->oartifact == ART_BLIND_PILOT) tmp -= 10;
 	if (uright && uright->oartifact == ART_BLIND_PILOT) tmp -= 10;
 	if (Role_if(PM_ARCHEOLOGIST) && uamul && uamul->oartifact == ART_ARCHEOLOGIST_SONG) tmp += 2;
@@ -1686,7 +1696,7 @@ int dieroll;
 			  !u.twoweap && obj->oclass == WEAPON_CLASS && (bimanual(obj) ||
 			    (Role_if(PM_SAMURAI) && obj->otyp == KATANA && !uarms)) &&
 			  ((wtype = uwep_skill_type()) != P_NONE && !(PlayerCannotUseSkills) &&
-			    P_SKILL(wtype) >= P_SKILLED) && ((monwep = MON_WEP(mon)) != 0 &&
+			    P_SKILL(wtype) >= P_SKILLED) && ((monwep = MON_WEP(mon)) != 0 && monwep &&
 			   !is_flimsy(monwep) && !stack_too_big(monwep) &&
 			   !obj_resists(monwep, 50 + 15 * greatest_erosionX(obj), 100))) {
 			/*
@@ -1722,7 +1732,7 @@ int dieroll;
 
 		    else if (obj == uwep && is_lightsaber(obj) &&
 			   ((wtype = uwep_skill_type()) != P_NONE) &&
-			   ((monwep = MON_WEP(mon)) != 0 && !is_lightsaber(monwep) && // no cutting other lightsabers :)
+			   ((monwep = MON_WEP(mon)) != 0 && monwep && !is_lightsaber(monwep) && // no cutting other lightsabers :)
 			   !monwep->oartifact && !stack_too_big(monwep) && // no cutting artifacts either
 			   !obj_resists(monwep, 50 + 15 * greatest_erosionX(obj), 100))) {
 
@@ -1955,7 +1965,7 @@ int dieroll;
 		if (obj->quan > 1L)
 		    obj = splitobj(obj, 1L);
 		else
-		    setuwep((struct obj *)0, FALSE);
+		    setuwep((struct obj *)0, FALSE, TRUE);
 		} else if (u.twoweap && obj == uswapwep) {
 		    if (obj->quan > 1L)
 			setworn(splitobj(obj, 1L), W_SWAPWEP);
@@ -2445,10 +2455,13 @@ int dieroll;
 		if (uarmc && uarmc->oartifact == ART_DUFFDUFFDUFF) tmp += 3;
 		if (uarmg && uarmg->oartifact == ART_RAAAAAAAARRRRRRGH) tmp += 5;
 		if (uarmg && uarmg->oartifact == ART_SI_OH_WEE) tmp += 2;
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_RHEA_S_MISSING_EYESIGHT) tmp += rnd(5);
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_SOME_LITTLE_AID) tmp += 1;
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_RHEA_S_MISSING_EYESIGHT) tmp += rnd(5);
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_SOME_LITTLE_AID) tmp += 1;
+		if (Race_if(PM_VIKING)) tmp += 1;
+		if (Race_if(PM_ITAQUE)) tmp -= 1;
 		if (uwep && uwep->oartifact == ART_RIP_STRATEGY) tmp -= 5;
 		if (uswapwep && uswapwep->oartifact == ART_RIP_STRATEGY) tmp -= 5;
+		if (!thrown && Race_if(PM_TURMENE) && tmp > 0) tmp -= 2;
 
 		if (Role_if(PM_OTAKU) && uarmc && OBJ_DESCR(objects[uarmc->otyp]) && (!strcmp(OBJ_DESCR(objects[uarmc->otyp]), "fourchan cloak") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "chetyrekhchasovoy plashch") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "to'rtburchak plash"))) tmp += 1;
 
@@ -2852,7 +2865,7 @@ int dieroll;
 		abuse_dog(mon);
 		monflee(mon, 10 * rnd(tmp), FALSE, FALSE);
 	}
-	if((mdat == &mons[PM_BLACK_PUDDING] || mdat == &mons[PM_DRUDDING] || mdat == &mons[PM_BLACK_DRUDDING] || mdat == &mons[PM_BLACKSTEEL_PUDDING] || mdat == &mons[PM_BLOOD_PUDDING] || mdat == &mons[PM_BLACK_PIERCER] || mdat == &mons[PM_BROWN_PUDDING])
+	if((mdat == &mons[PM_SHOCK_PUDDING] || mdat == &mons[PM_VOLT_PUDDING] || mdat == &mons[PM_BLACK_PUDDING] || mdat == &mons[PM_DRUDDING] || mdat == &mons[PM_BLACK_DRUDDING] || mdat == &mons[PM_BLACKSTEEL_PUDDING] || mdat == &mons[PM_BLOOD_PUDDING] || mdat == &mons[PM_BLACK_PIERCER] || mdat == &mons[PM_BROWN_PUDDING])
 		   && obj /* && obj == uwep -- !thrown and obj == weapon */
 		   && !thrown
 		   && objects[obj->otyp].oc_material == IRON
@@ -2876,7 +2889,7 @@ int dieroll;
 		}
 	}
 
-	if ((!hittxt || (Role_if(PM_SPACEWARS_FIGHTER) || sanitymessage || Role_if(PM_CAMPERSTRIKER) || Role_if(PM_HUSSY) || Role_if(PM_GANG_SCHOLAR) || ishaxor || Hallucination) ) &&			/*( thrown => obj exists )*/
+	if ((!hittxt || (Role_if(PM_SPACEWARS_FIGHTER) || sanitymessage || Role_if(PM_CAMPERSTRIKER) || Role_if(PM_HUSSY) || Role_if(PM_GANG_SCHOLAR) || Role_if(PM_WALSCHOLAR) || ishaxor || Hallucination) ) &&			/*( thrown => obj exists )*/
 	  (!destroyed || (thrown && m_shot.n > 1 && m_shot.o == obj->otyp))) {
 
 		if (!thrown && Role_if(PM_HUSSY) && !mon->female && !is_neuter(mon->data)) {
@@ -2886,7 +2899,7 @@ int dieroll;
 		if (thrown) hit(mshot_xname(obj), mon, exclam(tmp));
 		else if (!flags.verbose) You("hit it.");
 
-		else if ((Role_if(PM_SPACEWARS_FIGHTER) || Role_if(PM_CAMPERSTRIKER) || Role_if(PM_HUSSY) || Role_if(PM_GANG_SCHOLAR) || ishaxor || Hallucination || sanitymessage) && !rn2(20) && (PlayerHearsSoundEffects) ) {
+		else if ((Role_if(PM_SPACEWARS_FIGHTER) || Role_if(PM_CAMPERSTRIKER) || Role_if(PM_HUSSY) || Role_if(PM_GANG_SCHOLAR) || Role_if(PM_WALSCHOLAR) || ishaxor || Hallucination || sanitymessage) && !rn2(20) && (PlayerHearsSoundEffects) ) {
 
 			switch (rnd(15)) {
 	
@@ -2910,9 +2923,9 @@ int dieroll;
 
 		}
 
-		else if ((Role_if(PM_SPACEWARS_FIGHTER) || Role_if(PM_CAMPERSTRIKER) || Role_if(PM_HUSSY) || Role_if(PM_GANG_SCHOLAR) || ishaxor || Hallucination || sanitymessage) && !rn2(5)) {
+		else if ((Role_if(PM_SPACEWARS_FIGHTER) || Role_if(PM_CAMPERSTRIKER) || Role_if(PM_HUSSY) || Role_if(PM_GANG_SCHOLAR) || Role_if(PM_WALSCHOLAR) || ishaxor || Hallucination || sanitymessage) && !rn2(5)) {
 
-			switch (rnd(392)) {
+			switch (rnd(397)) {
 	
 			case 1: pline("%s staggers from your furious assault.", Monnam(mon)); break;
 			case 2: pline("Your cut barely scratches %s's scales.", mon_nam(mon)); break;
@@ -3306,6 +3319,11 @@ int dieroll;
 			case 390: pline("Your hit lays bare the muscles of %s's %s!", mon_nam(mon), mbodypart(mon, ARM)); break;
 			case 391: pline("You kick %s's %s with your cuddly-gentle sneakers, trying to draw %s.", mon_nam(mon), makeplural(mbodypart(mon, HAND)), mbodypart(mon, BLOOD)); break;
 			case 392: pline("%s tries to mock you that your stinking boots cannot hurt %s, but you prove %s wrong by scratching both of %s legs spilling %s everywhere.", Monnam(mon), mhim(mon), mhim(mon), mhis(mon), mbodypart(mon, BLOOD)); break;
+			case 393: pline("You pivot and roundhouse kick %s!", mon_nam(mon)); break;
+			case 394: pline("You leap up and butterfly kick %s!", mon_nam(mon)); break;
+			case 395: pline("You spin around and back kick %s!", mon_nam(mon)); break;
+			case 396: pline("You lightly caress %s.", mon_nam(mon)); break;
+			case 397: pline("You gently stroke %s.", mon_nam(mon)); break;
 
 			default: pline("You hit %s!", mon_nam(mon)); break;
 	
@@ -3401,7 +3419,7 @@ int dieroll;
 				u.hussykillturn = (moves + 1000);
 			}
 
-			if ((Role_if(PM_SPACEWARS_FIGHTER) || Role_if(PM_CAMPERSTRIKER) || Role_if(PM_HUSSY) || Role_if(PM_GANG_SCHOLAR) || ishaxor || Hallucination || (u.usanity > rn2(1000)) ) && !thrown && !rn2(20) && (PlayerHearsSoundEffects) ) {
+			if ((Role_if(PM_SPACEWARS_FIGHTER) || Role_if(PM_CAMPERSTRIKER) || Role_if(PM_HUSSY) || Role_if(PM_GANG_SCHOLAR) || Role_if(PM_WALSCHOLAR) || ishaxor || Hallucination || (u.usanity > rn2(1000)) ) && !thrown && !rn2(20) && (PlayerHearsSoundEffects) ) {
 
 				switch (rnd(8)) {
 	
@@ -3417,9 +3435,9 @@ int dieroll;
 
 			}
 
-			else if ((Role_if(PM_SPACEWARS_FIGHTER) || Role_if(PM_CAMPERSTRIKER) || Role_if(PM_HUSSY) || Role_if(PM_GANG_SCHOLAR) || ishaxor || Hallucination || (u.usanity > rn2(1000)) ) && !rn2(5) && !thrown) {
+			else if ((Role_if(PM_SPACEWARS_FIGHTER) || Role_if(PM_CAMPERSTRIKER) || Role_if(PM_HUSSY) || Role_if(PM_GANG_SCHOLAR) || Role_if(PM_WALSCHOLAR) || ishaxor || Hallucination || (u.usanity > rn2(1000)) ) && !rn2(5) && !thrown) {
 
-				switch (rnd(558)) {
+				switch (rnd(559)) {
 
 				case 1: pline("You crush %s's skull into jelly.", mon_nam(mon)); break;
 				case 2: pline("You decapitate %s with a backhand stroke.", mon_nam(mon)); break;
@@ -3979,6 +3997,7 @@ int dieroll;
 				case 556: pline("You cut %s's femoral artery wide open, causing instant death, but you're also showered with %s in the process.", mon_nam(mon), mbodypart(mon, BLOOD)); break;
 				case 557: pline("You cut %s across the abdomen, whose guts rejoice as they flee the body.", mon_nam(mon)); break;
 				case 558: pline("You cover %s's %s in a white leaden dust, and then it shatters, falling to the ground.", mon_nam(mon), mbodypart(mon, ARM)); break;
+				case 559: pline("You lie on the ground and as %s approaches, you bludgeon %s with a devastating bicycle kick.", Monnam(mon), mhim(mon)); break;
 
 				default: pline("You hit %s very hard!", mon_nam(mon)); break;
 	
@@ -4104,7 +4123,7 @@ struct obj *obj;	/* weapon */
 
     /* odds to joust are expert:80%, skilled:60%, basic:40%, unskilled:20%
      * but Amy edit: too easy to achieve high values... after all, expert isn't the max now */
-    if (((joust_dieroll = rn2(5)) < skill_rating) && (rn2(3) && (bypassrating >= rnd(4)) ) ) {
+    if (((joust_dieroll = rn2(5)) < skill_rating) && (rn2(3) || (bypassrating >= rnd(4)) ) ) {
 	if (joust_dieroll == 0 && rnl(50) == (50-1) &&
 		!unsolid(mon->data) && !obj_resists(obj, 0, 95)) /* Amy edit: artifacts no longer immune, only highly resistant */
 	    return -1;	/* hit that breaks lance */
@@ -4311,7 +4330,7 @@ register struct attack *mattk;
 
 		}
 
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant) {
+		if (powerfulimplants() && uimplant) {
 			switch (P_SKILL(P_IMPLANTS)) { /* more bonus when using a good implant without hands --Amy */
 
 		      	case P_BASIC:	youdamagebonus += 16; break;
@@ -4415,6 +4434,11 @@ register struct attack *mattk;
 		} else if(mattk->aatyp == AT_HUGS &&
 			u.umonnum == PM_ROPE_GOLEM) {
 		    if (breathless(mdef->data) || mdef->egotype_undead ) tmp = (tmp + 1) / 2;
+		}
+
+		if (Race_if(PM_PLAYER_JABBERWOCK) && !Upolyd && mattk->aatyp != AT_WEAP) {
+			if (u.ulevel > 20) tmp = rnd(20);
+			else tmp = rnd(u.ulevel);
 		}
 
 		break;
@@ -4727,7 +4751,7 @@ register struct attack *mattk;
 			reset_rndmonst(NON_PM);
 			while (aggroamount) {
 
-				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY);
+				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY|MM_FRENZIED);
 				aggroamount--;
 				if (aggroamount < 0) aggroamount = 0;
 			}
@@ -5626,7 +5650,7 @@ register struct attack *mattk;
 			reset_rndmonst(NON_PM);
 			while (aggroamount) {
 
-				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY);
+				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY|MM_FRENZIED);
 				aggroamount--;
 				if (aggroamount < 0) aggroamount = 0;
 			}
@@ -6178,7 +6202,7 @@ register int roll;
 	
 	if (could_seduce(&youmonst, mdef, mattk) && rn2(5) ) {
 		You("pretend to be friendly to %s.", mon_nam(mdef));
-	} else if ((Role_if(PM_SPACEWARS_FIGHTER) || Role_if(PM_CAMPERSTRIKER) || Role_if(PM_HUSSY) || Role_if(PM_GANG_SCHOLAR) || ishaxor || Hallucination || (u.usanity > rn2(1000)) ) && !rn2(20) && canspotmon(mdef) && flags.verbose && (PlayerHearsSoundEffects) ) {
+	} else if ((Role_if(PM_SPACEWARS_FIGHTER) || Role_if(PM_CAMPERSTRIKER) || Role_if(PM_HUSSY) || Role_if(PM_GANG_SCHOLAR) || Role_if(PM_WALSCHOLAR) || ishaxor || Hallucination || (u.usanity > rn2(1000)) ) && !rn2(20) && canspotmon(mdef) && flags.verbose && (PlayerHearsSoundEffects) ) {
 
 		switch (rnd(6)) {
 	
@@ -6190,9 +6214,9 @@ register int roll;
 		case 6: pline("Bimmselimmelimm!"); break;
 		}
 
-	} else if ((Role_if(PM_SPACEWARS_FIGHTER) || Role_if(PM_CAMPERSTRIKER) || Role_if(PM_HUSSY) || Role_if(PM_GANG_SCHOLAR) || ishaxor || Hallucination || (u.usanity > rn2(1000)) ) && !rn2(5) && canspotmon(mdef) && flags.verbose) {
+	} else if ((Role_if(PM_SPACEWARS_FIGHTER) || Role_if(PM_CAMPERSTRIKER) || Role_if(PM_HUSSY) || Role_if(PM_GANG_SCHOLAR) || Role_if(PM_WALSCHOLAR) || ishaxor || Hallucination || (u.usanity > rn2(1000)) ) && !rn2(5) && canspotmon(mdef) && flags.verbose) {
 
-		switch (rnd(543)) {
+		switch (rnd(545)) {
 
 		case 1: pline("%s cringes from your strike behind its %sshield.", Monnam(mdef), which_armor(mdef, W_ARMS) ? "" : "nonexistant "); break;
 		case 2: pline("You smash into %s's %sshield, striking sparks.", mon_nam(mdef), which_armor(mdef, W_ARMS) ? "" : "nonexistant "); break;
@@ -6737,7 +6761,9 @@ register int roll;
 		case 541: pline("%s converts you to %s religion just as you're about to attack.", Monnam(mdef), mhis(mdef)); break;
 		case 542: pline("Your stinking boots cannot hurt %s.", mon_nam(mdef)); break;
 		case 543: pline("%s grabs your nuts and squeezes them tight!", Monnam(mdef)); break;
-	
+		case 544: pline("Now you look old, because %s fully pwns you.", mon_nam(mdef)); break;
+		case 545: pline("You try to sell %s, but fail.", mon_nam(mdef)); break;
+
 		default: pline("You missed %s!", mon_nam(mdef)); break;
 
 		}
@@ -7306,6 +7332,8 @@ boolean ranged;
 
 	}
 
+	if (Race_if(PM_PLAYER_JABBERWOCK) && tmp > 0) tmp *= 2;
+
 	/* Monsters with AD_RBRE are supposed to have a random passive attack every time they are hit. --Amy */
 
 	atttypC = ptr->mattk[i].adtyp;
@@ -7571,7 +7599,7 @@ boolean ranged;
 			    break;
 		    case 6: make_burned(HBurned + tmp, TRUE);
 			    break;
-		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE);
+		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE, TRUE);
 			    break;
 		    case 8: (void) make_hallucinated(HHallucination + tmp, TRUE, 0L);
 			    break;
@@ -7584,10 +7612,12 @@ boolean ranged;
 		break;
 
 	    case AD_WEEP:
-		if (!rn2(3) && !u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
+		if (!rn2(3) && !u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
 			make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
-			level_tele();
-			nomul(-2, "being levelwarped", FALSE);
+			if (!u.levelporting) {
+				u.levelporting = 1;
+				nomul(-2, "being levelwarped", FALSE); /* because it's not called until you get another turn... */
+			}
 			return(0);
 		}
 		else if (!rn2(3) && (!Drain_resistance || !rn2(StrongDrain_resistance ? 16 : 4) )  ) {
@@ -7640,7 +7670,7 @@ boolean ranged;
 			reset_rndmonst(NON_PM);
 			while (aggroamount) {
 
-				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY);
+				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY|MM_FRENZIED);
 				aggroamount--;
 				if (aggroamount < 0) aggroamount = 0;
 			}
@@ -7667,7 +7697,7 @@ boolean ranged;
 		{
 			register int midentity = mon->m_id;
 			if (midentity < 0) midentity *= -1;
-			while (midentity > 232) midentity -= 232;
+			while (midentity > 235) midentity -= 235;
 
 			register int nastyduration = ((tmp + 2) * rnd(10));
 			if (LongScrewup || u.uprops[LONG_SCREWUP].extrinsic || have_longscrewupstone()) nastyduration *= 20;
@@ -7934,6 +7964,9 @@ boolean ranged;
 				case 230: BadPartBug += rnz(nastyduration); break;
 				case 231: CompletelyBadPartBug += rnz(nastyduration); break;
 				case 232: EvilVariantActive += rnz(nastyduration); break;
+				case 233: SanityTrebleEffect += rnz(nastyduration); break;
+				case 234: StatDecreaseBug += rnz(nastyduration); break;
+				case 235: SimeoutBug += rnz(nastyduration); break;
 
 				default: impossible("AD_MINA called with invalid value %d", midentity); break;
 			}
@@ -8210,6 +8243,9 @@ boolean ranged;
 				case 230: BadPartBug += rnz(nastyduration); break;
 				case 231: CompletelyBadPartBug += rnz(nastyduration); break;
 				case 232: EvilVariantActive += rnz(nastyduration); break;
+				case 233: SanityTrebleEffect += rnz(nastyduration); break;
+				case 234: StatDecreaseBug += rnz(nastyduration); break;
+				case 235: SimeoutBug += rnz(nastyduration); break;
 
 				default: impossible("AD_RUNS called with invalid value %d", u.adrunsattack); break;
 			}
@@ -8262,7 +8298,7 @@ boolean ranged;
 				break;
 			case 6:
 
-				if (!u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
+				if (!u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
 					make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
 					level_tele();
 					nomul(-2, "being levelwarped", FALSE);
@@ -8342,7 +8378,7 @@ boolean ranged;
 
 	    case AD_TIME:
 
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_TIMEAGE_OF_REALMS) break;
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_TIMEAGE_OF_REALMS) break;
 		switch (rnd(10)) {
 
 			case 1:
@@ -8569,19 +8605,15 @@ boolean ranged;
 	    case AD_BANI:
 		if (!rn2(3)) {
 			if (u.uevent.udemigod || u.uhave.amulet || CannotTeleport || (u.usteed && mon_has_amulet(u.usteed))) { pline("You shudder for a moment."); (void) safe_teleds(FALSE); break;}
-			if (flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) {
+			if (flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) {
 			 pline("For some reason you resist the banishment!"); break;}
 
 			make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
 
-			if (rn2(2)) {(void) safe_teleds(FALSE); goto_level(&medusa_level, TRUE, FALSE, FALSE); }
-			else {(void) safe_teleds(FALSE); goto_level(&portal_level, TRUE, FALSE, FALSE); }
-
-			register int newlev = rnd(99);
-			d_level newlevel;
-			get_level(&newlevel, newlev);
-			goto_level(&newlevel, TRUE, FALSE, FALSE);
-			nomul(-2, "being banished", FALSE);
+			if (!u.banishmentbeam) {
+				u.banishmentbeam = 1;
+				nomul(-2, "being banished", FALSE); /* because it's not called until you get another turn... */
+			}
 			return(0);
 		}
 		break;
@@ -8654,8 +8686,8 @@ boolean ranged;
 			}
 		    }
 
-			if (!rn2(10)) (void) adjattrib(A_INT, -rnd(2), FALSE);
-			else if (!rn2(2)) (void) adjattrib(A_INT, -1, FALSE);
+			if (!rn2(10)) (void) adjattrib(A_INT, -rnd(2), FALSE, TRUE);
+			else if (!rn2(2)) (void) adjattrib(A_INT, -1, FALSE, TRUE);
 			if (!rn2(issoviet ? 2 : 3)) forget_levels(rnd(issoviet ? 25 : 10));	/* lose memory of 25% of levels */
 			if (!rn2(issoviet ? 3 : 5)) forget_objects(rnd(issoviet ? 25 : 10));	/* lose memory of 25% of objects */
 			exercise(A_WIS, FALSE);
@@ -8916,8 +8948,8 @@ boolean ranged;
 				losexp("psionic drain", FALSE, TRUE);
 			}
 			if (!rn2(200)) {
-				adjattrib(A_INT, -1, 1);
-				adjattrib(A_WIS, -1, 1);
+				adjattrib(A_INT, -1, 1, TRUE);
+				adjattrib(A_WIS, -1, 1, TRUE);
 			}
 			if (!rn2(200)) {
 				pline("You scream in pain!");
@@ -9094,7 +9126,7 @@ boolean ranged;
 				    break;
 			    case 6: make_burned(HBurned + tmp, TRUE);
 				    break;
-			    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE);
+			    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE, TRUE);
 				    break;
 			    case 8: (void) make_hallucinated(HHallucination + tmp, TRUE, 0L);
 				    break;
@@ -9143,7 +9175,7 @@ boolean ranged;
 			    break;
 		    case 6: make_burned(HBurned + tmp, TRUE);
 			    break;
-		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE);
+		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE, TRUE);
 			    break;
 		    case 8: (void) make_hallucinated(HHallucination + tmp, TRUE, 0L);
 			    break;
@@ -9292,12 +9324,12 @@ boolean ranged;
 
 	       if ((!Strangled && !Breathless) || rn2(StrongMagical_breathing ? 2 : 3)) {
 		if (!Poison_resistance) pline("You're badly poisoned!");
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_STR, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_DEX, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CON, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_INT, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_WIS, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CHA, -rnd(2), FALSE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_STR, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_DEX, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CON, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_INT, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_WIS, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CHA, -rnd(2), FALSE, TRUE);
 		 poisoned("gas", rn2(A_MAX), "superpoisonous gas", 30);
 		if (isevilvariant || !rn2(issoviet ? 2 : 20)) (void)destroy_item(POTION_CLASS, AD_VENO);
 		if (isevilvariant || !rn2(issoviet ? 2 : 20)) (void)destroy_item(FOOD_CLASS, AD_VENO);
@@ -9642,7 +9674,7 @@ boolean ranged;
 			else You("pause momentarily.");
 			break;
 		    case 4: /* drain Dex */
-			adjattrib(A_DEX, -rn1(1,1), 0);
+			adjattrib(A_DEX, -rn1(1,1), 0, TRUE);
 			break;
 		    case 5: /* steal teleportitis */
 			if(HTeleportation & INTRINSIC) {
@@ -9997,7 +10029,7 @@ boolean ranged;
 		
 			while( ABASE(A_WIS) > ATTRMIN(A_WIS) && wdmg > 0){
 				wdmg--;
-				(void) adjattrib(A_WIS, -1, TRUE);
+				(void) adjattrib(A_WIS, -1, TRUE, TRUE);
 				forget_levels(1);	/* lose memory of 1% of levels per point lost*/
 				forget_objects(1);	/* lose memory of 1% of objects per point lost*/
 				exercise(A_WIS, FALSE);
@@ -10135,7 +10167,7 @@ struct attack *mattk;		/* null means we find one internally */
 	case AD_LAVA:
 
 burnagain:
-	    if(!mon->mcan && !stack_too_big(obj) && is_flammable(obj) && !(objects[obj->otyp].oc_material == WOOD && rn2(4)) && !(objects[obj->otyp].oc_material == LEATHER && rn2(2)) && !obj->oerodeproof && obj->otyp != SPE_BOOK_OF_THE_DEAD && obj->otyp != AMULET_OF_YENDOR && obj->otyp != CANDELABRUM_OF_INVOCATION && obj->otyp != BELL_OF_OPENING && obj->oartifact != ART_KEY_OF_LAW && obj->oartifact != ART_KEY_OF_CHAOS && obj->oartifact != ART_KEY_OF_NEUTRALITY && obj->oartifact != ART_GAUNTLET_KEY ) {
+	    if(!mon->mcan && !(Race_if(PM_CHIQUAI) && rn2(4)) && !stack_too_big(obj) && is_flammable(obj) && !(objects[obj->otyp].oc_material == WOOD && rn2(4)) && !(objects[obj->otyp].oc_material == LEATHER && rn2(2)) && !obj->oerodeproof && obj->otyp != SPE_BOOK_OF_THE_DEAD && obj->otyp != AMULET_OF_YENDOR && obj->otyp != CANDELABRUM_OF_INVOCATION && obj->otyp != BELL_OF_OPENING && obj->oartifact != ART_KEY_OF_LAW && obj->oartifact != ART_KEY_OF_CHAOS && obj->oartifact != ART_KEY_OF_NEUTRALITY && obj->oartifact != ART_GAUNTLET_KEY ) {
 
 			if (obj->oeroded < MAX_ERODE && !(obj->oartifact && rn2(4)) && (!rn2(2) || !(uarmf && uarmf->oartifact == ART_LUISA_S_IRRESISTIBLE_CHARM) ) && !((obj->blessed && !rnl(4)))) {
 				obj->oeroded++;
@@ -10157,7 +10189,7 @@ burnagain:
 
 	case AD_WTHR:
 
-	    if(!mon->mcan && !stack_too_big(obj) && !is_unwitherable(obj) && obj->otyp != SPE_BOOK_OF_THE_DEAD && obj->otyp != AMULET_OF_YENDOR && obj->otyp != CANDELABRUM_OF_INVOCATION && obj->otyp != BELL_OF_OPENING && obj->oartifact != ART_KEY_OF_LAW && obj->oartifact != ART_KEY_OF_CHAOS && obj->oartifact != ART_KEY_OF_NEUTRALITY && obj->oartifact != ART_GAUNTLET_KEY ) {
+	    if(!mon->mcan && !(Race_if(PM_CHIQUAI) && rn2(4)) && !stack_too_big(obj) && !is_unwitherable(obj) && obj->otyp != SPE_BOOK_OF_THE_DEAD && obj->otyp != AMULET_OF_YENDOR && obj->otyp != CANDELABRUM_OF_INVOCATION && obj->otyp != BELL_OF_OPENING && obj->oartifact != ART_KEY_OF_LAW && obj->oartifact != ART_KEY_OF_CHAOS && obj->oartifact != ART_KEY_OF_NEUTRALITY && obj->oartifact != ART_GAUNTLET_KEY ) {
 		/*erode_obj(obj, TRUE, FALSE);*/
 
 		if (rn2(2)) {
@@ -10226,11 +10258,11 @@ burnagain:
 		else if(obj->otyp != SPE_BOOK_OF_THE_DEAD && !is_unwitherable(obj) && obj->otyp != AMULET_OF_YENDOR && obj->otyp != CANDELABRUM_OF_INVOCATION && obj->otyp != BELL_OF_OPENING && obj->oartifact != ART_KEY_OF_LAW && obj->oartifact != ART_KEY_OF_CHAOS && obj->oartifact != ART_KEY_OF_NEUTRALITY && obj->oartifact != ART_GAUNTLET_KEY ) {
 
 		if (rn2(2)) {
-				if (obj->oeroded < MAX_ERODE && !(obj->oartifact && rn2(4)) && (!rn2(2) || !(uarmf && uarmf->oartifact == ART_LUISA_S_IRRESISTIBLE_CHARM) ) && !((obj->blessed && !rnl(4)))) 
+				if (obj->oeroded < MAX_ERODE && !(Race_if(PM_CHIQUAI) && rn2(4)) && !(obj->oartifact && rn2(4)) && (!rn2(2) || !(uarmf && uarmf->oartifact == ART_LUISA_S_IRRESISTIBLE_CHARM) ) && !((obj->blessed && !rnl(4)))) 
 				{obj->oeroded++;
 				pline("%s weapon has taken damage!", carried(obj) ? "Your" : "A");
 				}
-			else if (obj->oeroded == MAX_ERODE && !(obj->oartifact && rn2(4)) && !hard_to_destruct(obj) && (!rn2(2) || !(uarmf && uarmf->oartifact == ART_LUISA_S_IRRESISTIBLE_CHARM) ) && carried(obj) )
+			else if (obj->oeroded == MAX_ERODE && !(Race_if(PM_CHIQUAI) && rn2(4)) && !(obj->oartifact && rn2(4)) && !hard_to_destruct(obj) && (!rn2(2) || !(uarmf && uarmf->oartifact == ART_LUISA_S_IRRESISTIBLE_CHARM) ) && carried(obj) )
 			{
 	/* Unfortunately I can't seem to make it work for non-player inventory objects without crashing. --Amy */
 		    
@@ -10243,11 +10275,11 @@ burnagain:
 			}
 		}
 		else {
-				if (obj->oeroded2 < MAX_ERODE && !(obj->oartifact && rn2(4)) && (!rn2(2) || !(uarmf && uarmf->oartifact == ART_LUISA_S_IRRESISTIBLE_CHARM) ) && !((obj->blessed && !rnl(4))))
+				if (obj->oeroded2 < MAX_ERODE && !(Race_if(PM_CHIQUAI) && rn2(4)) && !(obj->oartifact && rn2(4)) && (!rn2(2) || !(uarmf && uarmf->oartifact == ART_LUISA_S_IRRESISTIBLE_CHARM) ) && !((obj->blessed && !rnl(4))))
 				{obj->oeroded2++;
 				pline("%s weapon has taken damage!", carried(obj) ? "Your" : "A");
 				}
-			else if (obj->oeroded2 == MAX_ERODE && !(obj->oartifact && rn2(4)) && !hard_to_destruct(obj) && (!rn2(2) || !(uarmf && uarmf->oartifact == ART_LUISA_S_IRRESISTIBLE_CHARM) ) && carried(obj) )
+			else if (obj->oeroded2 == MAX_ERODE && !(Race_if(PM_CHIQUAI) && rn2(4)) && !(obj->oartifact && rn2(4)) && !hard_to_destruct(obj) && (!rn2(2) || !(uarmf && uarmf->oartifact == ART_LUISA_S_IRRESISTIBLE_CHARM) ) && carried(obj) )
 			{
 		    
 			pline("Your weapon withered away!");

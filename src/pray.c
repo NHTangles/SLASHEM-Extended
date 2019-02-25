@@ -332,7 +332,7 @@ register int trouble;
 			u.utrap = 0;
 		    break;
 	    case TROUBLE_STARVING:
-			if (!u.weakcheat) losestr(-1); /* otherwise this could be exploited until you have 25 str --Amy */
+			if (!u.weakcheat) losestr(-1, TRUE); /* otherwise this could be exploited until you have 25 str --Amy */
 			else u.weakcheat--;
 		    /* fall into... */
 	    case TROUBLE_HUNGRY:
@@ -727,7 +727,7 @@ aligntyp resp_god;
 						"art arrogant",
 			      youmonst.data->mlet == S_HUMAN ? "mortal" : "creature");
 			verbalize("Thou must relearn thy lessons!");
-			(void) adjattrib(A_WIS, -3, FALSE);
+			(void) adjattrib(A_WIS, -3, FALSE, TRUE);
 			losexp((char *)0, TRUE, FALSE); /* divine wrath ignores mundane stuff like drain resistance --Amy */
 			break;
 	    case 6:	if (!Punished) {
@@ -1730,6 +1730,10 @@ dosacrifice()
 	You("offer this evil thing to %s...", a_gname());
 	value = MAXVALUE; /* holy crap! */
 	u.uconduct.gnostic++;	/* KMH, ethics */
+	if (Race_if(PM_MAGYAR)) {
+		You_feel("bad about breaking the atheist conduct.");
+		badeffect();
+	}
     }
 
     if (otmp->otyp == CORPSE) {
@@ -1745,6 +1749,10 @@ dosacrifice()
 
 	/* KMH, conduct */
 	u.uconduct.gnostic++;
+	if (Race_if(PM_MAGYAR)) {
+		You_feel("bad about breaking the atheist conduct.");
+		badeffect();
+	}
 
 	/* you're handling this corpse, even if it was killed upon the altar */
 	feel_cockatrice(otmp, TRUE);
@@ -1758,7 +1766,7 @@ dosacrifice()
 
 	/* fix for new races since they're MH_HUMAN but not actually supposed to count as same race --Amy */
 
-	if (your_race(ptr) && !Race_if(PM_ALIEN) && !Race_if(PM_CURSER) && !Race_if(PM_GASTLY) && !Race_if(PM_GIGANT) && !Race_if(PM_RODNEYAN) && !Race_if(PM_INSECTOID) && !Race_if(PM_WEAPON_TRAPPER) && !Race_if(PM_KOBOLT) && !Race_if(PM_MOULD) && !Race_if(PM_HUMANLIKE_DRAGON) && !Race_if(PM_HUMANLIKE_NAGA) && !Race_if(PM_MISSINGNO) && !Race_if(PM_WORM_THAT_WALKS) && !Race_if(PM_OGRO) && !Race_if(PM_DEATHMOLD) && !Race_if(PM_AQUATIC_MONSTER) && !Race_if(PM_TROLLOR) && !Race_if(PM_SHOE) && !Race_if(PM_PLAYER_SALAMANDER) && !Race_if(PM_VORTEX) && !Race_if(PM_CORTEX) && !Race_if(PM_HUMANOID_DEVIL) && !Race_if(PM_MUMMY) && !Race_if(PM_LICH_WARRIOR) && !Race_if(PM_UNGENOMOLD) && !Race_if(PM_PLAYER_ZRUTY) && !Race_if(PM_WARPER) && !Race_if(PM_LEVITATOR) && !Race_if(PM_PHANTOM_GHOST) && !Race_if(PM_UNALIGNMENT_THING) && !Race_if(PM_ARMED_COCKATRICE) && !Race_if(PM_ELEMENTAL) && !Race_if(PM_WEAPON_BUG) && !Race_if(PM_HUMANOID_LEPRECHAUN) && !Race_if(PM_NYMPH) && !Race_if(PM_TURTLE) && !Race_if(PM_LOWER_ENT) && !Race_if(PM_SPRIGGAN) && !Race_if(PM_JELLY) && !Race_if(PM_WEAPON_CUBE) && !Race_if(PM_WEAPON_IMP) && !Race_if(PM_DRYAD) && !Race_if(PM_PLAYER_SLIME) && !Race_if(PM_BORG)  && !Race_if(PM_AUREAL) && !Race_if(PM_MAZKE) && !Race_if(PM_ELONA_SNAIL) && !Race_if(PM_ANCIPITAL) && !Race_if(PM_PLAYER_DOLGSMAN) && !Race_if(PM_YEEK) && !Race_if(PM_PLAYER_GREMLIN) && !Race_if(PM_FAWN) && !Race_if(PM_CHIROPTERAN) && !Race_if(PM_YUKI_PLAYA) && !Race_if(PM_INKA) && !Race_if(PM_OCTOPODE) && !Race_if(PM_WEAPON_XORN) && !Race_if(PM_WISP) && !Race_if(PM_WEAPONIZED_DINOSAUR) && !Race_if(PM_SATRE)  ) {
+	if (your_race(ptr) && !Race_if(PM_ALIEN) && !Race_if(PM_CURSER) && !Race_if(PM_GASTLY) && !Race_if(PM_GIGANT) && !Race_if(PM_RODNEYAN) && !Race_if(PM_INSECTOID) && !Race_if(PM_WEAPON_TRAPPER) && !Race_if(PM_KOBOLT) && !Race_if(PM_MOULD) && !Race_if(PM_HUMANLIKE_DRAGON) && !Race_if(PM_HUMANLIKE_NAGA) && !Race_if(PM_MISSINGNO) && !Race_if(PM_WORM_THAT_WALKS) && !Race_if(PM_OGRO) && !Race_if(PM_DEATHMOLD) && !Race_if(PM_AQUATIC_MONSTER) && !Race_if(PM_TROLLOR) && !Race_if(PM_SHOE) && !Race_if(PM_PLAYER_SALAMANDER) && !Race_if(PM_VORTEX) && !Race_if(PM_METAL) && !Race_if(PM_SHELL) && !Race_if(PM_CORTEX) && !Race_if(PM_HUMANOID_DEVIL) && !Race_if(PM_MUMMY) && !Race_if(PM_LICH_WARRIOR) && !Race_if(PM_UNGENOMOLD) && !Race_if(PM_PLAYER_ZRUTY) && !Race_if(PM_PLAYER_GOLEM) && !Race_if(PM_PLAYER_MUSHROOM) && !Race_if(PM_PLAYER_ASURA) && !Race_if(PM_PIERCER) && !Race_if(PM_PLAYER_HULK) && !Race_if(PM_PLAYER_JABBERWOCK) && !Race_if(PM_WARPER) && !Race_if(PM_LEVITATOR) && !Race_if(PM_PHANTOM_GHOST) && !Race_if(PM_UNALIGNMENT_THING) && !Race_if(PM_ARMED_COCKATRICE) && !Race_if(PM_ELEMENTAL) && !Race_if(PM_WEAPON_BUG) && !Race_if(PM_HUMANOID_LEPRECHAUN) && !Race_if(PM_NYMPH) && !Race_if(PM_TURTLE) && !Race_if(PM_LOWER_ENT) && !Race_if(PM_SPRIGGAN) && !Race_if(PM_JELLY) && !Race_if(PM_WEAPON_CUBE) && !Race_if(PM_WEAPON_IMP) && !Race_if(PM_DRYAD) && !Race_if(PM_PLAYER_SLIME) && !Race_if(PM_BORG)  && !Race_if(PM_AUREAL) && !Race_if(PM_MAZKE) && !Race_if(PM_ELONA_SNAIL) && !Race_if(PM_ANCIPITAL) && !Race_if(PM_PLAYER_DOLGSMAN) && !Race_if(PM_YEEK) && !Race_if(PM_PLAYER_GREMLIN) && !Race_if(PM_FAWN) && !Race_if(PM_CHIROPTERAN) && !Race_if(PM_YUKI_PLAYA) && !Race_if(PM_INKA) && !Race_if(PM_OCTOPODE) && !Race_if(PM_WEAPON_XORN) && !Race_if(PM_WISP) && !Race_if(PM_WEAPONIZED_DINOSAUR) && !Race_if(PM_SATRE)  ) {
 	    if (is_demon(youmonst.data) || Race_if(PM_HUMAN_WEREWOLF) || Race_if(PM_AK_THIEF_IS_DEAD_) || Role_if(PM_LUNATIC)) {
 		You("find the idea very satisfying.");
 		exercise(A_WIS, TRUE);
@@ -1847,7 +1855,7 @@ dosacrifice()
 			       break;                
 			  case 4:
 			       pline("Amused, he grants you a boon!");
-				 if (!rn2(4)) makewish();
+				 if (!rn2(4)) makewish(evilfriday ? FALSE : TRUE);
 				 else othergreateffect();
 				 if (dmon && !rn2(200) ) dmon = tamedog(dmon, (struct obj *) 0, TRUE);
 			  case 13:
@@ -1868,7 +1876,7 @@ dosacrifice()
 	    if (u.ualign.type != A_CHAOTIC) {
 		adjalign(-25);
 		u.ugangr += 3;
-		(void) adjattrib(A_WIS, -1, TRUE);
+		(void) adjattrib(A_WIS, -1, TRUE, TRUE);
 		if (!Inhell) angrygods(u.ualign.type);
 		change_luck(-5);
 	    } else adjalign(5);
@@ -1895,7 +1903,7 @@ dosacrifice()
 		pline("Such an action is an insult to %s!",
 		      (unicalign == A_CHAOTIC)
 		      ? "chaos" : unicalign ? "law" : "balance");
-		(void) adjattrib(A_WIS, -1, TRUE);
+		(void) adjattrib(A_WIS, -1, TRUE, TRUE);
 		value = -5;
 	    } else if (u.ualign.type == altaralign) {
 		/* If different from altar, and altar is same as yours, */
@@ -2050,7 +2058,7 @@ verbalize("In return for thy service, I grant thee a dacha by the Black Sea!");
 	    /* Is this a conversion ? */
 	    /* An unaligned altar in Gehennom will always elicit rejection. */
 	    if (ugod_is_angry() || (altaralign == A_NONE && ( (Inhell && !Race_if(PM_HERETIC) ) || flags.gehenna ) )) {
-		if(u.ualignbase[A_CURRENT] == u.ualignbase[A_ORIGINAL] &&
+		if(u.ualignbase[A_CURRENT] == u.ualignbase[A_ORIGINAL] && !(Race_if(PM_CHIQUAI) && rn2(5)) &&
 		   altaralign != A_NONE) {
 		    You("have a strong feeling that %s is angry...", u_gname());
 		    consume_offering(otmp);
@@ -2078,7 +2086,7 @@ verbalize("In return for thy service, I grant thee a dacha by the Black Sea!");
 		    pline("%s rejects your sacrifice!", a_gname());
 		    godvoice(altaralign, "Suffer, infidel!");
 		    change_luck(-5);
-		    (void) adjattrib(A_WIS, -2, TRUE);
+		    (void) adjattrib(A_WIS, -2, TRUE, TRUE);
 		    if (!Inhell) angrygods(u.ualign.type);
 			else 	angrygods(altaralign);
 		}
@@ -2087,7 +2095,8 @@ verbalize("In return for thy service, I grant thee a dacha by the Black Sea!");
 		consume_offering(otmp);
 		You("sense a conflict between %s and %s.",
 		    u_gname(), a_gname());
-		if (rn2(2) && rn2(8 + u.ulevel) > 5) { /* lower chance of conversion --Amy */
+		if (((rn2(2) && rn2(8 + u.ulevel) > 5) || (Race_if(PM_EGYMID) && rn2(2) && rn2(8 + u.ulevel) > 5)) && !(Race_if(PM_CHIQUAI) && rn2(3)) ) {
+		    /* lower chance of conversion --Amy */
 		    struct monst *pri;
 		    You_feel("the power of %s increase.", u_gname());
 		    if (!rn2(2) || rnl(u.ulevel) > 3) { /* higher chance of conversion creating minions --Amy */
@@ -2407,7 +2416,7 @@ boolean praying;	/* false means no messages should be given */
 	(p_trouble < 0) ? (u.ublesscnt > ((u.ualign.type == A_CHAOTIC) ? (200 + maedhrosbonus) : (u.ualign.type == A_NEUTRAL) ? (125 + maedhrosbonus) : (100 + maedhrosbonus) ) ) : /* minor difficulties */
 	(u.ublesscnt > 0))			/* not in trouble */
 	p_type = 0;		/* too soon... */
-    else if ((int)Luck < 0 || u.ugangr || alignment < 0)
+    else if ((int)Luck < (HardcoreAlienMode ? rn2(2) : Race_if(PM_SPARD) ? -1 : 0) || u.ugangr || alignment < (HardcoreAlienMode ? rn2(20) : Race_if(PM_SPARD) ? -10 : 0) )
 	p_type = 1;		/* too naughty... */
     else /* alignment >= 0 */ {
 	if(on_altar() && u.ualign.type != p_aligntyp)
@@ -2444,8 +2453,8 @@ dopray()
 	else {
 		if (u.ugangr) godvoice(u.ualign.type, "Thou hast angered me before. I expect thee to make a valuable sacrifice to me first before thou mayst pray again.");
 		if (u.ublesscnt > 0) godvoice(u.ualign.type, "Thou mayst not pray yet!");
-		if ((int)Luck < 0) godvoice(u.ualign.type, "Thou art unlucky! I cannot help thee now!");
-		if (u.ualign.record < 0) godvoice(u.ualign.type, "Thou must not pray to me, for thou hath sinned!");
+		if ((int)Luck < (HardcoreAlienMode ? 1 : Race_if(PM_SPARD) ? -1 : 0) ) godvoice(u.ualign.type, "Thou art unlucky! I cannot help thee now!");
+		if (u.ualign.record < (HardcoreAlienMode ? 20 : Race_if(PM_SPARD) ? -10 : 0) ) godvoice(u.ualign.type, "Thou must not pray to me, for thou hath sinned!");
 		if (Inhell || flags.gehenna) godvoice(u.ualign.type, "My scholar, I cannot help thee in the Under World!");
 	}
 
@@ -2458,7 +2467,17 @@ dopray()
 	if (yn("Are you sure you want to pray?") == 'n')
 	    return 0;
 
+    if (Race_if(PM_MAGYAR)) {
+	adjalign(-10);
+	change_luck(-1);
+	pline("Praying as a magyar is a risky action because you're supposed to be an atheist!");
+    }
+
     u.uconduct.gnostic++;
+	if (Race_if(PM_MAGYAR)) {
+		You_feel("bad about breaking the atheist conduct.");
+		badeffect();
+	}
     u.uconduct.praydone++;
     /* Praying implies that the hero is conscious and since we have
        no deafness attribute this implies that all verbalized messages
@@ -2640,6 +2659,10 @@ turn_undead()
 	int once, range, xlev;
 
 	u.uconduct.gnostic++;
+	if (Race_if(PM_MAGYAR)) {
+		You_feel("bad about breaking the atheist conduct.");
+		badeffect();
+	}
 
 	int alignmentlimit;
 
@@ -2797,7 +2820,7 @@ aligntyp alignment;
 	     case 2:	gnam = roles[which].cgod; break;
 	     default:	gnam = 0; break;		/* lint suppression */
 	    }
-	    if (!gnam) gnam = Role_if(PM_GANG_SCHOLAR) ? ScholarMoloch : Moloch;
+	    if (!gnam) gnam = Role_if(PM_GANG_SCHOLAR) ? ScholarMoloch : Role_if(PM_WALSCHOLAR) ? ScholarMoloch : Moloch;
 	    if (*gnam == '_') ++gnam;
 	    return gnam;
 	}
@@ -2805,7 +2828,7 @@ aligntyp alignment;
 	if (isheretic || Role_if(PM_FAILED_EXISTENCE) || Role_if(PM_TRANSSYLVANIAN) || Role_if(PM_PRIEST) || Role_if(PM_MYSTIC) || Role_if(PM_SHAPESHIFTER) || Role_if(PM_GUNNER) || Role_if(PM_WILD_TALENT) || Role_if(PM_ERDRICK) || Role_if(PM_ANACHRONIST) ) {
 
     switch (alignment) {
-     case A_NONE:	gnam = Role_if(PM_GANG_SCHOLAR) ? ScholarMoloch : Moloch; break;
+     case A_NONE:	gnam = Role_if(PM_GANG_SCHOLAR) ? ScholarMoloch : Role_if(PM_WALSCHOLAR) ? ScholarMoloch : Moloch; break;
      case A_LAWFUL:	gnam = u.hereticlgod; break;
      case A_NEUTRAL:	gnam = u.hereticngod; break;
      case A_CHAOTIC:	gnam = u.hereticcgod; break;
@@ -2816,7 +2839,7 @@ aligntyp alignment;
 	} else {
 
     switch (alignment) {
-     case A_NONE:	gnam = Role_if(PM_GANG_SCHOLAR) ? ScholarMoloch : Moloch; break;
+     case A_NONE:	gnam = Role_if(PM_GANG_SCHOLAR) ? ScholarMoloch : Role_if(PM_WALSCHOLAR) ? ScholarMoloch : Moloch; break;
      case A_LAWFUL:	gnam = urole.lgod; break;
      case A_NEUTRAL:	gnam = urole.ngod; break;
      case A_CHAOTIC:	gnam = urole.cgod; break;
@@ -2848,7 +2871,7 @@ aligntyp alignment;
      case 2:	gnam = roles[which].cgod; break;
      default:	gnam = 0; break;		/* lint suppression */
     }
-    if (!gnam) gnam = Role_if(PM_GANG_SCHOLAR) ? ScholarMoloch : Moloch;
+    if (!gnam) gnam = Role_if(PM_GANG_SCHOLAR) ? ScholarMoloch : Role_if(PM_WALSCHOLAR) ? ScholarMoloch : Moloch;
     if (*gnam == '_') ++gnam;
     return gnam;
 }
@@ -2899,7 +2922,7 @@ register int x, y;
 
     if(!strcmp(align_gname(altaralign), u_gname())) {
 	godvoice(altaralign, "How darest thou desecrate my altar!");
-	(void) adjattrib(A_WIS, -1, FALSE);
+	(void) adjattrib(A_WIS, -1, FALSE, TRUE);
     } else {
 	pline("A voice (could it be %s?) whispers:",
 	      align_gname(altaralign));

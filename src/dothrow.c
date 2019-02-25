@@ -58,7 +58,7 @@ struct obj **pobj;
 	    setworn(otmp = splitobj(obj, 1L), W_WEP);
 	    /* not setuwep; do not change unweapon */
 	else {
-	    setuwep((struct obj *)0, FALSE);
+	    setuwep((struct obj *)0, FALSE, TRUE);
 	    if (uwep) return (struct obj *)0; /* unwielded, died, rewielded */
 	}
     } else if (obj->quan > 1L)
@@ -80,6 +80,7 @@ int thrown;
 	boolean fullmultishot; /* depends on missile weapons skill --Amy */
 	int angeramount; /* for blade anger technique */
 
+	if (Race_if(PM_SPARD)) multishot += rnd(4);
 	if (uarmh && uarmh->oartifact == ART_VIRUS_ATTACK) multishot += 1;
 	if (uarmh && uarmh->oartifact == ART_SURFACE_TO_AIR_SITE) multishot += 1;
 	if (uwep && uwep->oartifact == ART_LASER_PALADIN) multishot += 1;
@@ -205,6 +206,12 @@ int thrown;
 		multishot++;
 	    if (launcher && launcher->otyp == WILDHILD_BOW && obj->otyp == ODOR_SHOT) multishot++;
 	    if (launcher && launcher->otyp == COMPOST_BOW && obj->otyp == FORBIDDEN_ARROW) multishot++;
+
+	    if (launcher && launcher->oartifact == ART_TEAM_FORTRESS_GL && obj->otyp == FRAG_GRENADE) multishot += 5;
+	    if (launcher && launcher->oartifact == ART_TEAM_FORTRESS_GL && obj->otyp == GAS_GRENADE) multishot += 5;
+
+	    if (Race_if(PM_AZTPOK) && launcher && objects[launcher->otyp].oc_skill == P_FIREARM) multishot += rnd(2);
+	    if (Race_if(PM_TURMENE) && launcher && objects[launcher->otyp].oc_skill == P_FIREARM) multishot += rnd(3);
 
 	    if (launcher && launcher->otyp == CATAPULT) multishot += rnd(5);
 
@@ -1194,8 +1201,10 @@ boolean hitsroof;
 	if (dmg > 0 && uarmc && uarmc->oartifact == ART_DUFFDUFFDUFF) dmg += 3;
 	if (dmg > 0 && uarmg && uarmg->oartifact == ART_RAAAAAAAARRRRRRGH) dmg += 5;
 	if (dmg > 0 && uarmg && uarmg->oartifact == ART_SI_OH_WEE) dmg += 2;
-	if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_RHEA_S_MISSING_EYESIGHT) dmg += rnd(5);
-	if (dmg > 0 && nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_SOME_LITTLE_AID) dmg += 1;
+	if (powerfulimplants() && uimplant && uimplant->oartifact == ART_RHEA_S_MISSING_EYESIGHT) dmg += rnd(5);
+	if (dmg > 0 && powerfulimplants() && uimplant && uimplant->oartifact == ART_SOME_LITTLE_AID) dmg += 1;
+	if (dmg > 0 && Race_if(PM_VIKING)) dmg += 1;
+	if (dmg > 0 && Race_if(PM_ITAQUE)) dmg -= 1;
 	if (uwep && uwep->oartifact == ART_RIP_STRATEGY) dmg -= 5;
 	if (uswapwep && uswapwep->oartifact == ART_RIP_STRATEGY) dmg -= 5;
 
@@ -1341,10 +1350,8 @@ int thrown;
 		      Tobjnam(obj, "hit"), ceiling(u.ux,u.uy));
 		obj = addinv(obj);
 		(void) encumber_msg();
-		setuwep(obj, TRUE);
+		setuwep(obj, TRUE, TRUE);
 		u.twoweap = twoweap;
-/*            if (!fire_weapon) setuwep(obj);                
-            else setuqwep(obj);*/
 		return;
 	    }
 	    if (u.dz < 0 && (Role_if(PM_JEDI) || !rn2(2)) &&
@@ -1355,7 +1362,7 @@ int thrown;
 		      Tobjnam(obj, "hit"), ceiling(u.ux,u.uy));
 		obj = addinv(obj);
 		(void) encumber_msg();
-		setuwep(obj, TRUE);
+		setuwep(obj, TRUE, TRUE);
 		u.twoweap = twoweap;
 		return;
 	    }
@@ -1443,11 +1450,16 @@ int thrown;
 
 		if (uarmh && uarmh->oartifact == ART_VIRUS_ATTACK) range += 2;
 
+		if (Race_if(PM_ENGCHIP) && launcher && objects[launcher->otyp].oc_skill == P_BOW) range += 2;
+		if (Race_if(PM_ENGCHIP) && launcher && objects[launcher->otyp].oc_skill == P_CROSSBOW) range += 2;
+
 		if (uarmg && uarmg->oartifact == ART_BEEEEEEEANPOLE && launcher && objects[launcher->otyp].oc_skill == P_BOW) range += 5;
 		if (uwep && uwep->oartifact == ART_SNIPER_CROSSHAIR && launcher && objects[launcher->otyp].oc_skill == P_CROSSBOW) range += 30;
 		if ((uarmc && OBJ_DESCR(objects[uarmc->otyp]) && ( !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "cyanism cloak") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "plashch s tsianom") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "ko'k zaharlanish plash") )) && launcher && objects[launcher->otyp].oc_skill == P_SLING) range += 3;
 		if (obj && obj->oartifact == ART_RACER_PROJECTILE) range *= 2;
-	
+
+		if (Race_if(PM_GERTEUT) && range > 5) range = 5;
+
 		if (Is_airlevel(&u.uz) || Levitation) {
 		    /* action, reaction... */
 		    urange -= range;
@@ -1464,6 +1476,8 @@ int thrown;
 		    range = 1;
 
 		if (Underwater) range = 1;
+
+		if (Race_if(PM_GERTEUT) && range > 5) range = 5;
 
 		mon = bhit(u.dx,u.dy,range,THROWN_WEAPON,
 			   (int (*)(MONST_P,OBJ_P))0,
@@ -1568,7 +1582,7 @@ int thrown;
 			pline("%s to your hand!", Tobjnam(obj, "return"));
 			obj = addinv(obj);
 			(void) encumber_msg();
-			setuwep(obj, TRUE);
+			setuwep(obj, TRUE, TRUE);
 			u.twoweap = twoweap;
 			if(cansee(bhitpos.x, bhitpos.y))
 			    newsym(bhitpos.x,bhitpos.y);
@@ -1794,6 +1808,8 @@ int thrown;
 	if (uarm && uarm->oartifact == ART_MOTHERFUCKER_TROPHY) tmp += 5;
 	if (u.tiksrvzllatdown) tmp += 5;
 
+	if (Race_if(PM_GERTEUT)) tmp += 5;
+
 	if (uarmg && OBJ_DESCR(objects[uarmg->otyp]) && ( !strcmp(OBJ_DESCR(objects[uarmg->otyp]), "uncanny gloves") || !strcmp(OBJ_DESCR(objects[uarmg->otyp]), "sverkh''yestestvennyye perchatki") || !strcmp(OBJ_DESCR(objects[uarmg->otyp]), "dahshatli qo'lqop") )) tmp += 1;
 	if (uarmg && OBJ_DESCR(objects[uarmg->otyp]) && ( !strcmp(OBJ_DESCR(objects[uarmg->otyp]), "slaying gloves") || !strcmp(OBJ_DESCR(objects[uarmg->otyp]), "ubiystvennyye perchatki") || !strcmp(OBJ_DESCR(objects[uarmg->otyp]), "o'ldirish qo'lqop") )) tmp += 1;
 
@@ -1804,7 +1820,7 @@ int thrown;
 	if (uarmc && uarmc->oartifact == ART_ENEMIES_SHALL_LAUGH_TOO) tmp += 10;
 	if (uimplant && uimplant->oartifact == ART_ACTUAL_PRECISION) tmp += 5;
 	if (uimplant && uimplant->oartifact == ART_RHEA_S_MISSING_EYESIGHT) tmp -= rnd(20);
-	if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_ACTUAL_PRECISION) tmp += 5;
+	if (powerfulimplants() && uimplant && uimplant->oartifact == ART_ACTUAL_PRECISION) tmp += 5;
 	if (uleft && uleft->oartifact == ART_BLIND_PILOT) tmp -= 10;
 	if (uright && uright->oartifact == ART_BLIND_PILOT) tmp -= 10;
 	if (Role_if(PM_ARCHEOLOGIST) && uamul && uamul->oartifact == ART_ARCHEOLOGIST_SONG) tmp += 2;
@@ -1828,6 +1844,11 @@ int thrown;
 	if (uarmc && uarmc->oartifact == ART_ROKKO_CHAN_S_SUIT) tmp += 5;
 
 	if (!issoviet && !rn2(20 - (GushLevel / 2) )) tmp += rnd(GushLevel);
+
+	if (Race_if(PM_ENGCHIP) && objects[obj->otyp].oc_skill == P_BOW) tmp -= 5;
+	if (Race_if(PM_ENGCHIP) && objects[obj->otyp].oc_skill == -P_BOW) tmp -= 5;
+	if (Race_if(PM_ENGCHIP) && objects[obj->otyp].oc_skill == P_CROSSBOW) tmp -= 5;
+	if (Race_if(PM_ENGCHIP) && objects[obj->otyp].oc_skill == -P_BOW) tmp -= 5;
 
 	/* let's just add that bonus anyway. --Amy */
 	if(mon->mstun) tmp += 2;
@@ -1888,6 +1909,10 @@ int thrown;
 
 	}
 
+	if (Race_if(PM_FRO) && objects[obj->otyp].oc_skill == P_AXE) {
+		tmp += 5;
+	}
+	
 	if (Numbed) {
 		if (tmp > 1) {
 			tmp *= 9;
@@ -2046,6 +2071,7 @@ int thrown;
 				break;
 			case CRYSTAL_SHIELD:
 			case RAPIRAPI:
+			case HIDE_SHIELD:
 				shieldblockrate = 45;
 				break;
 			case SHIELD_OF_REFLECTION:
@@ -2126,6 +2152,11 @@ int thrown;
 			pline("%s's shield deflects your projectile!", Monnam(mon));
 		}
 	}
+
+	if (Race_if(PM_ENGCHIP) && !rn2(20) && objects[obj->otyp].oc_skill == P_BOW) tmp = -100;
+	if (Race_if(PM_ENGCHIP) && !rn2(20) && objects[obj->otyp].oc_skill == -P_BOW) tmp = -100;
+	if (Race_if(PM_ENGCHIP) && !rn2(20) && objects[obj->otyp].oc_skill == P_CROSSBOW) tmp = -100;
+	if (Race_if(PM_ENGCHIP) && !rn2(20) && objects[obj->otyp].oc_skill == -P_BOW) tmp = -100;
 
 	/* Modify to-hit depending on distance; but keep it sane.
 	 * Polearms get a distance penalty even when wielded; it's

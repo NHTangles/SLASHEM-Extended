@@ -59,7 +59,7 @@ dowaterdemon() /* Water demon */
 	if (rnd(100) > wishchance) {
 		pline("Grateful for %s release, %s grants you a boon!",
 		      mhis(mtmp), mhe(mtmp));
-		if (!rn2(4)) makewish();
+		if (!rn2(4)) makewish(evilfriday ? FALSE : TRUE);
 		else othergreateffect();
 		mongone(mtmp);
 	    } else if (t_at(mtmp->mx, mtmp->my))
@@ -218,6 +218,28 @@ drinkfountain()
 		pline("The water is very nutritious!");
 	}
 
+	/* occasionally give nastytrap effects, because fountain quaffing is supposed to be VERY DANGEROUS(TM) --Amy */
+	if (!rn2(100)) {
+
+		if (rn2(50)) {
+
+			int nastytrapdur = (Role_if(PM_GRADUATE) ? 6 : Role_if(PM_GEEK) ? 12 : 24);
+			if (!nastytrapdur) nastytrapdur = 24; /* fail safe */
+			int blackngdur = (Role_if(PM_GRADUATE) ? 2000 : Role_if(PM_GEEK) ? 1000 : 500);
+			if (!blackngdur ) blackngdur = 500; /* fail safe */
+
+			if (!rn2(100)) pline("You have a bad feeling in your %s.",body_part(STOMACH) );
+
+			randomnastytrapeffect(rnz(nastytrapdur * (monster_difficulty() + 1)), blackngdur - (monster_difficulty() * 3));
+
+		} else { /* oh my god the RNG hates you and gives the effect permanently... */
+
+			getnastytrapintrinsic();
+
+		}
+
+	}
+
 	if (mgkftn && u.uluck >= 0 && (!isfriday || !rn2(2)) && fate >= 10) {
 		int i, ii, littleluck = (u.uluck < 4);
 
@@ -231,7 +253,7 @@ drinkfountain()
 		/* gain ability, blessed if "natural" luck is high */
 		i = rn2(A_MAX);		/* start at a random attribute */
 		for (ii = 0; ii < A_MAX; ii++) {
-		    if (adjattrib(i, 1, littleluck ? -1 : 0) && (littleluck || !rn2(2)) )
+		    if (adjattrib(i, 1, littleluck ? -1 : 0, TRUE) && (littleluck || !rn2(2)) )
 			break;
 		    if (++i >= A_MAX) i = 0;
 		}
@@ -272,7 +294,7 @@ drinkfountain()
 			reset_rndmonst(NON_PM);
 			while (aggroamount) {
 
-				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY);
+				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY|MM_FRENZIED);
 				aggroamount--;
 				if (aggroamount < 0) aggroamount = 0;
 			}
@@ -288,7 +310,7 @@ drinkfountain()
 		case 16:
 			pm = rn2(5) ? dprince(rn2((int)A_LAWFUL+2) - 1) : dlord(rn2((int)A_LAWFUL+2) - 1);
 			if (pm && (pm != NON_PM)) {
-				(void) makemon(&mons[pm], u.ux, u.uy, MM_ANGRY);
+				(void) makemon(&mons[pm], u.ux, u.uy, MM_ANGRY|MM_FRENZIED);
 				pline("An angry demon climbs out of the fountain...");
 			}
 			break;
@@ -340,7 +362,7 @@ drinkfountain()
 				KILLED_BY_AN);
 			   break;
 			}
-			losestr(rn1(4,3));
+			losestr(rn1(4,3), TRUE);
 			losehp(rnd(10),"contaminated water", KILLED_BY);
 			exercise(A_CON, FALSE);
 			break;
@@ -353,7 +375,7 @@ drinkfountain()
 		case 23: /* Water demon */
 			if (uarmc && uarmc->oartifact == ART_JANA_S_ROULETTE_OF_LIFE && !rn2(10)) {
 				pline("Booyah, luck is smiling on you!");
-				if (!rn2(4)) makewish();
+				if (!rn2(4)) makewish(evilfriday ? FALSE : TRUE);
 				else othergreateffect();
 			} else dowaterdemon();
 			break;
@@ -578,7 +600,7 @@ register struct obj *obj;
 			reset_rndmonst(NON_PM);
 			while (aggroamount) {
 
-				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY);
+				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY|MM_FRENZIED);
 				aggroamount--;
 				if (aggroamount < 0) aggroamount = 0;
 			}
@@ -592,7 +614,7 @@ register struct obj *obj;
 			if (!rn2(50)) {
 				pm = rn2(5) ? dprince(rn2((int)A_LAWFUL+2) - 1) : dlord(rn2((int)A_LAWFUL+2) - 1);
 				if (pm && (pm != NON_PM)) {
-					(void) makemon(&mons[pm], u.ux, u.uy, MM_ANGRY);
+					(void) makemon(&mons[pm], u.ux, u.uy, MM_ANGRY|MM_FRENZIED);
 					pline("An angry demon climbs out of the fountain...");
 				}
 			}
@@ -670,7 +692,7 @@ newhamburger:
 				goto newhamburger;
 			}
 
-			if (ppm) (void) makemon(ppm, u.ux, u.uy, MM_ANGRY);
+			if (ppm) (void) makemon(ppm, u.ux, u.uy, MM_ANGRY|MM_FRENZIED);
 			aggroamount--;
 
 			} /* while (aggroamount) */
@@ -1219,7 +1241,7 @@ register struct obj *obj;
 			break;
 		case 4:
 			pline("This water contains toxic wastes!");
-			obj = poly_obj(obj, STRANGE_OBJECT);
+			obj = poly_obj(obj, STRANGE_OBJECT, FALSE);
 			u.uconduct.polypiles++;
 			break;
 		case 5: You_hear("clanking from the pipes...");

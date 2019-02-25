@@ -1037,7 +1037,12 @@ struct obj **optr;
 	    for(i = -bd; i <= bd; i++) for(j = -bd; j <= bd; j++) {
 		if (!isok(u.ux + i, u.uy + j)) continue;
 		if ((bimmel = m_at(u.ux + i, u.uy + j)) != 0 && bimmel->data->mlet == S_XAN)
-		    if (!resist(bimmel, RING_CLASS, 0, TELL) || ((rnd(30 - ACURR(A_CHA))) < 4) ) (void) tamedog(bimmel, (struct obj *) 0, FALSE);
+			if (!rn2(5) && bimmel && !(bimmel->mtame)) {
+				bimmel->mfrenzied = TRUE;
+
+			} else if (bimmel && !(bimmel->mtame) && !(bimmel->mfrenzied)) {
+				if (!resist(bimmel, RING_CLASS, 0, TELL) || ((rnd(30 - ACURR(A_CHA))) < 4) ) (void) tamedog(bimmel, (struct obj *) 0, FALSE);
+			}
 	    }
 
 	}
@@ -1116,7 +1121,7 @@ struct obj **optr;
 
 		mm.x = u.ux;
 		mm.y = u.uy;
-		mkundead(&mm, FALSE, NO_MINVENT);
+		mkundead(&mm, FALSE, NO_MINVENT, TRUE);
 		wakem = TRUE;
 		badeffect();
 		aggravate();
@@ -1877,7 +1882,7 @@ int magic; /* 0=Physical, otherwise skill level */
 
 	    teleds(cc.x, cc.y, TRUE);
 
-	if ( (sobj_at(ORCISH_SHORT_SWORD,cc.x,cc.y) || sobj_at(SHORT_SWORD,cc.x,cc.y) || sobj_at(SILVER_SHORT_SWORD,cc.x,cc.y) || sobj_at(DWARVISH_SHORT_SWORD,cc.x,cc.y)  || sobj_at(ELVEN_SHORT_SWORD,cc.x,cc.y) || sobj_at(HIGH_ELVEN_WARSWORD,cc.x,cc.y)  || sobj_at(DARK_ELVEN_SHORT_SWORD,cc.x,cc.y)  || sobj_at(DROVEN_SHORT_SWORD,cc.x,cc.y)  || sobj_at(VIBROBLADE,cc.x,cc.y)  || sobj_at(INKA_BLADE,cc.x,cc.y)  || sobj_at(ETERNIUM_BLADE,cc.x,cc.y)  || sobj_at(BROADSWORD,cc.x,cc.y)  || sobj_at(RUNESWORD,cc.x,cc.y)   || sobj_at(SUGUHANOKEN,cc.x,cc.y)   || sobj_at(GREAT_HOUCHOU,cc.x,cc.y)   || sobj_at(BLACK_AESTIVALIS,cc.x,cc.y)  || sobj_at(PAPER_SWORD,cc.x,cc.y)  || sobj_at(MEATSWORD,cc.x,cc.y)  || sobj_at(WHITE_FLOWER_SWORD,cc.x,cc.y) || sobj_at(ELVEN_BROADSWORD,cc.x,cc.y)  || sobj_at(LONG_SWORD,cc.x,cc.y)  || sobj_at(SILVER_LONG_SWORD,cc.x,cc.y)  || sobj_at(CRYSTAL_SWORD,cc.x,cc.y)  || sobj_at(KATANA,cc.x,cc.y)  || sobj_at(OSBANE_KATANA,cc.x,cc.y)  || sobj_at(ICKY_BLADE,cc.x,cc.y)  || sobj_at(GRANITE_IMPALER,cc.x,cc.y)  || sobj_at(ELECTRIC_SWORD,cc.x,cc.y)  || sobj_at(TWO_HANDED_SWORD,cc.x,cc.y)  || sobj_at(TSURUGI,cc.x,cc.y)   || sobj_at(CHAINSWORD,cc.x,cc.y)   || sobj_at(BASTERD_SWORD,cc.x,cc.y) || sobj_at(BIDENHANDER,cc.x,cc.y) || sobj_at(ORGANOBLADE,cc.x,cc.y) || sobj_at(COLOSSUS_BLADE,cc.x,cc.y) || sobj_at(DROVEN_GREATSWORD,cc.x,cc.y)  || sobj_at(SCIMITAR,cc.x,cc.y)  || sobj_at(BENT_SABLE,cc.x,cc.y)  || sobj_at(RAPIER,cc.x,cc.y)   || sobj_at(PLATINUM_SABER,cc.x,cc.y)  || sobj_at(WILD_BLADE,cc.x,cc.y)  || sobj_at(LEATHER_SABER,cc.x,cc.y)  || sobj_at(ARCANE_RAPIER,cc.x,cc.y) || sobj_at(INKUTLASS,cc.x,cc.y)  || sobj_at(HOE_SABLE,cc.x,cc.y)  || sobj_at(YATAGAN,cc.x,cc.y)  || sobj_at(SILVER_SABER,cc.x,cc.y)  || sobj_at(GOLDEN_SABER,cc.x,cc.y)  || sobj_at(IRON_SABER,cc.x,cc.y) ) && flags.iwbtg ) {
+	if ( (sobj_at(ORCISH_SHORT_SWORD,cc.x,cc.y) || sobj_at(SHORT_SWORD,cc.x,cc.y) || sobj_at(SILVER_SHORT_SWORD,cc.x,cc.y) || sobj_at(DWARVISH_SHORT_SWORD,cc.x,cc.y)  || sobj_at(ELVEN_SHORT_SWORD,cc.x,cc.y) || sobj_at(HIGH_ELVEN_WARSWORD,cc.x,cc.y)  || sobj_at(DARK_ELVEN_SHORT_SWORD,cc.x,cc.y)  || sobj_at(DROVEN_SHORT_SWORD,cc.x,cc.y)  || sobj_at(VIBROBLADE,cc.x,cc.y)  || sobj_at(INKA_BLADE,cc.x,cc.y)  || sobj_at(ETERNIUM_BLADE,cc.x,cc.y)  || sobj_at(BROADSWORD,cc.x,cc.y)  || sobj_at(RUNESWORD,cc.x,cc.y)   || sobj_at(SUGUHANOKEN,cc.x,cc.y)   || sobj_at(GREAT_HOUCHOU,cc.x,cc.y)   || sobj_at(BLACK_AESTIVALIS,cc.x,cc.y)  || sobj_at(PAPER_SWORD,cc.x,cc.y)  || sobj_at(MEATSWORD,cc.x,cc.y)  || sobj_at(WHITE_FLOWER_SWORD,cc.x,cc.y) || sobj_at(ELVEN_BROADSWORD,cc.x,cc.y)  || sobj_at(LONG_SWORD,cc.x,cc.y)  || sobj_at(SILVER_LONG_SWORD,cc.x,cc.y)  || sobj_at(CRYSTAL_SWORD,cc.x,cc.y)  || sobj_at(KATANA,cc.x,cc.y)  || sobj_at(OSBANE_KATANA,cc.x,cc.y)  || sobj_at(ICKY_BLADE,cc.x,cc.y)  || sobj_at(GRANITE_IMPALER,cc.x,cc.y)  || sobj_at(FLAME_MOUNTAIN,cc.x,cc.y)  || sobj_at(ELECTRIC_SWORD,cc.x,cc.y)  || sobj_at(TWO_HANDED_SWORD,cc.x,cc.y)  || sobj_at(TSURUGI,cc.x,cc.y)   || sobj_at(CHAINSWORD,cc.x,cc.y)   || sobj_at(BASTERD_SWORD,cc.x,cc.y) || sobj_at(BIDENHANDER,cc.x,cc.y) || sobj_at(ORGANOBLADE,cc.x,cc.y) || sobj_at(COLOSSUS_BLADE,cc.x,cc.y) || sobj_at(DROVEN_GREATSWORD,cc.x,cc.y)  || sobj_at(SCIMITAR,cc.x,cc.y)  || sobj_at(BENT_SABLE,cc.x,cc.y)  || sobj_at(RAPIER,cc.x,cc.y)   || sobj_at(PLATINUM_SABER,cc.x,cc.y)  || sobj_at(WILD_BLADE,cc.x,cc.y)  || sobj_at(LEATHER_SABER,cc.x,cc.y)  || sobj_at(ARCANE_RAPIER,cc.x,cc.y) || sobj_at(INKUTLASS,cc.x,cc.y)  || sobj_at(HOE_SABLE,cc.x,cc.y)  || sobj_at(YATAGAN,cc.x,cc.y)  || sobj_at(SILVER_SABER,cc.x,cc.y)  || sobj_at(GOLDEN_SABER,cc.x,cc.y)  || sobj_at(IRON_SABER,cc.x,cc.y) ) && flags.iwbtg ) {
 
 		u.youaredead = 1;
 		killer = "a sharp-edged sword";		/* the thing that killed you */
@@ -2250,7 +2255,7 @@ degradeagain:
 		    break;
 	    case 6: make_burned(HBurned + lcount, TRUE);
 		    break;
-	    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE);
+	    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE, TRUE);
 		    break;
 	    case 8: (void) make_hallucinated(HHallucination + lcount, TRUE, 0L);
 		    break;
@@ -2315,7 +2320,7 @@ degradeagain:
 
 fixthings:
 	if (trouble_count == 0) {
-	    if (!(nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_HEALENERATION)) {
+	    if (!(powerfulimplants() && uimplant && uimplant->oartifact == ART_HEALENERATION)) {
 			pline("%s", nothing_happens);
 			if (FailureEffects || u.uprops[FAILURE_EFFECTS].extrinsic || have_failurestone()) {
 				pline("Oh wait, actually something bad happens...");
@@ -3537,6 +3542,12 @@ use_pole (obj)
 	}
 
 	if (obj->otyp == NOOB_POLLAX || obj->otyp == GREAT_POLLAX) max_range += 5;
+	if (obj->otyp == YITH_TENTACLE) max_range += 2;
+	if (obj->otyp == POLE_LANTERN) {
+		max_range += 10;
+		min_range += 5;
+	}
+	if (obj->oartifact == ART_PAYBACK_TIME) max_range += 8;
 	if (obj->oartifact == ART_ETHER_PENETRATOR) max_range += 5;
 	if (obj->oartifact == ART_FUURKER) max_range += 6;
 	if (obj->otyp == WOODEN_BAR) max_range += 7;
@@ -3553,18 +3564,19 @@ use_pole (obj)
 	} else if (distu(cc.x, cc.y) < min_range) {
 	    pline(Hallucination ? "Your stick's too long, it seems!" : "Too close!");
 	    return (res);
-	} else if (!cansee(cc.x, cc.y) &&
-		   ((mtmp = m_at(cc.x, cc.y)) == (struct monst *)0 ||
-		    !canseemon(mtmp))) {
+	} else if (!cansee(cc.x, cc.y) && obj->otyp != DARK_BAR &&
+		   ((mtmp = m_at(cc.x, cc.y)) == (struct monst *)0 || !canseemon(mtmp))) {
 	    You(cant_see_spot);
 	    return (res);
-	} else if (!couldsee(cc.x, cc.y)) { /* Eyes of the Overworld */
+	} else if (!couldsee(cc.x, cc.y) && !(obj->oartifact == ART_WEAKITE_THRUST) ) { /* Eyes of the Overworld */
 	    You(cant_reach);
 	    return res;
 	}
 
 	/* So you did successfully apply your pole. If you try to camp on an Elbereth, it should be scuffed now --Amy */
 	u_wipe_engr(rnd(5));
+
+	if (u.mushroompoles) u.mushroompoleused = TRUE;
 
 	/* What is there? */
 	mtmp = m_at(cc.x, cc.y);
@@ -3736,7 +3748,7 @@ use_pole (obj)
 			u.heavyaggravation = 1;
 			reset_rndmonst(NON_PM);
 			while (aggroamount) {
-				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY);
+				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY|MM_FRENZIED);
 				aggroamount--;
 				if (aggroamount < 0) aggroamount = 0;
 			}
@@ -3814,6 +3826,7 @@ use_pole (obj)
 			badeffect();
 		}
 	}
+	u.mushroompoleused = 0;
 	return (1);
 }
 
@@ -4576,7 +4589,7 @@ doapply()
 	obj = getobj(class_list, "use or apply");
 	if(!obj) return 0;
 
-	if ((CurseuseEffect || u.uprops[CURSEUSE_EFFECT].extrinsic || have_curseusestone()) && obj && obj->otyp != CANDELABRUM_OF_INVOCATION && obj->otyp != SPE_BOOK_OF_THE_DEAD && obj->otyp != BELL_OF_OPENING) curse(obj);
+	if (CurseAsYouUse && obj && obj->otyp != CANDELABRUM_OF_INVOCATION && obj->otyp != SPE_BOOK_OF_THE_DEAD && obj->otyp != BELL_OF_OPENING) curse(obj);
 
 	if (InterruptEffect || u.uprops[INTERRUPT_EFFECT].extrinsic || have_interruptionstone()) {
 		nomul(-(rnd(5)), "applying a tool", TRUE);
@@ -4597,6 +4610,19 @@ doapply()
 
 	if (obj->oclass == WAND_CLASS)
 	    return do_break_wand(obj);
+
+	/* Mushroom can use every weapon as a polearm, including bows, arrows etc., can be turned on via #monster --Amy */
+	if (Race_if(PM_PLAYER_MUSHROOM) && obj->oclass == WEAPON_CLASS && u.mushroompoles) {
+
+		if (uwep && uwep == obj) res = use_pole(obj);
+		else {
+			pline("You must wield this item first if you want to apply it!"); 
+			if (flags.moreforced && !MessagesSuppressed) display_nhwindow(WIN_MESSAGE, TRUE);    /* --More-- */
+			wield_tool(obj, "swing");
+		}
+
+		goto mushroompolecheck;
+	}
 
 	switch(obj->otyp){
 	case BLINDFOLD:
@@ -4984,6 +5010,10 @@ doapply()
 	case FIGURINE:
 		use_figurine(&obj);
 		break;
+	case ENERGY_SAP:
+		energysap(obj);
+		noartispeak = TRUE;
+		break;
 	case UNICORN_HORN:
 		if (use_unicorn_horn(obj)) noartispeak = TRUE;
 		break;
@@ -5298,6 +5328,9 @@ doapply()
 	case TECHOUT_STONE:
 	case STAT_DECAY_STONE:
 	case MOVEMORK_STONE:
+	case SANE_TREBLE_STONE:
+	case STATCREASE_STONE:
+	case SIMEOUT_STONE:
 
 	case METABOLIC_STONE:
 	case STONE_OF_NO_RETURN:
@@ -5426,6 +5459,7 @@ doapply()
 		use_stone(obj);
 		break;
 	case ASSAULT_RIFLE:
+	case KALASHNIKOV:
 		/* Switch between WP_MODE_SINGLE, WP_MODE_BURST and WP_MODE_AUTO */
 
 		if (obj->altmode == WP_MODE_AUTO) {
@@ -5540,7 +5574,7 @@ materialchoice:
 
 		delobj(obj);
 		noartispeak = TRUE;
-		(void) adjattrib(A_INT, 1, FALSE);
+		(void) adjattrib(A_INT, 1, FALSE, TRUE);
 		if (Race_if(PM_SUSTAINER) && ABASE(A_WIS) < AMAX(A_WIS)) {
 			ABASE(A_WIS) += 1;
 			AMAX(A_WIS) += 1;
@@ -5549,10 +5583,10 @@ materialchoice:
 		}
 
 		if (obj->oartifact == ART_SUCK_THE_MIND_FLAYER) {
-			(void) adjattrib(A_INT, 1, FALSE);
-			(void) adjattrib(A_INT, 1, FALSE);
-			(void) adjattrib(A_INT, 1, FALSE);
-			(void) adjattrib(A_INT, 1, FALSE);
+			(void) adjattrib(A_INT, 1, FALSE, TRUE);
+			(void) adjattrib(A_INT, 1, FALSE, TRUE);
+			(void) adjattrib(A_INT, 1, FALSE, TRUE);
+			(void) adjattrib(A_INT, 1, FALSE, TRUE);
 			if (Race_if(PM_SUSTAINER) && ABASE(A_WIS) < AMAX(A_WIS)) {
 				ABASE(A_WIS) += 1;
 				AMAX(A_WIS) += 1;
@@ -5907,6 +5941,9 @@ chargingchoice:
 		BadPartBug = 0L;
 		CompletelyBadPartBug = 0L;
 		EvilVariantActive = 0L;
+		SanityTrebleEffect = 0L;
+		StatDecreaseBug = 0L;
+		SimeoutBug = 0L;
 
 		break;
 	case GOD_O_METER:
@@ -5965,6 +6002,9 @@ chargingchoice:
 		nomul(0, 0, FALSE);
 		return 0;
 	}
+
+mushroompolecheck:
+
 	nomul(0, 0, FALSE);
 	if (!obj) return res;
 	if (noartispeak) return res;

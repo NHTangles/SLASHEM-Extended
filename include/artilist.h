@@ -61,7 +61,7 @@ A("Firewall",                  ATHAME,
  *	for M2_ORC monsters.
  */
 A("Sting",			ELVEN_DAGGER,
-	(SPFX_WARN|SPFX_DCLAS), 0, M2_ORC,
+	(SPFX_WARN|SPFX_DFLAG2), 0, M2_ORC,
 	PHYS(5,0),	NO_DFNS,	NO_CARY,	0, A_LAWFUL, NON_PM, PM_ELF, 800L ),
 
 A("Giantkiller",                AXE,
@@ -1534,7 +1534,7 @@ A("Darkening Thing",			UNICORN_HORN, /* applying it aggravates monsters */
 	PHYS(3,8), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 500L ),
 
 A("Roommate's Special Idea",			LASER_SWATTER,
-	(SPFX_RESTR|SPFX_BEHEAD), 0, S_XAN,
+	(SPFX_RESTR|SPFX_BEHEAD|SPFX_DCLAS), 0, S_XAN,
 	PHYS(0,0), NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 2000L ),
 
 A("Lights, Camera, Action",			EXPENSIVE_CAMERA, /* if applied while it has charges, it scares all nearby monsters */
@@ -2220,7 +2220,7 @@ A("Beastmaster's Duster", LEATHER_JACKET, //needs quote
 	0, A_LAWFUL, NON_PM, NON_PM, 9000L), 
 
 A("The Shield of the All-Seeing", ORCISH_SHIELD, //needs quote
-	(SPFX_RESTR|SPFX_SEEK|SPFX_SEARCH|SPFX_WARN), 0, M2_ELF,
+	(SPFX_RESTR|SPFX_SEEK|SPFX_SEARCH|SPFX_WARN|SPFX_DFLAG2), 0, M2_ELF,
      NO_ATTK, DFNS(AD_FIRE), NO_CARY,
 	 0, A_NONE, NON_PM, NON_PM, 3000L),//needs message
 
@@ -2270,7 +2270,7 @@ A("The Rod of Seven Parts",	SILVER_SPEAR, /*From D&D*/
 	0,	A_LAWFUL, NON_PM, NON_PM, 7777L), 
 
 A("The Field Marshal's Baton",	MACE,
-	(SPFX_RESTR|SPFX_WARN), 0, M2_MERC,
+	(SPFX_RESTR|SPFX_WARN|SPFX_DFLAG2), 0, M2_MERC,
 	NO_ATTK,	NO_DFNS,	NO_CARY,
 	0,	A_LAWFUL, NON_PM, NON_PM, 5000L), 
 
@@ -2426,7 +2426,7 @@ A("Durin's Axe",			AXE, /*Moria dwarf noble crowning */
 	0, A_LAWFUL, NON_PM, NON_PM, 4000L), 
 
 A("Glamdring",			ELVEN_BROADSWORD, /*Lonely Mountain dwarf noble first gift */
-	(SPFX_WARN|SPFX_RESTR), 0, (M2_ORC|M2_DEMON), /* the old elves fought balrogs too. */
+	(SPFX_WARN|SPFX_RESTR|SPFX_DFLAG2), 0, (M2_ORC|M2_DEMON), /* the old elves fought balrogs too. */
 	PHYS(10,10),	NO_DFNS,	NO_CARY,
 	0, A_LAWFUL, NON_PM, NON_PM, 2000L), 
 
@@ -4791,7 +4791,7 @@ A("Hamburg One",			HELMET, /* hunger */
 	NO_ATTK, NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 1000L ),
 
 A("Arabella's Melee Power",			LONG_SWORD, /* nastiness, spawns a Gunnhild when wielded and also 1 in 1000 chance to spawn another one if you keep wielding it */
-	(SPFX_RESTR|SPFX_EVIL), 0, S_HUMAN,
+	(SPFX_RESTR|SPFX_EVIL|SPFX_DCLAS), 0, S_HUMAN,
 	PHYS(10,20), NO_DFNS, NO_CARY, 0, A_NEUTRAL, NON_PM, NON_PM, 8000L ),
 
 A("Asbestos Material",			LONG_SWORD, /* always poisoned */
@@ -5675,7 +5675,7 @@ A("Puddingbane",			KNIFE, /* idea by jonadab */
 	PHYS(5,0),	NO_DFNS,	NO_CARY,	0, A_NONE, NON_PM, NON_PM, 500L ),
 
 A("Faded Uselessness",			KNIFE, /* evil patch idea by jonadab - autocurses, slippery fingers, hallucination */
-	(SPFX_RESTR|SPFX_EVIL), 0, S_IMP,
+	(SPFX_RESTR|SPFX_EVIL|SPFX_DCLAS), 0, S_IMP,
 	PHYS(0,4),	NO_DFNS,	NO_CARY,	0, A_NONE, NON_PM, NON_PM, 500L ),
 
 
@@ -6182,6 +6182,62 @@ A("The Ring of P'hul", RIN_POISON_RESISTANCE, /* sickness resistance */
 A("The Really Cool Shirt", T_SHIRT,
 	(SPFX_RESTR|SPFX_LUCK|SPFX_WARN), 0, 0,
 	NO_ATTK, NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 800L),
+
+A("Heliokopis's Keyboard Curse", AMULET_OF_SANITY_TREBLE, /* automore effect in memory of how Heliokopis plays */
+	(SPFX_RESTR|SPFX_EVIL), 0, 0,
+	NO_ATTK, DFNS(AD_MAGM), NO_CARY, 0, A_NONE, NON_PM, NON_PM, 1000L),
+
+A("Satan's Final Trick", AMULET_OF_EVIL_VARIANT, /* nastiness */
+	(SPFX_RESTR|SPFX_EVIL), 0, 0,
+	NO_ATTK, NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 500L),
+
+A("Arabella's Dicinator", AMULET_OF_BAD_PART, /* cursed parts, curseuse, disintegration resistance, speed, invisibility, see invisible, keen memory */
+	(SPFX_RESTR|SPFX_EVIL|SPFX_TCTRL), 0, 0,
+	NO_ATTK, NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 10000L),
+
+A("The King of Porn", VICTORIAN_UNDERWEAR, /* by Porkman; can't refuse seduction attacks, discount action */
+	(SPFX_RESTR|SPFX_EVIL), 0, 0,
+	NO_ATTK, NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 5000L),
+
+A("Unicorn Drill", UNICORN_HORN, /* polymorph control and drain resistance when wielded */
+	(SPFX_RESTR), 0, 0,
+	NO_ATTK, NO_DFNS, NO_CARY, 0, A_CHAOTIC, NON_PM, NON_PM, 5000L),
+
+A("Automatically Metal", AMULET_OF_SPELL_METAL, /* makes it so that all metallic items are immune to erosion while all non-metallic ones are susceptible to all erosion effects; if this amulet is a nonmetallic type, its material automatically changes to "metal" */
+	(SPFX_RESTR|SPFX_EVIL), 0, 0,
+	NO_ATTK, NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 6000L),
+
+A("Yvonne's Model Ambition", LOW_BOOTS, /* initialized to always be velvet pumps, cold and shock resistance, +2 charisma */
+	(SPFX_RESTR|SPFX_STLTH), 0, 0,
+	NO_ATTK, NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 8000L),
+
+A("Version Control", RIN_AGGRAVATE_MONSTER, /* randart, autocurses, putting it on allows you to activate or deactivate soviet and evilvariant hybrid races */
+	(SPFX_RESTR|SPFX_EVIL), 0, 0,
+	NO_ATTK, NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 2000L),
+
+A("Aegis", DWARVISH_ROUNDSHIELD, /* petrification resistance, provides partial protection from gaze attacks */
+	(SPFX_RESTR), 0, 0,
+	NO_ATTK, NO_DFNS, NO_CARY, 0, A_NONE, NON_PM, NON_PM, 10000L),
+
+A("Egrid Bug",			LONG_SWORD, /* black spells, de-light, cursed parts, displays all 'x' and they can't move diagonally */
+	(SPFX_ATTK|SPFX_RESTR|SPFX_DEFN|SPFX_INTEL|SPFX_EVIL), 0, 0,
+	PHYS(5,2),	DRLI(0,0),	NO_CARY,	0, A_CHAOTIC, NON_PM, NON_PM, 3000L ),
+
+A("The Trident of Poseidon", TRIDENT, /* magical breathing, swimming and protects items from getting wet */
+	(SPFX_RESTR|SPFX_DFLAG1), 0, M1_SWIM,
+	PHYS(5, 10), NO_DFNS, NO_CARY, 0, A_CHAOTIC, NON_PM, NON_PM, 6000L),
+
+A("Weakite Thrust",			DARK_BAR, /* can attack through walls, weak sight, de-light and nolite when wielded */
+	(SPFX_RESTR|SPFX_EVIL), 0, 0,
+	NO_ATTK,	NO_DFNS,	NO_CARY,	0, A_NONE, NON_PM, NON_PM, 5000L ),
+
+A("Dizzy Metal Storm",			POLE_LANTERN, /* jumping, can displace monsters by walking into them, silver spells, manler effect */
+	(SPFX_RESTR|SPFX_EVIL), 0, 0,
+	NO_ATTK,	NO_DFNS,	NO_CARY,	0, A_NONE, NON_PM, NON_PM, 3000L ),
+
+A("Payback Time",			NASTYPOLE, /* player can use it at increased range */
+	(SPFX_RESTR), 0, 0,
+	NO_ATTK,	NO_DFNS,	NO_CARY,	0, A_NONE, NON_PM, NON_PM, 10000L ),
 
 /*
  *	Stormbringer only has a 2 because it can drain a level,
@@ -6978,6 +7034,31 @@ A("The Ultimate Pick", DWARVISH_MATTOCK,
 	(SPFX_NOGEN|SPFX_RESTR|SPFX_INTEL), 0, 0,
 	PHYS(0, 20),	NO_DFNS, NO_CARY,
 	0,	A_NEUTRAL, PM_MASON, NON_PM, 2500L ),
+
+A("Pediatric Gawking Gangs", MEN_S_UNDERWEAR, /* resist psi, discount action */
+	(SPFX_NOGEN|SPFX_RESTR|SPFX_INTEL|SPFX_ESP), 0, 0,
+	NO_ATTK,	NO_DFNS, NO_CARY,
+	0,	A_LAWFUL, PM_CELLAR_CHILD, NON_PM, 4000L ),
+
+A("Message Megaphone", BUGLE, /* tries to make monsters flee, like a tooled horn, but reduces alignment by 5 and max alignment by 1 with every use */
+	(SPFX_NOGEN|SPFX_RESTR|SPFX_INTEL), 0, 0,
+	NO_ATTK,	NO_DFNS, CARY(AD_MAGM),
+	0,	A_CHAOTIC, PM_DEMAGOGUE, NON_PM, 6000L ),
+
+A("Team Fortress GL", GRENADE_LAUNCHER, /* multishot bonus */
+	(SPFX_NOGEN|SPFX_RESTR|SPFX_INTEL|SPFX_DEFN), SPFX_STLTH, 0,
+	NO_ATTK,	DFNS(AD_MAGM), NO_CARY,
+	0,	A_LAWFUL, PM_GRENADONIN, NON_PM, 10000L ),
+
+A("Marker of Safe Speech", MAGIC_MARKER, /* can potentially be recharged several times */
+	(SPFX_NOGEN|SPFX_RESTR|SPFX_INTEL), (SPFX_HSPDAM|SPFX_SPEAK), 0,
+	NO_ATTK,	NO_DFNS, NO_CARY,
+	0,	A_CHAOTIC, PM_SOCIAL_JUSTICE_WARRIOR, NON_PM, 6000L ),
+
+A("Stahngnir's Giant Crusher", HUGE_CLUB, /* petrification resistance when wielded */
+	(SPFX_NOGEN|SPFX_RESTR|SPFX_INTEL), SPFX_ESP, 0,
+	PHYS(5, 0),	NO_DFNS, NO_CARY,
+	0,	A_NEUTRAL, PM_WALSCHOLAR, NON_PM, 20000L ),
 
 /* Amy note: DO NOT add non-quest artifacts beyond this point!!! foreignartifactcount() in invent.c depends on it */
 

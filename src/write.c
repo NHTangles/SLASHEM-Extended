@@ -40,6 +40,7 @@ register struct obj *otmp;
 	case SCR_EARTH:
 	case SCR_CURE_BLINDNESS:
 	case SCR_ROOT_PASSWORD_DETECTION:
+	case SCR_GRASSLAND:
 		return(8);
 	case SCR_MANA:
 	case SCR_DESTROY_ARMOR:
@@ -54,6 +55,8 @@ register struct obj *otmp;
 	case SCR_CREATE_CREATE_SCROLL:
 	case SCR_PROOF_ARMOR:
 	case SCR_PROOF_WEAPON:
+	case SCR_CRYPT:
+	case SCR_PAVING:
 		return(10);
 	case SCR_CONFUSE_MONSTER:
 	case SCR_PHASE_DOOR:
@@ -63,12 +66,28 @@ register struct obj *otmp;
 	case SCR_BULLSHIT:
 	case SCR_REVERSE_IDENTIFY:
 	case SCR_SCARE_MONSTER:
+	case SCR_SNOW:
+	case SCR_SAND:
+	case SCR_NETHER:
 		return(14);
+	case SCR_ASH:
+	case SCR_BUBBLE_BOBBLE:
+	case SCR_RAIN:
 	case SCR_TAMING:
 	case SCR_TELEPORTATION:
 	case SCR_FLOOD:
 	case SCR_LAVA:
+	case SCR_GRAVE:
+	case SCR_DIVING:
+	case SCR_CRYSTALLIZATION:
+	case SCR_QUICKSAND:
+	case SCR_STYX:
+	case SCR_URINE:
+	case SCR_MOORLAND:
+	case SCR_TUNNELS:
+	case SCR_FARMING:
 	case SCR_BARRHING:
+	case SCR_STALACTITE:
 	case SCR_GROWTH:
 	case SCR_ICE:
 	case SCR_ENRAGE:
@@ -105,6 +124,8 @@ register struct obj *otmp;
 	case SCR_SECURE_IDENTIFY:
 	case SCR_REPAIR_ITEM:
 	case SCR_EXTRA_HEALING:
+	case SCR_MOUNTAINS:
+	case SCR_HIGHWAY:
 		return(24);
 	case SCR_RESISTANCE:
 	case SCR_GENOCIDE:
@@ -122,6 +143,7 @@ register struct obj *otmp;
 	case SCR_CREATE_FACILITY:
 	case SCR_SUMMON_GHOST:
 	case SCR_GREATER_MANA_RESTORATION:
+	case SCR_NASTY_CURSE:
 		return(30);
 	case SCR_GAIN_MANA:
 	case SCR_LOCKOUT:
@@ -137,9 +159,11 @@ register struct obj *otmp;
 	case SCR_CONSECRATION:
 	case SCR_BOSS_COMPANION:
 	case SCR_ANTIMAGIC:
+	case SCR_SECURE_CURSE_REMOVAL:
 	case SCR_INVENTORY_ID:
 	case SCR_SKILL_UP:
 	case SCR_ALTER_REALITY:
+	case SCR_HYBRIDIZATION:
 		return(50);
 	case SCR_RAGNAROK:
 		return(64);
@@ -151,10 +175,17 @@ register struct obj *otmp;
 	case SCR_COPYING:
 	case SCR_WISHING:
 	case SCR_ARTIFACT_CREATION:
+	case SCR_MISSING_CODE:
 	case SCR_ARTIFACT_JACKPOT:
 	case SCR_RESURRECTION:
 	case SCR_ACQUIREMENT:
 	case SCR_ENTHRONIZATION:
+	case SCR_WELL_BUILDING:
+	case SCR_DRIVING:
+	case SCR_TABLE_FURNITURE:
+	case SCR_EMBEDDING:
+	case SCR_MATTRESS_SLEEPING:
+	case SCR_MAKE_PENTAGRAM:
 	case SCR_FOUNTAIN_BUILDING:
 	case SCR_SINKING:
 	case SCR_CREATE_SINK:
@@ -180,6 +211,9 @@ register struct obj *pen;
 	int first, last, i;
 	boolean by_descr = FALSE;
 	const char *typeword;
+
+	int oldspe, oldrecharged; /* for spellbooks */
+	boolean oldknown;
 
 	if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) ) {
 	    You("need hands to be able to write!");
@@ -253,7 +287,7 @@ found:
 		if(Hallucination) 
 			pline("(I know it, but not tell to you.)");
 		return 1;
-	} else if (i == SCR_WISHING || i == SCR_ARTIFACT_CREATION || i == SCR_ARTIFACT_JACKPOT || i == SCR_RESURRECTION || i == SCR_ACQUIREMENT || i == SCR_ENTHRONIZATION || i == SCR_FOUNTAIN_BUILDING || i == SCR_SINKING || i == SCR_CREATE_SINK || i == SCR_WC) {
+	} else if (i == SCR_WISHING || i == SCR_ARTIFACT_CREATION || i == SCR_MISSING_CODE || i == SCR_ARTIFACT_JACKPOT || i == SCR_RESURRECTION || i == SCR_ACQUIREMENT || i == SCR_ENTHRONIZATION || i == SCR_MAKE_PENTAGRAM || i == SCR_WELL_BUILDING || i == SCR_DRIVING || i == SCR_TABLE_FURNITURE || i == SCR_EMBEDDING || i == SCR_MATTRESS_SLEEPING || i == SCR_FOUNTAIN_BUILDING || i == SCR_SINKING || i == SCR_CREATE_SINK || i == SCR_WC) {
 		pline("This scroll refuses to be written.");
 		return 1;
 	} else if (by_descr && paper->oclass == SPBOOK_CLASS &&
@@ -367,6 +401,11 @@ found:
 	}
 
 	/* useup old scroll / spellbook */
+
+	oldspe = paper->spe;
+	oldrecharged = (int)paper->recharged; /* for spellbooks */
+	oldknown = paper->known;
+
 	useup(paper);
 	use_skill(P_DEVICES,10);
 	if (Race_if(PM_FAWN)) {
@@ -382,9 +421,16 @@ found:
 		/* acknowledge the change in the object's description... */
 		pline_The("spellbook warps strangely, then turns %s.",
 		      OBJ_DESCR(objects[new_obj->otyp]));
+
+		/* for some reason the charges weren't being used at all!!! --Amy */
+		new_obj->spe = oldspe;
+		new_obj->recharged = oldrecharged;
+		if (oldknown == TRUE) new_obj->known = TRUE;
+
 	}
 	new_obj->blessed = (curseval > 0);
 	new_obj->cursed = (curseval < 0);
+
 	if (pen && pen->oartifact == ART_PEN_OF_RANDOMNESS) {
 		new_obj->blessed = 0;
 		new_obj->cursed = 0;

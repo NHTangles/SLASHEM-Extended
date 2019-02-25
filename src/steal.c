@@ -545,12 +545,12 @@ gotobj:
 				  curssv ? "helps you to take" :
 				  slowly ? "you start taking" : "you take",
 				  equipname(otmp));
-				if (mtmp->female) (void) adjattrib(A_CHA, -1, FALSE);
-				if (!mtmp->female) (void) adjattrib(A_WIS, -1, FALSE);
+				if (mtmp->female) (void) adjattrib(A_CHA, -1, FALSE, TRUE);
+				if (!mtmp->female) (void) adjattrib(A_WIS, -1, FALSE, TRUE);
 				}
 			named++;
 			/* the following is to set multi for later on */
-			nomul(-armordelay, "being seduced into taking off your clothes", TRUE);
+			nomul(-armordelay, "being seduced into taking off their clothes", TRUE);
 			nomovemsg = 0;
 			remove_worn_item(otmp, TRUE);
 			otmp->cursed = curssv;

@@ -346,6 +346,10 @@ doaltarobj(obj)  /* obj is an object dropped on an altar */
 
 	/* KMH, conduct */
 	u.uconduct.gnostic++;
+	if (Race_if(PM_MAGYAR)) {
+		You_feel("bad about breaking the atheist conduct.");
+		badeffect();
+	}
 
 	/* evil patch idea by aosdict: Moloch's altars can occasionally curse the item. */
 	
@@ -519,6 +523,12 @@ giveback:
 		case RIN_ILLITERACY:
 		    pline("The sink seems to be breaking apart at the seams.");
 		    break;
+		case RIN_STAT_DECREASE:
+		    pline("The water stream seems to die of hunger.");
+		    break;
+		case RIN_SANITY_TIMEOUT:
+		    pline("The water flow exposes quite a lot of muck in the sink.");
+		    break;
 
 		case RIN_WIMPINESS:
 		    pline("Somehow the sink seems powerless.");
@@ -559,6 +569,12 @@ giveback:
 
 	      case RIN_SICKNESS_RESISTANCE:
 		    pline("The sink looks clean and neat for a moment.");
+		    break;
+	      case RIN_JUMPING:
+		    pline("The sink jumps up and down!");
+		    break;
+	      case RIN_ILLNESS:
+		    pline("The sink is overgrown with fungus.");
 		    break;
 	      case RIN_DISARMING:
 		    pline("The water flow pauses for a moment.");
@@ -1002,6 +1018,9 @@ register struct obj *obj;
 	case AMULET_OF_HOSTILITY:
 		pline_The("toilet suddenly threatens to attack you!");
 		break;
+	case AMULET_OF_SANITY_TREBLE:
+		pline_The("toilet seems to be full of dirt and shit!");
+		break;
 	case AMULET_OF_EVIL_CRAFTING:
 		You("suddenly seem to see %s taking a crap!", rndplrmonnamefemale());
 		break;
@@ -1135,7 +1154,7 @@ register struct obj *obj;
 			weldmsg(obj);
 			return(0);
 		}
-		setuwep((struct obj *)0, FALSE);
+		setuwep((struct obj *)0, FALSE, TRUE);
 	}
 	if (obj == uswapwep) {
 		setuswapwep((struct obj *)0, FALSE);
@@ -1168,12 +1187,17 @@ register struct obj *obj;
 		return(issoviet ? 1 : 0);
 	    }
 	    if (!can_reach_floor()) {
+		if (u.uprops[DROPCURSES_EFFECT].extrinsic || Dropcurses || have_dropcursestone() || (uleft && uleft->oartifact == ART_ARABELLA_S_RADAR) || (uright && uright->oartifact == ART_ARABELLA_S_RADAR) ) {
+			curse(obj);
+		}
+
 		if(flags.verbose) You("drop %s.", doname(obj));
 #ifndef GOLDOBJ
 		if (obj->oclass != COIN_CLASS || obj == invent) freeinv(obj);
 #else
 		/* Ensure update when we drop gold objects */
 		if (obj->oclass == COIN_CLASS) flags.botl = 1;
+
 		freeinv(obj);
 #endif
 		hitfloor(obj);
@@ -1183,6 +1207,11 @@ register struct obj *obj;
 	    if (!IS_ALTAR(levl[u.ux][u.uy].typ) && flags.verbose)
 		You("drop %s.", doname(obj));
 	}
+
+	if (u.uprops[DROPCURSES_EFFECT].extrinsic || Dropcurses || have_dropcursestone() || (uleft && uleft->oartifact == ART_ARABELLA_S_RADAR) || (uright && uright->oartifact == ART_ARABELLA_S_RADAR) ) {
+		curse(obj);
+	}
+
 	dropx(obj);
 	if (issoviet && !rn2(10)) pline("Eto zanimayet ochered' potomu, chto sovetskiy khochet, chtoby igra byla der'mo.");
 	return(issoviet ? 1 : 0);
@@ -1216,7 +1245,7 @@ void
 dropy(obj)
 register struct obj *obj;
 {
-	if (obj == uwep) setuwep((struct obj *)0, FALSE);
+	if (obj == uwep) setuwep((struct obj *)0, FALSE, TRUE);
 	if (obj == uquiver) setuqwep((struct obj *)0);
 	if (obj == uswapwep) setuswapwep((struct obj *)0, FALSE);
 
@@ -1453,7 +1482,7 @@ dodown()
 
 	}
 
-	if (!(nohands(youmonst.data) && !Race_if(PM_TRANSFORMER)) && uimplant && uimplant->oartifact == ART_JANA_S_MAKE_UP_PUTTY && (stairs_down || ladder_down) && !rn2(100)) {
+	if (!(powerfulimplants()) && uimplant && uimplant->oartifact == ART_JANA_S_MAKE_UP_PUTTY && (stairs_down || ladder_down) && !rn2(100)) {
 		u.youaredead = 1;
 		pline("NETHACK caused a Kernel error at address 0001:A9EE.");
 		killer_format = KILLED_BY;
@@ -1516,9 +1545,12 @@ dodown()
 		else {return(0);} /* didn't move */
 	}
 	if (!stairs_down && !ladder_down) {
+
+		/* Amy edit: just because you can't see the trap doesn't mean it's not there; let the player use it! */
+
 		if (!(trap = t_at(u.ux,u.uy)) ||
 			(trap->ttyp != TRAPDOOR && trap->ttyp != SHAFT_TRAP && trap->ttyp != CURRENT_SHAFT && trap->ttyp != HOLE)
-			|| !Can_fall_thru(&u.uz) || (!trap->tseen && !Race_if(PM_LEVITATOR)) ) {
+			|| !Can_fall_thru(&u.uz) ) {
 
 			/* allow the > key to go down into a pit. But only if it really is one! --Amy */
 			if ((trap = t_at(u.ux,u.uy)) && (trap->ttyp == PIT || trap->ttyp == SHIT_PIT || trap->ttyp == MANA_PIT || trap->ttyp == GIANT_CHASM || trap->ttyp == SPIKED_PIT || trap->ttyp == ANOXIC_PIT || trap->ttyp == ACID_PIT) && !u.utrap) {
@@ -1624,7 +1656,7 @@ doup()
 
 	}
 
-	if (!(nohands(youmonst.data) && !Race_if(PM_TRANSFORMER)) && uimplant && uimplant->oartifact == ART_JANA_S_MAKE_UP_PUTTY && !rn2(100)) {
+	if (!(powerfulimplants()) && uimplant && uimplant->oartifact == ART_JANA_S_MAKE_UP_PUTTY && !rn2(100)) {
 		u.youaredead = 1;
 		pline("NETHACK caused a Kernel error at address 0001:A9EE.");
 		killer_format = KILLED_BY;
@@ -1635,6 +1667,11 @@ doup()
 
 	if (u.stairscumslowing && !u.uhave.amulet) {
 		pline("This stair is currently blocked and will reopen in %d turn%s.", u.stairscumslowing, u.stairscumslowing > 1 ? "s" : "");
+		return(0);
+	}
+
+	if ((flags.zapem && !(u.zapemescape)) && u.ux == sstairs.sx && u.uy == sstairs.sy && In_spacebase(&u.uz) && (dunlev(&u.uz) == 1) && !u.sewerplantcomplete) {
+		pline("Since you've not finished the Sewer Plant yet, you cannot leave the Space Base.");
 		return(0);
 	}
 
@@ -4080,7 +4117,7 @@ rerollchaloc:
 		    if (!rn2(10) && has_head(youmonst.data) && !Role_if(PM_COURIER) ) { /* evil patch idea by jonadab: amnesia */
 
 			if (rn2(50)) {
-				adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE);
+				adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE, TRUE);
 			} else {
 				You_feel("dizzy!");
 				forget(1 + rn2(5));
@@ -4101,7 +4138,7 @@ rerollchaloc:
 			    if (uquiver == uball)
 				setuqwep((struct obj *)0);
 			    if (uwep == uball)
-				setuwep((struct obj *)0, FALSE);
+				setuwep((struct obj *)0, FALSE, TRUE);
 			    freeinv(uball);
 			}
 		    }

@@ -1075,7 +1075,7 @@ can_reach_floor()
 {
 	return (boolean)(!u.uswallow &&
 			/* Restricted/unskilled riders can't reach the floor */
-			!(u.usteed && !(nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) && (PlayerCannotUseSkills || P_SKILL(P_RIDING) < P_BASIC) ) &&
+			!(u.usteed && !(powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) && (PlayerCannotUseSkills || P_SKILL(P_RIDING) < P_BASIC) ) &&
 			 ((!Levitation || StrongLevitation) || is_table(u.ux, u.uy) ||
 			  Is_airlevel(&u.uz) || Is_waterlevel(&u.uz)));
 }
@@ -1693,9 +1693,14 @@ doengrave()
 		    case WAN_CHARGING:
 		    case WAN_CURSE_ITEMS:
 		    case WAN_AMNESIA:
+		    case WAN_DISENCHANTMENT:
+		    case WAN_CONTAMINATION:
+		    case WAN_TREMBLING:
 		    case WAN_BAD_LUCK:
 		    case WAN_REMOVE_RESISTANCE:
 		    case WAN_CORROSION:
+		    case WAN_CHAOS_TERRAIN:
+		    case WAN_FLEECY_TERRAIN:
 		    case WAN_FUMBLING:
 		    case WAN_TIDAL_WAVE:
 		    case WAN_SUMMON_ELM:
@@ -4811,6 +4816,17 @@ static const char *epitaphs[] = {
 	"RIP suffragette, she got rolled over by a train.",
 	"RIP suffragette, she got eaten by an alligator.",
 	"RIP suffragette, she got dropped in a mine shaft and fed to the devil.",
+	"Ruat coelum, fiat iustitia. Ecce, lex rex!", /* by Porkman */
+	"Satan's Flaming Bollocks!", /* ditto */
+	"Here lies Antichthon. Crushed underneath an express train from HELL.", /* with 50-odd egotypes */
+	"if you play slex, you *are* a dickhead", /* by porkman */
+	"Oh no! The brain drain!",
+	"Spork Astral hits! You feel your game fading away...", /* by aosdict, after K2 suffered an astral splat :( */
+	"After 20 hours of playing bigslex I suddenly ran into a damms and died in two turns. Fuck that stupid game, why the hell are level 90 outta depth crap monsters spawning in sokoban and randomly ending my run.",
+	"I lost the run to RNG, dude!",
+	"Fucking game bugs. The loadstone that the lich put into my inventory weighed 21600 units and of course my blessing technique was on timeout.",
+	"Argh, tender jesses are overpowered. How the heck do you handle them?",
+	"Why does the game constantly spawn lulu asses, anyway?",
 
 };
 

@@ -566,7 +566,7 @@ struct monst *shkp;
 
 	/* it was annoying that the total was completely irrelevant unless you somehow wanted to compensate the shopkeeper,
 	 * and therefore I decided to have it influence the kop wanted level --Amy */
-	if (!rn2(5) && (total > 10)) u.copwantedlevel += rnz(total / 5);
+	if ((!rn2(5) || Role_if(PM_CELLAR_CHILD)) && (total > 10)) u.copwantedlevel += rnz(total / 5);
 
 	You("stole %ld %s worth of merchandise.",
 	    total, currency(total));
@@ -1001,6 +1001,12 @@ register struct obj *obj, *merge;
 #endif
 		}
 	}
+
+	if (Race_if(PM_PLAYER_MUSHROOM) && u.mushroompoleused) {
+		setnotworn(obj);
+		obj_extract_self(obj);
+	}
+
 	dealloc_obj(obj);
 }
 #endif /* OVLB */
@@ -1796,6 +1802,7 @@ shk_other_services()
 			((shk_class_match(WAND_CLASS, shkp) == SHK_MATCH) ||
 			(shk_class_match(TOOL_CLASS, shkp) == SHK_MATCH) ||
 			(shk_class_match(SPBOOK_CLASS, shkp) == SHK_MATCH) ||
+			(shk_class_match(IMPLANT_CLASS, shkp) == SHK_MATCH) ||
 			(shk_class_match(RING_CLASS, shkp) == SHK_MATCH))) {
 		any.a_int = 6;
 		add_menu(tmpwin, NO_GLYPH, &any , 'c', 0, ATR_NONE,
@@ -3051,7 +3058,18 @@ xchar x, y;
 		} else {
 		    long delta = gltmp - eshkp->debit;
 
-		    if (rn2(2)) eshkp->credit += delta; /* make the shopkeeper devious --Amy */
+		    /* credit limit as a nerf for cloning exploits: this exists mainly so you can't get 10000s of credit and enchant everything to +3 in an armor shop --Amy */
+		    if (eshkp->totalcredit >= eshkp->creditlimit) {
+				verbalize("Sorry. I'm not offering credit anymore because you've already had so much credit in my shop. From now on I can only pay you in cash. Why don't you buy something so I can pay you again?");
+		    } else if (rn2(2)) { /* make the shopkeeper devious --Amy */
+				if (eshkp->totalcredit + delta > eshkp->creditlimit) {
+					eshkp->totalcredit = eshkp->creditlimit;
+					verbalize("You've exceeded your credit limit in this shop. Sorry.");
+				} else {
+					eshkp->credit += delta;
+					eshkp->totalcredit += delta;
+				}
+		    } else verbalize("What? You want credit? Well, sucks to be you, but I ain't giving you any!");
 		    if(eshkp->debit) {
 			eshkp->debit = 0L;
 			eshkp->loan = 0L;
@@ -3118,10 +3136,20 @@ move_on:
 		    shk_names_obj(shkp, obj, (sell_how != SELL_NORMAL) ?
 			    "traded %s for %ld zorkmid%s in %scredit." :
 			"relinquish %s and acquire %ld zorkmid%s in %scredit.",
-			    tmpcr,
-			    (eshkp->credit > 0L) ? "additional " : "");
-		    if (rn2(2)) eshkp->credit += tmpcr; /* fail sometimes --Amy */
-			else verbalize("What? You want credit? Well, sucks to be you, but I ain't giving you any!");
+			    tmpcr, (eshkp->credit > 0L) ? "additional " : "");
+		    if (eshkp->totalcredit >= eshkp->creditlimit) {
+				verbalize("Sorry. I'm not offering credit anymore because you've already had so much credit in my shop. From now on I can only pay you in cash. Why don't you buy something so I can pay you again?");
+		    } else if (rn2(2)) { /* fail sometimes --Amy */
+
+				if (eshkp->totalcredit + tmpcr > eshkp->creditlimit) {
+					eshkp->totalcredit = eshkp->creditlimit;
+					verbalize("You've exceeded your credit limit in this shop. Sorry.");
+				} else {
+					eshkp->credit += tmpcr;
+					eshkp->totalcredit += tmpcr;
+				}
+
+		    } else verbalize("What? You want credit? Well, sucks to be you, but I ain't giving you any!");
 		    subfrombill(obj, shkp);
 		} else {
 		    if (c == 'q') sell_response = 'n';
@@ -3664,6 +3692,43 @@ boolean catchup;	/* restoring a level */
 				&& ttmp->ttyp != TECHOUT_TRAP
 				&& ttmp->ttyp != STAT_DECAY_TRAP
 				&& ttmp->ttyp != MOVEMORK_TRAP
+
+				&& ttmp->ttyp != GRAVE_WALL_TRAP
+				&& ttmp->ttyp != TUNNEL_TRAP
+				&& ttmp->ttyp != FARMLAND_TRAP
+				&& ttmp->ttyp != MOUNTAIN_TRAP
+				&& ttmp->ttyp != WATER_TUNNEL_TRAP
+				&& ttmp->ttyp != CRYSTAL_FLOOD_TRAP
+				&& ttmp->ttyp != MOORLAND_TRAP
+				&& ttmp->ttyp != URINE_TRAP
+				&& ttmp->ttyp != SHIFTING_SAND_TRAP
+				&& ttmp->ttyp != STYX_TRAP
+				&& ttmp->ttyp != PENTAGRAM_TRAP
+				&& ttmp->ttyp != SNOW_TRAP
+				&& ttmp->ttyp != ASH_TRAP
+				&& ttmp->ttyp != SAND_TRAP
+				&& ttmp->ttyp != PAVEMENT_TRAP
+				&& ttmp->ttyp != HIGHWAY_TRAP
+				&& ttmp->ttyp != GRASSLAND_TRAP
+				&& ttmp->ttyp != NETHER_MIST_TRAP
+				&& ttmp->ttyp != STALACTITE_TRAP
+				&& ttmp->ttyp != CRYPTFLOOR_TRAP
+				&& ttmp->ttyp != BUBBLE_TRAP
+				&& ttmp->ttyp != RAIN_CLOUD_TRAP
+
+				&& ttmp->ttyp != ITEM_NASTIFICATION_TRAP
+				&& ttmp->ttyp != SANITY_INCREASE_TRAP
+				&& ttmp->ttyp != PSI_TRAP
+				&& ttmp->ttyp != GAY_TRAP
+
+				&& ttmp->ttyp != SARAH_TRAP
+				&& ttmp->ttyp != CLAUDIA_TRAP
+				&& ttmp->ttyp != LUDGERA_TRAP
+				&& ttmp->ttyp != KATI_TRAP
+
+				&& ttmp->ttyp != SANITY_TREBLE_TRAP
+				&& ttmp->ttyp != STAT_DECREASE_TRAP
+				&& ttmp->ttyp != SIMEOUT_TRAP
 
 				&& ttmp->ttyp != HYBRID_TRAP
 				&& ttmp->ttyp != SHAPECHANGE_TRAP
@@ -4407,7 +4472,7 @@ coord *mm;
 		case 8:
 		case 9:
 		case 10:
-		(void) makemon(&mons[PM_ANGRY_WATCHMAN], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(&mons[PM_ANGRY_WATCHMAN], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		case 11:
 		case 12:
@@ -4429,7 +4494,7 @@ coord *mm;
 		case 28:
 		case 29:
 		case 30:
-		(void) makemon(&mons[PM_SOLDIER], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(&mons[PM_SOLDIER], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		case 31:
 		case 32:
@@ -4501,7 +4566,7 @@ coord *mm;
 		case 98:
 		case 99:
 		case 100:
-		(void) makemon(&mons[PM_KEYSTONE_KOP], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(&mons[PM_KEYSTONE_KOP], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		case 101:
 		case 102:
@@ -4509,7 +4574,7 @@ coord *mm;
 		case 104:
 		case 105:
 		case 106:
-		(void) makemon(&mons[PM_ANGRY_WATCH_CAPTAIN], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(&mons[PM_ANGRY_WATCH_CAPTAIN], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		case 107:
 		case 108:
@@ -4521,7 +4586,7 @@ coord *mm;
 		case 114:
 		case 115:
 		case 116:
-		(void) makemon(&mons[PM_SERGEANT], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(&mons[PM_SERGEANT], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		case 117:
 		case 118:
@@ -4557,19 +4622,19 @@ coord *mm;
 		case 148:
 		case 149:
 		case 150:
-		(void) makemon(&mons[PM_KOP_SERGEANT], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(&mons[PM_KOP_SERGEANT], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		case 151:
 		case 152:
 		case 153:
-		(void) makemon(&mons[PM_ANGRY_WATCH_LIEUTENANT], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(&mons[PM_ANGRY_WATCH_LIEUTENANT], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		case 154:
 		case 155:
 		case 156:
 		case 157:
 		case 158:
-		(void) makemon(&mons[PM_LIEUTENANT], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(&mons[PM_LIEUTENANT], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		case 159:
 		case 160:
@@ -4593,12 +4658,12 @@ coord *mm;
 		case 178:
 		case 179:
 		case 180:
-		(void) makemon(&mons[PM_KOP_LIEUTENANT], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(&mons[PM_KOP_LIEUTENANT], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		case 181:
 		case 182:
 		case 183:
-		(void) makemon(&mons[PM_CAPTAIN], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(&mons[PM_CAPTAIN], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		case 184:
 		case 185:
@@ -4608,34 +4673,34 @@ coord *mm;
 		case 189:
 		case 190:
 		case 191:
-		(void) makemon(&mons[PM_KOP_KAPTAIN], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(&mons[PM_KOP_KAPTAIN], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		case 192:
-		(void) makemon(&mons[PM_GENERAL], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(&mons[PM_GENERAL], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		case 193:
 		case 194:
 		case 195:
 		case 196:
 		case 197:
-		(void) makemon(&mons[PM_KOP_KOMMISSIONER], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(&mons[PM_KOP_KOMMISSIONER], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		case 198:
 		case 199:
 		case 200:
-		(void) makemon(&mons[PM_KOP_KCHIEF], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(&mons[PM_KOP_KCHIEF], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		case 201:
-		(void) makemon(&mons[PM_ARCH_LICH], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(&mons[PM_ARCH_LICH], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		case 202:
-		(void) makemon(&mons[PM_ANGRY_WATCH_LEADER], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(&mons[PM_ANGRY_WATCH_LEADER], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		case 203:
-		(void) makemon(&mons[PM_KOP_KATCHER], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(&mons[PM_KOP_KATCHER], mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		default: /* can spawn sephirahs and similar things --Amy */
-		(void) makemon(mkclass(S_KOP,0), mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK);
+		(void) makemon(mkclass(S_KOP,0), mc[cnt].x, mc[cnt].y, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 		break;
 		} /* switch */
 
@@ -6060,6 +6125,26 @@ shk_armor_works(slang, shkp)
 			break;
 		}
 
+		if (obj->otyp == LIZARD_SCALES) {
+			Your("%s merges and hardens!", xname(obj));
+			setworn((struct obj *)0, W_ARM);
+			obj->otyp = LIZARD_SCALE_MAIL;
+			if ((obj->morgcurse || obj->evilcurse || obj->bbrcurse) && !rn2(100) ) {
+				obj->prmcurse = obj->hvycurse = obj->cursed = obj->morgcurse = obj->evilcurse = obj->bbrcurse = obj->stckcurse = 0;
+			}
+			else if (obj->prmcurse && !(obj->morgcurse || obj->evilcurse || obj->bbrcurse) && !rn2(10) ) {
+				obj->prmcurse = obj->hvycurse = obj->cursed = obj->morgcurse = obj->evilcurse = obj->bbrcurse = obj->stckcurse = 0;
+			}
+			else if (!(obj->prmcurse) && !(obj->morgcurse || obj->evilcurse || obj->bbrcurse) && obj->hvycurse && !rn2(3) ) {
+				obj->prmcurse = obj->hvycurse = obj->cursed = obj->morgcurse = obj->evilcurse = obj->bbrcurse = obj->stckcurse = 0;
+			}
+			else if (!(obj->prmcurse) && !(obj->hvycurse) && !(obj->morgcurse || obj->evilcurse || obj->bbrcurse) ) obj->prmcurse = obj->hvycurse = obj->cursed = obj->morgcurse = obj->evilcurse = obj->bbrcurse = obj->stckcurse = 0;
+
+			obj->known = 1;
+			setworn(obj, W_ARM);
+			break;
+		}
+
 		obj->spe++;
 		break;
 
@@ -6077,7 +6162,7 @@ shk_armor_works(slang, shkp)
 */
 static NEARDATA const char wand_types[] = { WAND_CLASS, 0 };
 static NEARDATA const char tool_types[] = { TOOL_CLASS, 0 };
-static NEARDATA const char ring_types[] = { RING_CLASS, 0 };
+static NEARDATA const char ring_types[] = { RING_CLASS, IMPLANT_CLASS, 0 };
 static NEARDATA const char spbook_types[] = { SPBOOK_CLASS, 0 };
 
 static void

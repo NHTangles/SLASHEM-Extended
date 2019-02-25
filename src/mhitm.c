@@ -257,7 +257,7 @@ mattackm(magr, mdef)
     pa = magr->data;  pd = mdef->data;
 
     /* Grid bugs cannot attack at an angle. */
-    if ((isgridbug(pa) || (uarmf && !rn2(10) && OBJ_DESCR(objects[uarmf->otyp]) && ( !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "chess boots") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "shakhmatnyye sapogi") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "shaxmat chizilmasin") ) ) ) && magr->mx != mdef->mx
+    if ((isgridbug(pa) || (uwep && uwep->oartifact == ART_EGRID_BUG && magr->data->mlet == S_XAN) || (uarmf && !rn2(10) && OBJ_DESCR(objects[uarmf->otyp]) && ( !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "chess boots") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "shakhmatnyye sapogi") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "shaxmat chizilmasin") ) ) ) && magr->mx != mdef->mx
 						&& magr->my != mdef->my)
 	return(MM_MISS);
 
@@ -426,7 +426,7 @@ meleeattack:
 		strike = (tmp > dieroll);
 		if (strike) {
 		    res[i] = hitmm(magr, mdef, mattk);
-		    if((mdef->data == &mons[PM_BLACK_PUDDING] || mdef->data == &mons[PM_DRUDDING] || mdef->data == &mons[PM_BLACK_DRUDDING] || mdef->data == &mons[PM_BLACKSTEEL_PUDDING] || mdef->data == &mons[PM_BLOOD_PUDDING] || mdef->data == &mons[PM_BLACK_PIERCER] || mdef->data == &mons[PM_BROWN_PUDDING])
+		    if((mdef->data == &mons[PM_BLACK_PUDDING] || mdef->data == &mons[PM_SHOCK_PUDDING] || mdef->data == &mons[PM_VOLT_PUDDING] || mdef->data == &mons[PM_DRUDDING] || mdef->data == &mons[PM_BLACK_DRUDDING] || mdef->data == &mons[PM_BLACKSTEEL_PUDDING] || mdef->data == &mons[PM_BLOOD_PUDDING] || mdef->data == &mons[PM_BLACK_PIERCER] || mdef->data == &mons[PM_BROWN_PUDDING])
 		       && otmp && objects[otmp->otyp].oc_material == IRON
 		       && mdef->mhp > 1 && !mdef->mcan && !rn2(100) ) /* slowing pudding farming to a crawl --Amy */
 		    {
@@ -698,14 +698,14 @@ struct monst *magr, *mdef;
     skill = objects[obj->otyp].oc_skill;
     mwep = MON_WEP(magr);		/* wielded weapon */
 
-    if (ammo_and_launcher(obj, mwep) && objects[mwep->otyp].oc_range &&
+    if (mwep && ammo_and_launcher(obj, mwep) && objects[mwep->otyp].oc_range &&
 	    dist2(magr->mx, magr->my, mdef->mx, mdef->my) >
 	    objects[mwep->otyp].oc_range * objects[mwep->otyp].oc_range)
 	return MM_MISS; /* Out of range */
 
     /* Multishot calculations */
     multishot = 1;
-    if ((ammo_and_launcher(obj, mwep) || skill == P_DAGGER ||
+    if (( (mwep && ammo_and_launcher(obj, mwep)) || skill == P_DAGGER ||
 	    skill == -P_DART || skill == -P_SHURIKEN) && !magr->mconf) {
 	/* Assumes lords are skilled, princes are expert */
 	if (is_prince(magr->data)) multishot += 2;
@@ -771,7 +771,7 @@ struct monst *magr, *mdef;
 	    onm = singular(obj, xname);
 	    onm = obj_is_pname(obj) ? the(onm) : an(onm);
 	}
-	m_shot.s = ammo_and_launcher(obj,mwep) ? TRUE : FALSE;
+	m_shot.s = (mwep && ammo_and_launcher(obj,mwep)) ? TRUE : FALSE;
 	pline("%s %s %s!", Monnam(magr),
 	      m_shot.s ? is_bullet(obj) ? "fires" : "shoots" : "throws",
 	      onm);
@@ -1113,6 +1113,10 @@ mdamagem(magr, mdef, mattk)
 		
 		}
 
+	}
+
+	if (magr->mtame && !mdef->mtame && (magr->data->mlet == S_QUADRUPED) && Race_if(PM_ENGCHIP)) {
+		petdamagebonus += 25;
 	}
 
 	if (magr->mtame && !mdef->mtame) {
@@ -1741,7 +1745,7 @@ physical:
 		if (!rn2(20)) {
 			u.aggravation = 1;
 			reset_rndmonst(NON_PM);
-			(void) makemon((struct permonst *)0, magr->mx, magr->my, MM_ANGRY|MM_ADJACENTOK);
+			(void) makemon((struct permonst *)0, magr->mx, magr->my, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 			u.aggravation = 0;
 		}
 
@@ -2783,7 +2787,7 @@ int mdead;
 		if (!rn2(20)) {
 			u.aggravation = 1;
 			reset_rndmonst(NON_PM);
-			(void) makemon((struct permonst *)0, mdef->mx, mdef->my, MM_ANGRY|MM_ADJACENTOK);
+			(void) makemon((struct permonst *)0, mdef->mx, mdef->my, MM_ANGRY|MM_ADJACENTOK|MM_FRENZIED);
 			u.aggravation = 0;
 		}
 

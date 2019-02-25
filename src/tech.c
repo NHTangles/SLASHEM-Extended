@@ -386,6 +386,8 @@ static const struct innate_tech
 		       {   0, 0, 0} },
 	sco_tech[] = { {   25, T_DIAMOND_BARRIER, 1},
 		       {   0, 0, 0} },
+	wal_tech[] = { {   1, T_DIAMOND_BARRIER, 1},
+		       {   0, 0, 0} },
 	loc_tech[] = { {   15, T_DIAMOND_BARRIER, 1},
 		       {   0, 0, 0} },
 	roc_tech[] = { {   1, T_EGG_BOMB, 1},
@@ -400,6 +402,8 @@ static const struct innate_tech
 	cav_tech[] = { {   1, T_PRIMAL_ROAR, 1},
 		       {   10, T_SHIELD_BASH, 1},
 		       {   20, T_POLYFORM, 1},
+		       {   0, 0, 0} },
+	dem_tech[] = { {   1, T_PRIMAL_ROAR, 1},
 		       {   0, 0, 0} },
 	sli_tech[] = { {   1, T_LIQUID_LEAP, 1},
 		       {   4, T_SPIRITUALITY_CHECK, 1},
@@ -662,6 +666,13 @@ static const struct innate_tech
 		       {   18, T_CONCENTRATING, 1},
 		       {   30, T_BLOOD_RITUAL, 1},
 		       {   0, 0, 0} },
+	gro_tech[] = { {   1, T_KIII, 1},
+		       {   1, T_CREATE_AMMO, 1},
+		       {   6, T_SHIELD_BASH, 1},
+		       {   18, T_IRON_SKIN, 1},
+		       {   18, T_CONCENTRATING, 1},
+		       {   30, T_BLOOD_RITUAL, 1},
+		       {   0, 0, 0} },
 	nin_tech[] = { {   5, T_DOUBLE_THROWNAGE, 1},
 		       {   25, T_EDDY_WIND, 1},
 		       {   0, 0, 0} },
@@ -832,6 +843,13 @@ static const struct innate_tech
 		       {   1, T_PHASE_DOOR, 1},
 		       {   1, T_INVOKE_DEITY, 1},
 		       {   1, T_WARD_ELEC, 1},
+		       {   15, T_SECURE_IDENTIFY, 1},
+		       {   0, 0, 0} },
+	jav_tech[] = { {   1, T_APPRAISAL, 1},
+		       {   1, T_PANIC_DIGGING, 1},
+		       {   1, T_PHASE_DOOR, 1},
+		       {   1, T_INVOKE_DEITY, 1},
+		       {   1, T_DOUBLE_THROWNAGE, 1},
 		       {   15, T_SECURE_IDENTIFY, 1},
 		       {   0, 0, 0} },
 	wis_tech[] = { {   1, T_APPRAISAL, 1},
@@ -1260,6 +1278,14 @@ static const struct innate_tech
 		       {   1, T_PHASE_DOOR, 1},
 		       {   1, T_INVOKE_DEITY, 1},
 		       {   10, T_RECHARGE, 1},
+		       {   15, T_SECURE_IDENTIFY, 1},
+		       {   0, 0, 0} },
+
+	tme_tech[] = { {   1, T_APPRAISAL, 1},
+		       {   1, T_PANIC_DIGGING, 1},
+		       {   1, T_PHASE_DOOR, 1},
+		       {   1, T_INVOKE_DEITY, 1},
+		       {   1, T_CREATE_AMMO, 1},
 		       {   15, T_SECURE_IDENTIFY, 1},
 		       {   0, 0, 0} },
 
@@ -2654,9 +2680,10 @@ int tech_no;
 			if (u.ualign.record < 0) {
 
 				if ( (Inhell && !Race_if(PM_HERETIC) ) || flags.gehenna ) {
-					pline("%s is inaccessible, and %s decides to smite you!",u_gname(), Role_if(PM_GANG_SCHOLAR) ? "Anna" : "Moloch" );
+					pline("%s is inaccessible, and %s decides to smite you!",u_gname(), Role_if(PM_GANG_SCHOLAR) ? "Anna" : Role_if(PM_WALSCHOLAR) ? "Anna" : "Moloch" );
 					u.ublesscnt += rnz(-u.ualign.record);
 					if (Role_if(PM_GANG_SCHOLAR)) losehp(rnz(-u.ualign.record), "annoying Anna", KILLED_BY);
+					else if (Role_if(PM_WALSCHOLAR)) losehp(rnz(-u.ualign.record), "annoying Anna", KILLED_BY);
 					else losehp(rnz(-u.ualign.record), "annoying Moloch", KILLED_BY);
 				} else {
 					pline("%s smites you for your sins!",u_gname() );
@@ -2674,7 +2701,7 @@ int tech_no;
 			} 
 
 			else if ( (Inhell && !Race_if(PM_HERETIC) ) || flags.gehenna ) {
-				pline("%s is inaccessible, and %s decides to smite you!",u_gname(), Role_if(PM_GANG_SCHOLAR) ? "Anna" : "Moloch" );
+				pline("%s is inaccessible, and %s decides to smite you!",u_gname(), Role_if(PM_GANG_SCHOLAR) ? "Anna" : Role_if(PM_WALSCHOLAR) ? "Anna" : "Moloch" );
 				u.ublesscnt += rnz(monster_difficulty() + 1 );
 				losehp(rnz(monster_difficulty() + 1 ), "trying to contact their deity in Gehennom", KILLED_BY);
 /* Trying to invoke a deity in Gehennom is never a good idea... */
@@ -2693,6 +2720,10 @@ int tech_no;
 			}
 
 			u.uconduct.gnostic++;	/* you just tried to access your god */
+			if (Race_if(PM_MAGYAR)) {
+				You_feel("bad about breaking the atheist conduct.");
+				badeffect();
+			}
                 t_timeout = rnz(3000);
 		break;
             case T_APPRAISAL:
@@ -2708,6 +2739,12 @@ int tech_no;
                         You("examine %s.", doname(uwep));
                                 uwep->known = TRUE;
                                 You("discover it is %s",doname(uwep));
+
+			if (Race_if(PM_GERTEUT) && is_poisonable(uwep) && !stack_too_big(uwep)) {
+				Your("%s is poisoned.", doname(uwep));
+				uwep->opoisoned = TRUE;
+			}
+
                 t_timeout = rnz(200);
 		}
 		break;
@@ -2877,11 +2914,11 @@ secureidchoice:
 
 
                         pline("%s gets tamer.", Monnam(u.usteed));
-                        tamedog(u.usteed, (struct obj *) 0, FALSE);
+                        tamedog(u.usteed, (struct obj *) 0, FALSE); /* caveat: you might be riding a non-tame monster */
 
 				while (calmedX == 0) { /* remove the stupid bug that caused this tech to do nothing --Amy */
 
-				if (u.usteed->mtame < 20) u.usteed->mtame++;
+				if (u.usteed && u.usteed->mtame < 20) u.usteed->mtame++;
 
 				if (techlevX(tech_no) < rnd(50)) calmedX++; /* high level tech has high chance of extra tameness */
 
@@ -3921,11 +3958,19 @@ secureidchoice:
 
 		}
 
+		if (Role_if(PM_GRENADONIN)) ammotype = 6; /* grenades */
+
+		if (Race_if(PM_TURMENE)) {
+			pline("You can also make shotgun shells instead of regular ammo.");
+			if (yn("Do you want to create shotgun shells?") == 'y') ammotype = 3;
+		}
+
 	    You("make some ammo for your gun.");
 
 		struct obj *uammo;
 
-		if (ammotype == 5) uammo = mksobj(BFG_AMMO, TRUE, FALSE);
+		if (ammotype == 6) uammo = mksobj(rn2(2) ? GAS_GRENADE : FRAG_GRENADE, TRUE, FALSE);
+		else if (ammotype == 5) uammo = mksobj(BFG_AMMO, TRUE, FALSE);
 		else if (ammotype == 4) uammo = mksobj(ROCKET, TRUE, FALSE);
 		else if (ammotype == 3) uammo = mksobj(SHOTGUN_SHELL, TRUE, FALSE);
 		else if (ammotype == 2) uammo = mksobj(BLASTER_BOLT, TRUE, FALSE);
@@ -3949,13 +3994,44 @@ secureidchoice:
 			stackobj(uammo);
 		}
 
+		if (Role_if(PM_GRENADONIN) && u.ulevel >= 10) {
+
+			if (!u.grenadoninlauncher && !rn2(5)) {
+				u.grenadoninlauncher = TRUE;
+				uammo = mksobj(GRENADE_LAUNCHER, TRUE, FALSE);
+				if (uammo) {
+					uammo->known = uammo->dknown = uammo->bknown = uammo->rknown = 1;
+					dropy(uammo);
+					stackobj(uammo);
+					pline("There's your grenade launcher!");
+				}
+			}
+
+			if (!rn2(10)) {
+				uammo = mksobj(STICK_OF_DYNAMITE, TRUE, FALSE);
+				if (uammo) {
+					uammo->quan = techlevX(tech_no) - 9;
+					if (uammo->quan < 1) uammo->quan = 1;
+					if (uarmc && uarmc->oartifact == ART_ARABELLA_S_WEAPON_STORAGE) uammo->quan *= 2;
+					uammo->quan /= 3;
+					if (uammo->quan < 1) uammo->quan = 1; /* fail safe */
+					uammo->known = uammo->dknown = uammo->bknown = uammo->rknown = 1;
+					uammo->owt = weight(uammo);
+					dropy(uammo);
+					stackobj(uammo);
+				}
+
+			}
+
+		}
+
 		if (uarmh && uarmh->oartifact == ART_TURKISH_EMPIRE) {
 			uammo = mksobj(ROCKET, TRUE, FALSE);
 			if (uammo) {
 				uammo->quan = techlevX(tech_no);
 				if (uarmc && uarmc->oartifact == ART_ARABELLA_S_WEAPON_STORAGE) uammo->quan *= 2;
 				uammo->quan /= 10;
-				if (uammo->quan < 0) uammo->quan = 1; /* fail safe */
+				if (uammo->quan < 1) uammo->quan = 1; /* fail safe */
 				uammo->known = uammo->dknown = uammo->bknown = uammo->rknown = 1;
 				uammo->owt = weight(uammo);
 				dropy(uammo);
@@ -4116,6 +4192,10 @@ chargingchoice:
 			if (u.ualign.record < 0) pline("Your alignment record is negative.");
 		}
 		u.uconduct.gnostic++;	/* you just communicated with your god */
+		if (Race_if(PM_MAGYAR)) {
+			You_feel("bad about breaking the atheist conduct.");
+			badeffect();
+		}
 
 	      t_timeout = rnz(2000);
 	      break;
@@ -4173,7 +4253,7 @@ chargingchoice:
 		if (ABASE(A_CHA) < ATTRMIN(A_CHA)) ABASE(A_CHA) = ATTRMIN(A_CHA);
 		AMAX(A_CHA) = ABASE(A_CHA);
 
-		if (!rn2(4)) makewish();
+		if (!rn2(4)) makewish(TRUE);
 		else othergreateffect();
 
 	      t_timeout = rnz(25000);
@@ -4384,6 +4464,7 @@ resettechdone:
 
 			pline("Force field activated!");
 			num = 50 + (techlevX(tech_no) * 3);
+			if (Race_if(PM_PLAYER_ATLANTEAN)) num *= 2;
 		    	techt_inuse(tech_no) = num + 1;
 			t_timeout = rnz(4000);
 			break;
@@ -5473,13 +5554,24 @@ revid_end:
 			if (wearimplant->otyp >= IMPLANT_OF_ABSORPTION && wearimplant->otyp <= IMPLANT_OF_PROSPERITY) {
 				objects[wearimplant->otyp].a_ac = rnd(10);
 			}
+			if (wearimplant->otyp >= IMPLANT_OF_QUEEB_BUTT && wearimplant->otyp <= IMPLANT_OF_FINGER_POINTING) {
+				objects[wearimplant->otyp].a_ac = rnd(10);
+			}
 
 			if (wearimplant->otyp >= IMPLANT_OF_QUICKENING && wearimplant->otyp <= IMPLANT_OF_BLITZEN) {
 				objects[wearimplant->otyp].a_ac = rnd(8);
 				objects[wearimplant->otyp].oc_oprop = randnastyenchantment();
 			}
+			if (wearimplant->otyp >= IMPLANT_OF_TOTAL_NONSENSE && wearimplant->otyp <= IMPLANT_OF_GALVANIZATION) {
+				objects[wearimplant->otyp].a_ac = rnd(8);
+				objects[wearimplant->otyp].oc_oprop = randnastyenchantment();
+			}
 
 			if (wearimplant->otyp >= IMPLANT_OF_IRE && wearimplant->otyp <= IMPLANT_OF_FREEDOM) {
+				objects[wearimplant->otyp].a_ac = rnd(5);
+				objects[wearimplant->otyp].oc_oprop = !rn2(10) ? randnastyenchantment() : randenchantment();
+			}
+			if (wearimplant->otyp >= IMPLANT_OF_TEN_THOUSAND_THINGS && wearimplant->otyp <= IMPLANT_OF_ENFORCING) {
 				objects[wearimplant->otyp].a_ac = rnd(5);
 				objects[wearimplant->otyp].oc_oprop = !rn2(10) ? randnastyenchantment() : randenchantment();
 			}
@@ -5652,7 +5744,7 @@ revid_end:
 	    case T_INTENSIVE_TRAINING:
 
 		pline("You train your attributes...");
-		adjattrib(rn2(A_MAX), 1, -1);
+		adjattrib(rn2(A_MAX), 1, -1, TRUE);
 		t_timeout = rnz(7500);
 		break;
 
@@ -5853,9 +5945,32 @@ revid_end:
 
 		pline("You try to erect barriers!");
 
+		if (Role_if(PM_WALSCHOLAR)) {
+			register struct obj *waldiamond;
+
+			waldiamond = carrying(DIAMOND);
+
+			if (!waldiamond) {
+				pline("But you don't have a diamond to create them...");
+				break;
+			}
+
+			if (waldiamond) {
+				if (waldiamond->quan > 1) {
+					waldiamond->quan--;
+					waldiamond->owt = weight(waldiamond);
+				}
+				else useup(waldiamond);
+				You("use a diamond to create the barriers.");
+			}
+
+		}
+
 		{
 
 			int diamondradius = 1;
+
+			if (Role_if(PM_WALSCHOLAR)) diamondradius = 3; /* can't reduce, unlike mason */
 
 			if (Role_if(PM_MASON)) {
 
@@ -5894,6 +6009,11 @@ revid_end:
 
 		}
 		vision_recalc(0);
+
+		if (Role_if(PM_WALSCHOLAR)) {
+			u.walscholarpass += (rnd(50) + rnd(techlevX(tech_no) * 5) );
+			pline("For a while, you can freely pass through grave walls!");
+		}
 
 	      t_timeout = Role_if(PM_MASON) ? rnz(1000) : rnz(5000);
 
@@ -6513,7 +6633,7 @@ revid_end:
 
 		if (uamul && uamul->oartifact == ART_TYRANITAR_S_QUEST && !rn2(2)) techtout(tech_no) = 0;
 
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_NO_ABNORMAL_FUTURE) techtout(tech_no) /= 4;
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_NO_ABNORMAL_FUTURE) techtout(tech_no) /= 4;
 
 		if (techid(tech_no) == T_ASIAN_KICK) {
 
@@ -6854,6 +6974,7 @@ role_tech()
 		case PM_BLOODSEEKER:	return (blo_tech);
 		case PM_BLEEDER:	return (ble_tech);
 		case PM_CAVEMAN:	return (cav_tech);
+		case PM_DEMAGOGUE:	return (dem_tech);
 		case PM_DQ_SLIME:	return (sli_tech);
 		case PM_ERDRICK:	return (erd_tech);
 		case PM_BARD:	return (brd_tech);
@@ -6921,8 +7042,10 @@ role_tech()
 		case PM_CAMPERSTRIKER:		return (cam_tech);
 		case PM_LOCKSMITH:		return (loc_tech);
 		case PM_GANG_SCHOLAR:		return (sco_tech);
+		case PM_WALSCHOLAR:		return (wal_tech);
 		case PM_ROGUE:		return (rog_tech);
 		case PM_SAMURAI:	return (sam_tech);
+		case PM_GRENADONIN:	return (gro_tech);
 		case PM_NINJA:	return (nin_tech);
 		case PM_TOURIST:	return (tou_tech);
 		case PM_UNDEAD_SLAYER:	return (und_tech);
@@ -6964,6 +7087,7 @@ race_tech()
 		case PM_PLAYER_GREMLIN:		return (gre_tech);
 		case PM_STICKER:		return (sti_tech);
 		case PM_THUNDERLORD:		return (thu_tech);
+		case PM_JAVA:		return (jav_tech);
 		case PM_WISP:		return (wis_tech);
 		case PM_ROHIRRIM:		return (roh_tech);
 		case PM_PLAYER_SALAMANDER:		return (sal_tech);
@@ -6977,6 +7101,7 @@ race_tech()
 		case PM_BORG:		return (bor_tech);
 		case PM_RODNEYAN:		return (rod_tech);
 		case PM_TURTLE:		return (tur_tech);
+		case PM_TURMENE:		return (tme_tech);
 		case PM_JELLY:		return (jel_tech);
 		case PM_HUMANOID_DRYAD:		return (dry_tech);
 		case PM_UNGENOMOLD:		return (ung_tech);
@@ -7160,7 +7285,7 @@ tinker()
 		/* object downgrade  - But for now,  nothing :) */
 	}
 
-	setuwep(otmp, FALSE);
+	setuwep(otmp, FALSE, TRUE);
 	You("now hold %s!", doname(otmp));
 	return(0);
 }

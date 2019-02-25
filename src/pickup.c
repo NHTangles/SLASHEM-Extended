@@ -1606,7 +1606,7 @@ able_to_loot(x, y)
 int x, y;
 {
 	if (!can_reach_floor()) {
-		if (u.usteed && !(nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) && (PlayerCannotUseSkills || P_SKILL(P_RIDING) < P_BASIC) )
+		if (u.usteed && !(powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) && (PlayerCannotUseSkills || P_SKILL(P_RIDING) < P_BASIC) )
 			rider_cant_reach(); /* not skilled enough to reach */
 		else
 			You("cannot reach the %s.", surface(x, y));
@@ -1623,7 +1623,7 @@ int x, y;
 		pline("Without limbs, you cannot loot anything.");
 		if (flags.moreforced && !MessagesSuppressed) display_nhwindow(WIN_MESSAGE, TRUE);    /* --More-- */
 		return FALSE;
-	} else if (!freehandX()) {
+	} else if (!freehandX() && !(Role_if(PM_CELLAR_CHILD) && uwep && (weapon_type(uwep) == P_QUARTERSTAFF)) ) {
 		pline("Without a free %s, you cannot loot anything.",
 			body_part(HAND));
 		if (flags.moreforced && !MessagesSuppressed) display_nhwindow(WIN_MESSAGE, TRUE);    /* --More-- */
@@ -2078,7 +2078,7 @@ boolean invobj;
 			weldmsg(obj);
 			return 0;
 		}
-		setuwep((struct obj *) 0, FALSE);
+		setuwep((struct obj *) 0, FALSE, TRUE);
 		if (uwep) return 0;	/* unwielded, died, rewielded */
 	} else if (obj == uswapwep) {
 		setuswapwep((struct obj *) 0, FALSE);
@@ -2155,7 +2155,7 @@ boolean invobj;
 		sellobj_state(SELL_NORMAL);
 	    }
 	}
-	if (Icebox && !age_is_relative(obj)) {
+	if (Icebox && !age_is_relative(obj) && !is_lightsaber(obj)) {
 		obj->age = monstermoves - obj->age; /* actual age */
 		/* stop any corpse timeouts when frozen */
 		if (obj->otyp == CORPSE && obj->timed) {
@@ -2304,7 +2304,7 @@ register struct obj *obj;
 	obj_extract_self(obj);
 	current_container->owt = weight(current_container);
 
-	if (Icebox && !age_is_relative(obj)) {
+	if (Icebox && !age_is_relative(obj) && !is_lightsaber(obj)) {
 		obj->age = monstermoves - obj->age; /* actual age */
 		if (obj->otyp == CORPSE)
 			start_corpse_timeout(obj);
@@ -2461,7 +2461,7 @@ int held;
 		}
 		else {return(0);}
 
-	} else if (!freehandX()) {
+	} else if (!freehandX() && !(Role_if(PM_CELLAR_CHILD) && uwep && (weapon_type(uwep) == P_QUARTERSTAFF)) ) {
 		You("have no free %s.", body_part(HAND));
 		if (flags.moreforced && !MessagesSuppressed) display_nhwindow(WIN_MESSAGE, TRUE);    /* --More-- */
 		return 0;
@@ -2979,7 +2979,7 @@ BOOLEAN_P destroy_after;
 		container->owt = weight(container);
 
 		/* we do need to start the timer on these */
-		if ( (container->otyp == ICE_BOX || container->otyp == ICE_BOX_OF_HOLDING || container->otyp == ICE_BOX_OF_WATERPROOFING || container->otyp == ICE_BOX_OF_DIGESTION) && !age_is_relative(otmp)) {
+		if ( (container->otyp == ICE_BOX || container->otyp == ICE_BOX_OF_HOLDING || container->otyp == ICE_BOX_OF_WATERPROOFING || container->otyp == ICE_BOX_OF_DIGESTION) && !age_is_relative(otmp) && !is_lightsaber(otmp)) {
 			otmp->age = monstermoves - otmp->age;
 			if (otmp->otyp == CORPSE) {
 				start_corpse_timeout(otmp);

@@ -353,6 +353,8 @@ maeney:
 	if (pettype == PM_SOLDIER) petname = "Lieutenant Surge"; /* Pokemon Yellow */
 	if (pettype == PM_VALKYRIE) petname = "Rue";	/* hunger games */
 	if (pettype == PM_PLATYPUS) petname = "Donald Duck";
+	if (pettype == PM_OFFICER_JENNY) petname = "Jenny";
+	if (pettype == PM_FEMALE_SAMURAI) petname = "Miss Grenade";
 	if (pettype == PM_ORDINATOR) petname = "Andragil";
 	if (pettype == PM_ROTHE) petname = "Rambo";
 
@@ -762,7 +764,7 @@ long nmv;		/* number of moves */
 		else mtmp->mhp++;
 	}
 
-	if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE && u.usteed && (mtmp == u.usteed)) {
+	if (powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE && u.usteed && (mtmp == u.usteed)) {
 		if (mtmp->mhp + 1 >= mtmp->mhpmax)
 		      mtmp->mhp = mtmp->mhpmax;
 		else mtmp->mhp++;
@@ -783,7 +785,7 @@ long nmv;		/* number of moves */
 	if (!(PlayerCannotUseSkills)) {
 
 	if (P_SKILL(P_RIDING) == P_BASIC && u.usteed && (mtmp == u.usteed) && !rn2(10) ) {
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
 			if (mtmp->mhp + 1 >= mtmp->mhpmax)
 			      mtmp->mhp = mtmp->mhpmax;
 			else mtmp->mhp++;
@@ -793,7 +795,7 @@ long nmv;		/* number of moves */
 		if (mtmp->mhp + 1 >= mtmp->mhpmax)
 		      mtmp->mhp = mtmp->mhpmax;
 		else mtmp->mhp++;
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
 			if (mtmp->mhp + 2 >= mtmp->mhpmax)
 			      mtmp->mhp = mtmp->mhpmax;
 			else mtmp->mhp++;
@@ -803,7 +805,7 @@ long nmv;		/* number of moves */
 		if (mtmp->mhp + 1 >= mtmp->mhpmax)
 		      mtmp->mhp = mtmp->mhpmax;
 		else mtmp->mhp++;
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
 			if (mtmp->mhp + 3 >= mtmp->mhpmax)
 			      mtmp->mhp = mtmp->mhpmax;
 			else mtmp->mhp++;
@@ -813,7 +815,7 @@ long nmv;		/* number of moves */
 		if (mtmp->mhp + 1 >= mtmp->mhpmax)
 		      mtmp->mhp = mtmp->mhpmax;
 		else mtmp->mhp++;
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
 			if (mtmp->mhp + 4 >= mtmp->mhpmax)
 			      mtmp->mhp = mtmp->mhpmax;
 			else mtmp->mhp++;
@@ -823,7 +825,7 @@ long nmv;		/* number of moves */
 		if (mtmp->mhp + 1 >= mtmp->mhpmax)
 		      mtmp->mhp = mtmp->mhpmax;
 		else mtmp->mhp++;
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
 			if (mtmp->mhp + 5 >= mtmp->mhpmax)
 			      mtmp->mhp = mtmp->mhpmax;
 			else mtmp->mhp++;
@@ -834,7 +836,7 @@ long nmv;		/* number of moves */
 		if (mtmp->mhp + 1 >= mtmp->mhpmax)
 		      mtmp->mhp = mtmp->mhpmax;
 		else mtmp->mhp++;
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
 			if (mtmp->mhp + 6 >= mtmp->mhpmax)
 			      mtmp->mhp = mtmp->mhpmax;
 			else mtmp->mhp++;
@@ -1068,7 +1070,7 @@ register struct obj *obj;
 		 || is_rider(fptr) || (!issoviet && (fptr->cnutrit < 1)) || is_deadlysin(fptr) || fptr->mlet == S_TROVE )) /* troves are meant for the player --Amy */
 		    return TABU;
 	    /* Ghouls only eat old corpses... yum! */
-	    if (mon->data == &mons[PM_GHOUL] || mon->data == &mons[PM_GHAST] || mon->data == &mons[PM_GASTLY] || mon->data == &mons[PM_PHANTOM_GHOST]
+	    if (mon->data == &mons[PM_GHOUL] || mon->data == &mons[PM_GHAST] || mon->data == &mons[PM_STINKING_ALIEN] || mon->data == &mons[PM_GASTLY] || mon->data == &mons[PM_PHANTOM_GHOST]
 		|| mon->data == &mons[PM_HAUNTER] || mon->data == &mons[PM_GENGAR]) {
 		return (obj->otyp == CORPSE && obj->corpsenm != PM_ACID_BLOB &&
 		  peek_at_iced_corpse_age(obj) + 5*rn1(20,10) <= monstermoves) ?

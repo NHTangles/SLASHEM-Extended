@@ -451,7 +451,7 @@ int		class;		/* an object class, 0 for all */
     if (boulder && class != ROCK_CLASS) strcat(stuff, " and/or large stones");
 
     if (do_dknown) for(obj = invent; obj; obj = obj->nobj) {
-	if (guaranteed || (likely && rn2(5)) || !rn2(3)) do_dknown_of(obj);
+	if (guaranteed || (likely && rn2(2)) || !rn2(3)) do_dknown_of(obj);
 	}
 
     for (obj = fobj; obj; obj = obj->nobj) {
@@ -459,7 +459,7 @@ int		class;		/* an object class, 0 for all */
 	    if (obj->ox == u.ux && obj->oy == u.uy) ctu++;
 	    else ct++;
 	}
-	if (do_dknown && (guaranteed || (likely && rn2(5)) || !rn2(3)) ) do_dknown_of(obj);
+	if (do_dknown && (guaranteed || (likely && rn2(2)) || !rn2(3)) ) do_dknown_of(obj);
     }
 
     for (obj = level.buriedobjlist; obj; obj = obj->nobj) {
@@ -467,14 +467,14 @@ int		class;		/* an object class, 0 for all */
 	    if (obj->ox == u.ux && obj->oy == u.uy) ctu++;
 	    else ct++;
 	}
-	if (do_dknown && (guaranteed || (likely && rn2(5)) || !rn2(3)) ) do_dknown_of(obj);
+	if (do_dknown && (guaranteed || (likely && rn2(2)) || !rn2(3)) ) do_dknown_of(obj);
     }
 
     for (mtmp = fmon; mtmp; mtmp = mtmp->nmon) {
 	if (DEADMONSTER(mtmp)) continue;
 	for (obj = mtmp->minvent; obj; obj = obj->nobj) {
 	    if ((!class && !boulder) || o_in(obj, class) || o_in(obj, boulder)) ct++;
-	    if (do_dknown && (guaranteed || (likely && rn2(5)) || !rn2(3)) ) do_dknown_of(obj);
+	    if (do_dknown && (guaranteed || (likely && rn2(2)) || !rn2(3)) ) do_dknown_of(obj);
 	}
 	if ((is_cursed && mtmp->m_ap_type == M_AP_OBJECT &&
 	    (!class || class == objects[mtmp->mappearance].oc_class)) ||
@@ -512,9 +512,9 @@ int		class;		/* an object class, 0 for all */
 		    otmp->ox = obj->ox;
 		    otmp->oy = obj->oy;
 		}
-		if (guaranteed || (likely && rn2(5)) || !rn2(3)) map_object(otmp, 1);
+		if (guaranteed || (likely && rn2(2)) || !rn2(3)) map_object(otmp, 1);
 	    } else
-		if (guaranteed || (likely && rn2(5)) || !rn2(3)) map_object(obj, 1);
+		if (guaranteed || (likely && rn2(2)) || !rn2(3)) map_object(obj, 1);
 	}
     /*
      * If we are mapping all objects, map only the top object of a pile or
@@ -534,9 +534,9 @@ int		class;		/* an object class, 0 for all */
 			    otmp->ox = obj->ox;
 			    otmp->oy = obj->oy;
 			}
-			if (guaranteed || (likely && rn2(5)) || !rn2(3)) map_object(otmp, 1);
+			if (guaranteed || (likely && rn2(2)) || !rn2(3)) map_object(otmp, 1);
 		    } else
-			if (guaranteed || (likely && rn2(5)) || !rn2(3)) map_object(obj, 1);
+			if (guaranteed || (likely && rn2(2)) || !rn2(3)) map_object(obj, 1);
 		    break;
 		}
 
@@ -549,7 +549,7 @@ int		class;		/* an object class, 0 for all */
 		if (!class && !boulder) otmp = obj;
 		otmp->ox = mtmp->mx;		/* at monster location */
 		otmp->oy = mtmp->my;
-		if (guaranteed || (likely && rn2(5)) || !rn2(3)) map_object(otmp, 1);
+		if (guaranteed || (likely && rn2(2)) || !rn2(3)) map_object(otmp, 1);
 		break;
 	    }
 	/* Allow a mimic to override the detected objects it is carrying. */
@@ -1583,10 +1583,10 @@ struct trap *trap;
 
     trap->tseen = 1;
     exercise(A_WIS, TRUE);
-    if (Blind)
+/*    if (Blind)*/
 	feel_location(trap->tx, trap->ty);
-    else
-	newsym(trap->tx, trap->ty);
+/*    else*/
+	if (!Blind) newsym(trap->tx, trap->ty);
 
 #ifdef DISPLAY_LAYERS
     if (levl[trap->tx][trap->ty].mem_obj ||
@@ -1678,7 +1678,7 @@ register int aflag;
 	      for(y = u.uy-1; y < u.uy+2; y++) {
 		if(!isok(x,y)) continue;
 		if(x != u.ux || y != u.uy) {
-		    if (Blind && (!aflag || !rn2(fundxtrachange) || !rn2(fundxtrachange)) ) feel_location(x,y);
+		    if (/*Blind &&*/ (!aflag || !rn2(fundxtrachange) || !rn2(fundxtrachange)) ) feel_location(x,y);
 		    if(levl[x][y].typ == SDOOR) {
 			if(rnl(7-fund) && rn2(fundxtrachange) && (rn2(fundxtrachange) || !rn2(2)) ) continue; /* better chance --Amy */
 			cvt_sdoor_to_door(&levl[x][y]);	/* .typ = DOOR */
@@ -1687,10 +1687,10 @@ register int aflag;
 			if (flags.moreforced && !MessagesSuppressed) display_nhwindow(WIN_MESSAGE, TRUE);    /* --More-- */
 			exercise(A_WIS, TRUE);
 			nomul(0, 0, FALSE);
-			if (Blind && (!aflag || !rn2(fundxtrachange) || !rn2(fundxtrachange)) )
+			if (/*Blind && */(!aflag || !rn2(fundxtrachange) || !rn2(fundxtrachange)) )
 			    feel_location(x,y);	/* make sure it shows up */
-			else
-			    newsym(x,y);
+			/*else*/
+			if (!Blind) newsym(x,y);
 		    } else if(levl[x][y].typ == SCORR) {
 			if(rnl(7-fund) && rn2(fundxtrachange) && (rn2(fundxtrachange) || !rn2(2)) ) continue; /* better chance --Amy */
 			levl[x][y].typ = CORR;

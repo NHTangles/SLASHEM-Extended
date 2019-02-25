@@ -227,11 +227,11 @@ struct obj *otmp;
 		if (distu(mtmp->mx, mtmp->my) > 3) break;
 		if (!which_armor(mtmp, W_ARMH)) {
 			pline("Your rock hits %s's %s!", mon_nam(mtmp), mbodypart(mtmp, HEAD));
-			dmg += (10 + rnz(u.ulevel) + skilldmg);
+			dmg += (10 + rnd(u.ulevel) + skilldmg);
 		}
 		if (!resists_elec(mtmp)) {
 			pline("%s is electrified!", Monnam(mtmp));
-			dmg += (10 + rnz(u.ulevel) + skilldmg);
+			dmg += (10 + rnd(u.ulevel) + skilldmg);
 		}
 		if (dmg > 0) (void) resist(mtmp, otmp->oclass, dmg, NOTELL);
 
@@ -243,11 +243,11 @@ struct obj *otmp;
 		dmg += skilldmg;
 		if (resists_cold(mtmp)) {
 			pline("%s is burned by the watery flame!", Monnam(mtmp));
-			dmg += (rnz(u.ulevel) + skilldmg);
+			dmg += (rnd(u.ulevel) + skilldmg);
 		}
 		if (resists_fire(mtmp)) {
 			pline("%s is cooled by the watery flame!", Monnam(mtmp));
-			dmg += (rnz(u.ulevel) + skilldmg);
+			dmg += (rnd(u.ulevel) + skilldmg);
 		}
 		(void) resist(mtmp, otmp->oclass, dmg, NOTELL);
 
@@ -2418,15 +2418,18 @@ struct obj *obj;
  * This should be safe to call for an object anywhere.
  */
 struct obj *
-poly_obj(obj, id)
+poly_obj(obj, id, degradation)
 	struct obj *obj;
 	int id;
+	boolean degradation;
 {
 	struct obj *otmp;
 	xchar ox, oy;
 	boolean can_merge = (id == STRANGE_OBJECT);
 	int obj_location = obj->where;
 	int old_nutrit, new_nutrit;
+
+	if (evilfriday) degradation = TRUE;
 
 	boolean unpoly = (id == STRANGE_OBJECT);
 
@@ -2484,7 +2487,7 @@ poly_obj(obj, id)
 	    /* literally replace obj with this new thing */
 	    otmp = mksobj(id, FALSE, FALSE);
 	/* Actually more things use corpsenm but they polymorph differently */
-#define USES_CORPSENM(typ) ((typ)==CORPSE || (typ)==STATUE || (typ)==FIGURINE)
+#define USES_CORPSENM(typ) ((typ)==CORPSE || (typ)==STATUE || (typ)==FIGURINE || (typ)==ENERGY_SAP)
 	    if (USES_CORPSENM(obj->otyp) && USES_CORPSENM(id))
 		otmp->corpsenm = obj->corpsenm;
 #undef USES_CORPSENM
@@ -2613,6 +2616,7 @@ poly_obj(obj, id)
 		otmp->oeroded = 0;
 		otmp->oerodeproof = TRUE;
 		otmp->quan = 1L;
+		otmp->owt = weight(otmp);
 		otmp->cursed = otmp->hvycurse = otmp->prmcurse = otmp->morgcurse = otmp->evilcurse = otmp->bbrcurse = otmp->stckcurse = FALSE;
 	    }
 	}
@@ -2657,7 +2661,7 @@ poly_obj(obj, id)
 	    break;
 
 	case SCROLL_CLASS:
-	    while (otmp->otyp == SCR_WISHING || otmp->otyp == SCR_RESURRECTION || otmp->otyp == SCR_ACQUIREMENT || otmp->otyp == SCR_ENTHRONIZATION || otmp->otyp == SCR_FOUNTAIN_BUILDING || otmp->otyp == SCR_SINKING || otmp->otyp == SCR_WC)
+	    while (otmp->otyp == SCR_WISHING || otmp->otyp == SCR_RESURRECTION || otmp->otyp == SCR_ACQUIREMENT || otmp->otyp == SCR_ENTHRONIZATION || otmp->otyp == SCR_MAKE_PENTAGRAM || otmp->otyp == SCR_FOUNTAIN_BUILDING || otmp->otyp == SCR_SINKING || otmp->otyp == SCR_WC)
 		otmp->otyp = rnd_class(SCR_CREATE_MONSTER, SCR_BLANK_PAPER);
 	    break;
 
@@ -2696,12 +2700,18 @@ poly_obj(obj, id)
 	}
 
 	/* degrade the object because polypiling is too powerful --Amy */
-	if (otmp->spe > 2) otmp->spe /= 2;
-	else if (otmp->spe > -20) otmp->spe--;
-	if (otmp->cursed) curse(otmp);
-	else if (!otmp->blessed && rn2(3)) curse(otmp);
-	else if (!rn2(3)) curse(otmp);
-	else if (rn2(3)) unbless(otmp);
+	if (degradation) {
+		if (rn2(2) || evilfriday) {
+			if (otmp->spe > 2) otmp->spe /= 2;
+			else if (otmp->spe > -20) otmp->spe--;
+		}
+		if (rn2(2) || evilfriday) {
+			if (otmp->cursed) curse(otmp);
+			else if (!otmp->blessed && rn2(3)) curse(otmp);
+			else if (!rn2(3)) curse(otmp);
+			else if (rn2(3)) unbless(otmp);
+		}
+	}
 
 	/* update the weight */
 	otmp->owt = weight(otmp);
@@ -2934,7 +2944,7 @@ struct obj *obj, *otmp;
 		    do_osshock(obj);
 		    break;
 		}
-		obj = poly_obj(obj, STRANGE_OBJECT);
+		obj = poly_obj(obj, STRANGE_OBJECT, TRUE);
 		newsym(obj->ox,obj->oy);
 		break;
 	case WAN_PROBING:
@@ -3155,13 +3165,13 @@ struct obj *obj, *otmp;
 		switch (objects[obj->otyp].oc_class) {
 		    case ROCK_CLASS:	/* boulders and statues */
 			if (obj->otyp == BOULDER) {
-			    obj = poly_obj(obj, rnd(20) ? MEATBALL : HUGE_CHUNK_OF_MEAT);
+			    obj = poly_obj(obj, rnd(20) ? MEATBALL : HUGE_CHUNK_OF_MEAT, FALSE);
 			    goto smell;
 			} else if (obj->otyp == STATUE) {
 
 				/* endless stone to flesh farming shouldn't be possible --Amy */
 			    if (!rn2(10)) {
-			      obj = poly_obj(obj, MEATBALL);
+			      obj = poly_obj(obj, MEATBALL, FALSE);
 			      goto smell;
 			    }
 
@@ -3171,7 +3181,7 @@ struct obj *obj, *otmp;
 			    refresh_x = oox; refresh_y = ooy;
 			    if (vegetarian(&mons[obj->corpsenm])) {
 				/* Don't animate monsters that aren't flesh */
-				obj = poly_obj(obj, MEATBALL);
+				obj = poly_obj(obj, MEATBALL, FALSE);
 			    	goto smell;
 			    }
 			    if (!animate_statue(obj, oox, ooy,
@@ -3190,7 +3200,7 @@ makecorpse:			if (mons[obj->corpsenm].geno &
 				    obj_extract_self(item);
 				    place_object(item, oox, ooy);
 				}
-				obj = poly_obj(obj, CORPSE);
+				obj = poly_obj(obj, CORPSE, FALSE);
 				break;
 			    }
 			} else { /* new rock class object... */
@@ -3209,7 +3219,7 @@ makecorpse:			if (mons[obj->corpsenm].geno &
 			}
 			if (vegetarian(&mons[obj->corpsenm])) {
 			    /* Don't animate monsters that aren't flesh */
-			    obj = poly_obj(obj, MEATBALL);
+			    obj = poly_obj(obj, MEATBALL, FALSE);
 			    goto smell;
 			}
 			(void) get_obj_location(obj, &oox, &ooy, 0);
@@ -3226,13 +3236,13 @@ makecorpse:			if (mons[obj->corpsenm].geno &
 		    }
 		    /* maybe add weird things to become? */
 		    case RING_CLASS:	/* some of the rings are stone */
-			obj = poly_obj(obj, MEAT_RING);
+			obj = poly_obj(obj, MEAT_RING, FALSE);
 			goto smell;
 		    case WAND_CLASS:	/* marble wand */
-			obj = poly_obj(obj, MEAT_STICK);
+			obj = poly_obj(obj, MEAT_STICK, FALSE);
 			goto smell;
 		    case GEM_CLASS:	/* rocks & gems */
-			obj = poly_obj(obj, MEATBALL);
+			obj = poly_obj(obj, MEATBALL, FALSE);
 smell:
 			if (herbivorous(youmonst.data) &&
 			    (!carnivorous(youmonst.data) ||
@@ -3503,12 +3513,54 @@ secureidchoice:
 
 		break;
 
+		case WAN_DISENCHANTMENT:
+
+			known = TRUE;
+		{
+			struct obj *otmpE;
+		      for (otmpE = invent; otmpE; otmpE = otmpE->nobj) {
+				if (otmpE && !rn2(10)) (void) drain_item_severely(otmpE);
+			}
+			Your("equipment seems less effective.");
+			if (PlayerHearsSoundEffects) pline(issoviet ? "Vse, chto vy vladeyete budet razocharovalsya v zabveniye, kha-kha-kha!" : "Klatsch!");
+		}
+
+		break;
+
+		case WAN_CONTAMINATION:
+
+			contaminate(rnd(10 + level_difficulty()), TRUE);
+
+		break;
+
+		case WAN_TREMBLING:
+
+			known = TRUE;
+			pline("Your %s are trembling!", makeplural(body_part(HAND)));
+			u.tremblingamount++;
+
+		break;
+
 		case WAN_REMOVE_RESISTANCE:
 
 			attrcurse();
 			while (rn2(3)) {
 				attrcurse();
 			}
+
+		break;
+
+		case WAN_CHAOS_TERRAIN:
+
+			wandofchaosterrain();
+			known = TRUE;
+
+		break;
+
+		case WAN_FLEECY_TERRAIN:
+
+			wandoffleecyterrain();
+			known = TRUE;
 
 		break;
 
@@ -3590,7 +3642,7 @@ secureidchoice:
 					else You("pause momentarily.");
 					break;
 				    case 4: /* drain Dex */
-					adjattrib(A_DEX, -rn1(1,1), 0);
+					adjattrib(A_DEX, -rn1(1,1), 0, TRUE);
 					break;
 				    case 5: /* steal teleportitis */
 					if(HTeleportation & INTRINSIC) {
@@ -3888,7 +3940,7 @@ secureidchoice:
 
 		case WAN_BAD_EQUIPMENT:
 
-			bad_equipment();
+			bad_equipment(0);
 			known = TRUE;
 			break;
 
@@ -3987,6 +4039,7 @@ secureidchoice:
 				}
 			}
 
+			(void) doredraw();
 			break;
 		case WAN_CREATE_MONSTER:
 			known = create_critters(rn2(23) ? 1 : rn1(7,2),
@@ -4009,11 +4062,11 @@ secureidchoice:
 			break;
 		case WAN_SUMMON_UNDEAD:
 			known = TRUE;
-			coord mm;   
-			mm.x = u.ux;   
-			mm.y = u.uy;   
+			coord mm;
+			mm.x = u.ux;
+			mm.y = u.uy;
 			pline("You summon some undead creatures!");   
-			mkundeadX(&mm, FALSE, NO_MINVENT);   
+			mkundeadX(&mm, FALSE, NO_MINVENT);
 			break;
 		case WAN_CREATE_HORDE:
 			known = create_critters(rn1(7,6), (struct permonst *)0);
@@ -4024,7 +4077,7 @@ secureidchoice:
 				makenonworkingwish();
 				break;
 			}
-			makewish();
+			makewish(TRUE);
 			break;
 		case WAN_ACQUIREMENT:
 			known = TRUE;
@@ -4092,7 +4145,7 @@ secureidchoice:
 			if (acqo->otyp == MAGIC_MARKER) acqo->recharged = 1;
 		    while(acqo->otyp == WAN_WISHING || acqo->otyp == WAN_POLYMORPH || acqo->otyp == WAN_MUTATION || acqo->otyp == WAN_ACQUIREMENT)
 			acqo->otyp = rnd_class(WAN_LIGHT, WAN_PSYBEAM);
-		    while (acqo->otyp == SCR_WISHING || acqo->otyp == SCR_RESURRECTION || acqo->otyp == SCR_ACQUIREMENT || acqo->otyp == SCR_ENTHRONIZATION || acqo->otyp == SCR_FOUNTAIN_BUILDING || acqo->otyp == SCR_SINKING || acqo->otyp == SCR_WC)
+		    while (acqo->otyp == SCR_WISHING || acqo->otyp == SCR_RESURRECTION || acqo->otyp == SCR_ACQUIREMENT || acqo->otyp == SCR_ENTHRONIZATION || acqo->otyp == SCR_MAKE_PENTAGRAM || acqo->otyp == SCR_FOUNTAIN_BUILDING || acqo->otyp == SCR_SINKING || acqo->otyp == SCR_WC)
 			acqo->otyp = rnd_class(SCR_CREATE_MONSTER, SCR_BLANK_PAPER);
 	
 			pline("Something appeared on the ground just beneath you!");
@@ -4171,7 +4224,7 @@ secureidchoice:
 			break;
 			}
 		case WAN_TELE_LEVEL:
-		      if (!flags.lostsoul && !flags.uberlostsoul && !(flags.wonderland && !(u.wonderlandescape)) && !(u.uprops[STORM_HELM].extrinsic) && !(In_bellcaves(&u.uz)) && !(In_subquest(&u.uz)) && !(In_voiddungeon(&u.uz)) && !(In_netherrealm(&u.uz))) level_tele();
+		      if (!flags.lostsoul && !flags.uberlostsoul && !(flags.wonderland && !(u.wonderlandescape)) && !(flags.zapem && !(u.zapemescape)) && !(u.uprops[STORM_HELM].extrinsic) && !(In_bellcaves(&u.uz)) && !(In_subquest(&u.uz)) && !(In_voiddungeon(&u.uz)) && !(In_netherrealm(&u.uz))) level_tele();
 			else pline("Hmm... that level teleport wand didn't do anything.");
 			known = TRUE;
 			break;
@@ -4365,7 +4418,7 @@ chargingchoice:
 			case 5 : 
 				pline("Multicolored sparks fly from the wand.");
 				if (!rn2(250)) {
-					if (!rn2(4)) makewish();
+					if (!rn2(4)) makewish(TRUE);
 					else othergreateffect();
 				}
 		/* since there is a 1% chance of the wand exploding, this _should_ be okay --Amy */
@@ -4511,7 +4564,7 @@ dozap()
 	obj = getobj(zap_syms, "zap");
 	if(!obj) return(0);
 
-	if ((CurseuseEffect || u.uprops[CURSEUSE_EFFECT].extrinsic || have_curseusestone()) && obj && obj->otyp != CANDELABRUM_OF_INVOCATION && obj->otyp != SPE_BOOK_OF_THE_DEAD && obj->otyp != BELL_OF_OPENING) curse(obj);
+	if (CurseAsYouUse && obj && obj->otyp != CANDELABRUM_OF_INVOCATION && obj->otyp != SPE_BOOK_OF_THE_DEAD && obj->otyp != BELL_OF_OPENING) curse(obj);
 
 	if (InterruptEffect || u.uprops[INTERRUPT_EFFECT].extrinsic || have_interruptionstone()) {
 		nomul(-(rnd(5)), "zapping a wand", TRUE);
@@ -5006,8 +5059,8 @@ boolean ordinary;
 				losexp("psionic drain", FALSE, TRUE);
 			}
 			if (!rn2(200)) {
-				adjattrib(A_INT, -1, 1);
-				adjattrib(A_WIS, -1, 1);
+				adjattrib(A_INT, -1, 1, TRUE);
+				adjattrib(A_WIS, -1, 1, TRUE);
 			}
 			if (!rn2(200)) {
 				pline("You scream in pain!");
@@ -5063,8 +5116,8 @@ boolean ordinary;
 				losexp("psionic drain", FALSE, TRUE);
 			}
 			if (!rn2(200)) {
-				adjattrib(A_INT, -1, 1);
-				adjattrib(A_WIS, -1, 1);
+				adjattrib(A_INT, -1, 1, TRUE);
+				adjattrib(A_WIS, -1, 1, TRUE);
 			}
 			if (!rn2(200)) {
 				pline("You scream in pain!");
@@ -5127,8 +5180,8 @@ boolean ordinary;
 				losexp("nether drain", FALSE, TRUE);
 			}
 			if (!rn2(200)) {
-				adjattrib(A_INT, -1, 1);
-				adjattrib(A_WIS, -1, 1);
+				adjattrib(A_INT, -1, 1, TRUE);
+				adjattrib(A_WIS, -1, 1, TRUE);
 			}
 			if (!rn2(200)) {
 				pline("You scream in pain!");
@@ -5180,12 +5233,12 @@ boolean ordinary;
 			  damage = d(14,7);
 			  poisoned("blast", A_DEX, "toxic blast", 15);
 			}
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_STR, -rnd(2), FALSE);
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_DEX, -rnd(2), FALSE);
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CON, -rnd(2), FALSE);
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_INT, -rnd(2), FALSE);
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_WIS, -rnd(2), FALSE);
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CHA, -rnd(2), FALSE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_STR, -rnd(2), FALSE, TRUE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_DEX, -rnd(2), FALSE, TRUE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CON, -rnd(2), FALSE, TRUE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_INT, -rnd(2), FALSE, TRUE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_WIS, -rnd(2), FALSE, TRUE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CHA, -rnd(2), FALSE, TRUE);
 
 		   break;
 
@@ -5739,7 +5792,7 @@ boolean ordinary;
 			makeknown(obj->otyp);
 		case SPE_TIME:
 
-			if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_TIMEAGE_OF_REALMS) {
+			if (powerfulimplants() && uimplant && uimplant->oartifact == ART_TIMEAGE_OF_REALMS) {
 				You_feel("not as powerful than you used to be, but the feeling passes.");
 				break;
 			}
@@ -6058,7 +6111,7 @@ boolean ordinary;
 		case WAN_BANISHMENT:
 			makeknown(obj->otyp);
 			if (u.uevent.udemigod || u.uhave.amulet || CannotTeleport || (u.usteed && mon_has_amulet(u.usteed))) { pline("You shudder for a moment."); (void) safe_teleds(FALSE); break;}
-			if (flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) {
+			if (flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) {
 			 pline("For some reason you resist the banishment!"); break;}
 
 			make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
@@ -6253,7 +6306,7 @@ struct obj *obj;	/* wand or spell */
 		case WAN_BANISHMENT:
 			makeknown(obj->otyp);
 			if (u.uevent.udemigod || u.uhave.amulet || CannotTeleport || (u.usteed && mon_has_amulet(u.usteed))) { pline("You shudder for a moment."); break;}
-			if (flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) {
+			if (flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) {
 			pline("For some reason you resist the banishment!"); break;}
 
 			make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
@@ -7910,8 +7963,8 @@ xchar sx, sy;
 			losexp("psionic drain", FALSE, TRUE);
 		}
 		if (!rn2(200)) {
-			adjattrib(A_INT, -1, 1);
-			adjattrib(A_WIS, -1, 1);
+			adjattrib(A_INT, -1, 1, TRUE);
+			adjattrib(A_WIS, -1, 1, TRUE);
 		}
 		if (!rn2(200)) {
 			pline("You scream in pain!");
@@ -8073,6 +8126,9 @@ int type;
 
     /* do you have the force field technique active? if yes, 3 out of 4 zaps miss you unconditionally --Amy */
     if (tech_inuse(T_FORCE_FIELD) && rn2(4)) {
+	return FALSE;
+    }
+    if (Race_if(PM_PLAYER_ATLANTEAN) && rn2(2)) {
 	return FALSE;
     }
 
@@ -8370,7 +8426,7 @@ sigilcontroldirection:
 		    mon = u.usteed;
 		    goto buzzmonst;
 	    } else
-	    if ((zap_hit_player((int) u.uac, 0)) || (Conflict && (zap_hit_player((int) u.uac, 0)) ) || (StrongConflict && (zap_hit_player((int) u.uac, 0)) ) ) {
+	    if ((zap_hit_player((int) u.uac, 0)) || (Conflict && (zap_hit_player((int) u.uac, 0)) ) || (Race_if(PM_SPARD) && (zap_hit_player((int) u.uac, 0)) ) || (StrongConflict && (zap_hit_player((int) u.uac, 0)) ) ) {
 
 		if (!(uarmg && OBJ_DESCR(objects[uarmg->otyp]) && (!strcmp(OBJ_DESCR(objects[uarmg->otyp]), "rayductnay gloves") || !strcmp(OBJ_DESCR(objects[uarmg->otyp]), "ruchnyye perchatki") || !strcmp(OBJ_DESCR(objects[uarmg->otyp]), "nurli qo'lqoplar")))) range -= 2;
 		pline("%s hits you!", The(fltxt));
@@ -9116,10 +9172,10 @@ register int osym, dmgtyp;
 		    if (uarmf && OBJ_DESCR(objects[uarmf->otyp]) && ( !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "fleecy boots") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "flis sapogi") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "tozalamoq chizilmasin") ) ) {skip++; break;
 			}
 
-		    if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_WHITE_WHALE_HATH_COME) {skip++; break;
+		    if (powerfulimplants() && uimplant && uimplant->oartifact == ART_WHITE_WHALE_HATH_COME) {skip++; break;
 			}
 
-		    if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_DUBAI_TOWER_BREAK) {skip++; break;
+		    if (powerfulimplants() && uimplant && uimplant->oartifact == ART_DUBAI_TOWER_BREAK) {skip++; break;
 			}
 
 		    if (uarmf && uarmf->oartifact == ART_VERA_S_FREEZER) {skip++; break;
@@ -9422,7 +9478,8 @@ int damage, tell;
 }
 
 void
-makewish()
+makewish(magicalwish)
+boolean magicalwish; /* for the evil variant, because of Unnethack's nonmagical pseudo"wishes" --Amy */
 {
 	char buf[BUFSZ];
 #ifdef LIVELOGFILE
@@ -9430,9 +9487,16 @@ makewish()
 #endif
 	struct obj *otmp, nothing;
 	int tries = 0;
+	boolean magical_object;
 
 	nothing = zeroobj;  /* lint suppression; only its address matters */
 	if (flags.verbose) { (Role_if(PM_PIRATE) || Role_if(PM_KORSAIR) || (uwep && uwep->oartifact == ART_ARRRRRR_MATEY) ) ? pline("Shiver me timbers! Ye may wish for an object!") : You("may wish for an object."); }
+
+	if (!magicalwish) pline("This is the evil variant though, you can only wish for nonmagical crap.");
+	/* In Unnethack you'd even be disallowed to wish for an object class that has potentially magical ones...
+	 * But I decided that it's fair game, after all wishing for a random scroll may well give you a scroll of amnesia
+	 * or other useless one. If you decide to gamble like that, oh well, I'm allowing it. --Amy */
+
 retry:
 	getlin("For what do you wish?", buf);
 #ifdef LIVELOGFILE
@@ -9470,8 +9534,19 @@ retry:
 	    return;
 	}
 
+	/* check if wishing for magical objects is allowed; code stolen from unnethack */
+	magical_object = (otmp && (otmp->oartifact || objects[otmp->otyp].oc_magic));
+	if (!magicalwish && magical_object) {
+		verbalize("Har har har, this object is magical and therefore you cannot wish for it, bitch.");
+		if (otmp->oartifact) artifact_exists(otmp, ONAME(otmp), FALSE);
+		obfree(otmp, (struct obj *) 0);
+		otmp = &zeroobj;
+		goto retry;
+	}
+
 	/* KMH, conduct */
-	u.uconduct.wishes++;
+	/* Amy edit: nonmagical pseudo"wishes" aren't really wishes and therefore don't break the conduct. */
+	if (magicalwish) u.uconduct.wishes++;
 
 	/* Livelog patch */
 #ifdef LIVELOGFILE
@@ -9653,7 +9728,7 @@ othergreateffect()
 		if (acqo->otyp == MAGIC_MARKER) acqo->recharged = 1;
 	    while(acqo->otyp == WAN_WISHING || acqo->otyp == WAN_POLYMORPH || acqo->otyp == WAN_MUTATION || acqo->otyp == WAN_ACQUIREMENT)
 		acqo->otyp = rnd_class(WAN_LIGHT, WAN_PSYBEAM);
-	    while (acqo->otyp == SCR_WISHING || acqo->otyp == SCR_RESURRECTION || acqo->otyp == SCR_ACQUIREMENT || acqo->otyp == SCR_ENTHRONIZATION || acqo->otyp == SCR_FOUNTAIN_BUILDING || acqo->otyp == SCR_SINKING || acqo->otyp == SCR_WC)
+	    while (acqo->otyp == SCR_WISHING || acqo->otyp == SCR_RESURRECTION || acqo->otyp == SCR_ACQUIREMENT || acqo->otyp == SCR_ENTHRONIZATION || acqo->otyp == SCR_MAKE_PENTAGRAM || acqo->otyp == SCR_FOUNTAIN_BUILDING || acqo->otyp == SCR_SINKING || acqo->otyp == SCR_WC)
 		acqo->otyp = rnd_class(SCR_CREATE_MONSTER, SCR_BLANK_PAPER);
 
 		pline("Something appeared on the ground just beneath you!");

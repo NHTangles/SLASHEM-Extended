@@ -530,7 +530,7 @@ struct obj *box;
 
 			if (uimplant && uimplant->oartifact == ART_SCROOGE_S_MONEY_MEMORY) {
 				otmp->quan *= 2;
-				if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER)) otmp->quan *= 2;
+				if (powerfulimplants()) otmp->quan *= 2;
 			}
 
 			if (uarmh && uarmh->oartifact == ART_GOLD_STANDARD) otmp->quan *= 2;
@@ -613,7 +613,7 @@ int
 usefulitem() /* select the ID number of an item that may be useful for the player --Amy */
 {
 
-	switch (rnd(150)) {
+	switch (rnd(151)) {
 
 		case 1:
 			return ATHAME;
@@ -844,6 +844,8 @@ usefulitem() /* select the ID number of an item that may be useful for the playe
 			return WAN_SOLAR_BEAM;
 		case 150:
 			return SPE_REPAIR_WEAPON;
+		case 151:
+			return SCR_MAKE_PENTAGRAM;
 		default: /* fail safe */
 			return POT_FULL_HEALING;
 	}
@@ -854,7 +856,7 @@ int
 nastymusableitem() /* select the ID number of an item that the monsters may use against you --Amy */
 {
 
-	switch (rnd(179)) {
+	switch (rnd(206)) {
 
 		case 1:
 		case 2:
@@ -1124,6 +1126,60 @@ nastymusableitem() /* select the ID number of an item that the monsters may use 
 			return POT_DIMNESS;
 		case 179:
 			return SCR_OFFLEVEL_ITEM;
+		case 180:
+			return SCR_NASTY_CURSE;
+		case 181:
+			return WAN_FLEECY_TERRAIN;
+		case 182:
+			return WAN_DISENCHANTMENT;
+		case 183:
+			return WAN_CONTAMINATION;
+		case 184:
+			return WAN_TREMBLING;
+		case 185:
+			return SCR_GRAVE;
+		case 186:
+			return SCR_TUNNELS;
+		case 187:
+			return SCR_FARMING;
+		case 188:
+			return SCR_MOUNTAINS;
+		case 189:
+			return SCR_DIVING;
+		case 190:
+			return SCR_CRYSTALLIZATION;
+		case 191:
+			return SCR_MOORLAND;
+		case 192:
+			return SCR_URINE;
+		case 193:
+			return SCR_QUICKSAND;
+		case 194:
+			return SCR_STYX;
+		case 195:
+			return SCR_SNOW;
+		case 196:
+			return SCR_ASH;
+		case 197:
+			return SCR_SAND;
+		case 198:
+			return SCR_PAVING;
+		case 199:
+			return SCR_HIGHWAY;
+		case 200:
+			return SCR_GRASSLAND;
+		case 201:
+			return SCR_NETHER;
+		case 202:
+			return SCR_STALACTITE;
+		case 203:
+			return SCR_CRYPT;
+		case 204:
+			return SCR_BUBBLE_BOBBLE;
+		case 205:
+			return SCR_RAIN;
+		case 206:
+			return WAN_CHAOS_TERRAIN;
 		default: /* fail safe */
 			return WAN_CREATE_HORDE;
 	}
@@ -1765,6 +1821,7 @@ int artif;
 		if (otmp->otyp == INKA_STINGER || otmp->otyp == SPIKE) otmp->quan += rnd(30);
 		if (otmp->otyp == SHURIKEN) otmp->quan += rnd(100);
 		if (otmp->otyp == TAR_STAR) otmp->quan += rnd(100);
+		if (otmp->otyp == WINDMILL_BLADE) otmp->quan += rnd(100);
 		if (otmp->otyp == NEEDLE) otmp->quan += rnd(100);
 		if (otmp->otyp == SOFT_STAR) otmp->quan += rnd(200);
 		if (otmp->otyp == CALTROP) otmp->quan += rnd(400);
@@ -1780,6 +1837,10 @@ int artif;
 			otmp->quan += rnd(otmp->quan);
 			if (!rn2(50)) otmp->quan += rnz(otmp->quan + 3);
 			if (!rn2(50)) otmp->quan += rnz( rnd( (otmp->quan * 2) + 3) );
+		}
+
+		if (Race_if(PM_JAVA) && (otmp->otyp == JAVELIN || otmp->otyp == ASBESTOS_JAVELIN || otmp->otyp == SPIRIT_THROWER || otmp->otyp == COURSE_JAVELIN || otmp->otyp == TORPEDO || otmp->otyp == HOMING_TORPEDO)) {
+			otmp->quan += rnd(5);
 		}
 
 		if (uarmc && uarmc->oartifact == ART_ARABELLA_S_WEAPON_STORAGE && (is_ammo(otmp) || is_missile(otmp) || is_grenade(otmp)) ) otmp->quan *= 2;
@@ -2169,6 +2230,14 @@ int artif;
 					blessorcurse_on_creation(otmp, 4);
 					break;
 				}
+		case ENERGY_SAP:
+			{
+				int tryct2 = 0;
+				do otmp->corpsenm = rndmonnum();
+				while(is_human(&mons[otmp->corpsenm]) && !rn2(5) && tryct2++ < 30);
+				blessorcurse_on_creation(otmp, 4);
+				break;
+			}
 		case BELL_OF_OPENING:
 			otmp->spe = (ishaxor ? 60 : 30);
 					break;
@@ -2252,7 +2321,26 @@ int artif;
 
 		break;
 	case IMPLANT_CLASS:
-		blessorcurse_on_creation(otmp, 5);
+
+		if(objects[otmp->otyp].oc_charged) {
+		    blessorcurse_on_creation(otmp, 5);
+		    if(rn2(10)) {
+			if(rn2(10) && bcsign(otmp))
+			    otmp->spe = bcsign(otmp) * rne(Race_if(PM_LISTENER) ? 3 : 2);
+			else otmp->spe = rn2(2) ? rne(Race_if(PM_LISTENER) ? 3 : 2) : -rne(Race_if(PM_LISTENER) ? 3 : 2);
+		    }
+		    /* make useless +0 implants much less common */
+		    if (otmp->spe == 0) {
+/*                     otmp->spe = rn2(4) - rn2(3); */
+		       /* wow! +8! */
+		       if (rn2(3)) otmp->spe = rne(2)+1;
+		       else otmp->spe = -(rne(2)+1);
+		    }
+			if (Race_if(PM_LISTENER) && !Hallucination && (rnd(30) > ACURR(A_INT)) && (abs(otmp->spe) > 3 || (abs(otmp->spe) == 3 && rn2(2) ) || (abs(otmp->spe) == 2 && !rn2(3) )|| (abs(otmp->spe) == 1 && !rn2(5) ) ) ) pline("Precognition: made object with enchantment %d", abs(otmp->spe));
+
+		    /* negative implants are usually cursed */
+		    if (otmp->spe < 0 && rn2(5)) curse_on_creation(otmp);
+		} else blessorcurse_on_creation(otmp, 5);
 
 		if (!rn2(1200)) otmp->oerodeproof = 1;
 		if (!rn2(1200)) {
@@ -2850,6 +2938,7 @@ register struct obj *otmp;
 	if (!rn2(isfriday ? 50 : 100)) otmp->stckcurse = 1;
 
 	if (u.stickycursechance && (u.stickycursechance >= rnd(100)) ) otmp->stckcurse = 1;
+	if (youmonst.data && Role_if(PM_CELLAR_CHILD) && !rn2(10)) otmp->stckcurse = 1;
 
 	if (otmp->cursed) {
 		if (!otmp->hvycurse && !rn2(5)) otmp->hvycurse = 1;
@@ -2905,6 +2994,7 @@ register struct obj *otmp;
 	if (!rn2(isfriday ? 50 : 100)) otmp->stckcurse = 1;
 
 	if (u.stickycursechance && (u.stickycursechance >= rnd(100)) ) otmp->stckcurse = 1;
+	if (youmonst.data && Role_if(PM_CELLAR_CHILD) && !rn2(10)) otmp->stckcurse = 1;
 
 	if (otmp->cursed) { /* should not happen, but oh well */
 		if (!otmp->hvycurse && !rn2(5)) otmp->hvycurse = 1;
@@ -2919,7 +3009,11 @@ register struct obj *otmp;
 
 		if (u.heavycursechance && (u.heavycursechance >= rnd(100)) ) otmp->hvycurse = 1;
 
-		if (!rn2(10) && uarmc && OBJ_DESCR(objects[uarmc->otyp]) && (!strcmp(OBJ_DESCR(objects[uarmc->otyp]), "cursed called cloak") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "proklyatyy pod nazvaniyem plashch") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "la'natlangan la'nati") )) otmp->hvycurse = 1;
+		if (!u.dungeongrowthhack) {
+
+			if (!rn2(10) && uarmc && OBJ_DESCR(objects[uarmc->otyp]) && (!strcmp(OBJ_DESCR(objects[uarmc->otyp]), "cursed called cloak") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "proklyatyy pod nazvaniyem plashch") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "la'natlangan la'nati") )) otmp->hvycurse = 1;
+
+		}
 
 		if (!otmp->hvycurse && !otmp->prmcurse && !(otmp->morgcurse || otmp->evilcurse || otmp->bbrcurse) && !rn2(Role_if(PM_CAMPERSTRIKER) ? 5 : isfriday ? 15 : 25)) otmp->hvycurse = 1;
 
@@ -3012,8 +3106,12 @@ register int chance;
 	if(!rn2(chance)) {
 	    if(!rn2(isfriday ? 2 : 3)) {
 		curse_on_creation(otmp);
-	    } else if (!rn2(5) && uarmc && OBJ_DESCR(objects[uarmc->otyp]) && (!strcmp(OBJ_DESCR(objects[uarmc->otyp]), "cursed called cloak") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "proklyatyy pod nazvaniyem plashch") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "la'natlangan la'nati") )) {
-		curse_on_creation(otmp);
+	    } else if (!u.dungeongrowthhack) {
+			if (!rn2(5) && uarmc && OBJ_DESCR(objects[uarmc->otyp]) && (!strcmp(OBJ_DESCR(objects[uarmc->otyp]), "cursed called cloak") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "proklyatyy pod nazvaniyem plashch") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "la'natlangan la'nati") )) {
+				curse_on_creation(otmp);
+			} else {
+				bless(otmp);
+			}
 	    } else {
 		bless(otmp);
 	    }
@@ -3341,6 +3439,10 @@ register struct obj *otmp;
 	int otyp = otmp->otyp;
 	int omat = objects[otyp].oc_material;
 
+	if (uamul && uamul->oartifact == ART_AUTOMATICALLY_METAL) {
+		return (!(is_metallic(otmp)));
+	}
+
 	if (objects[otyp].oc_oprop == FIRE_RES || otyp == WAN_FIRE)
 		return FALSE;
 
@@ -3356,6 +3458,10 @@ is_rottable(otmp)
 register struct obj *otmp;
 {
 	int otyp = otmp->otyp;
+
+	if (uamul && uamul->oartifact == ART_AUTOMATICALLY_METAL) {
+		return (!(is_metallic(otmp)));
+	}
 
 	if (objects[otyp].oc_material == INKA) return TRUE;
 	if (objects[otyp].oc_material == ARCANIUM) return TRUE;

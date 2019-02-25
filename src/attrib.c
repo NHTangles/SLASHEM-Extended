@@ -147,6 +147,17 @@ const struct innate {
 			{	30, &(Antileveling), "", "" },
 		     {	 0, 0, 0, 0 } },
 
+	gro_abil[] = { {	 1, &(HFast), "", "" },
+			{   4, &(Unidentify), "", "" },
+			{	8, &(MojibakeEffect), "", "" },
+			{	12, &(Dropcurses), "", "" },
+		     {  15, &(HStealth), "stealthy", "noisy" },
+			{	16, &(RecurringDisenchant), "", "" },
+			{	20, &(TimerunBug), "", "" },
+			{	25, &(FastMetabolismEffect), "", "" },
+			{	30, &(Goldspells), "", "" },
+		     {	 0, 0, 0, 0 } },
+
 	mah_abil[] = { {   1, &(HAggravate_monster), "", "" },
 			{	1, &(HAntimagic), "", "" },
 			{   7, &(HSee_invisible), "your vision sharpen", "your vision blurring" },
@@ -185,6 +196,16 @@ const struct innate {
 		     {   0, 0, 0, 0 } },
 
 	erd_abil[] = { {   1, &(HFree_action), "", "" },
+		     {   0, 0, 0, 0 } },
+
+	cel_abil[] = { {   1, &(BlueSpells), "", "" },
+			{	5, &(DamageMeterBug), "", "" },
+			{	9, &(RangCallEffect), "", "" },
+			{	14, &(CrapEffect), "", "" },
+			{	18, &(PokelieEffect), "", "" },
+			{	22, &(ExplodingDiceEffect), "", "" },
+			{	26, &(AutopilotEffect), "", "" },
+			{	30, &(InterfaceScrewed), "", "" },
 		     {   0, 0, 0, 0 } },
 
 	blo_abil[] = { {   1, &(HWarning), "", "" },
@@ -565,6 +586,23 @@ const struct innate {
 			{  10, &(HFire_resistance), "cool", "warmer" },
 			{   0, 0, 0, 0 } },
 
+	azt_abil[] = { { 1, &(HFast), "", "" },
+			{   0, 0, 0, 0 } },
+
+	jav_abil[] = { { 1, &(HFire_resistance), "", "" },
+		     {	 1, &(HPoison_resistance), "", "" },
+		     {	 1, &(HSick_resistance), "", "" },
+			{   0, 0, 0, 0 } },
+
+	chi_abil[] = { { 1, &(HFull_nutrient), "", "" },
+			{   0, 0, 0, 0 } },
+
+	gru_abil[] = { { 1, &(HFast), "", "" },
+			{   0, 0, 0, 0 } },
+
+	vik_abil[] = { { 1, &(HSwimming), "", "" },
+			{   0, 0, 0, 0 } },
+
 	slm_abil[] = { { 1, &(HCold_resistance), "", "" },
 		     {	 1, &(HStone_resistance), "", "" },
 		     {	 1, &(HShock_resistance), "", "" },
@@ -648,6 +686,54 @@ const struct innate {
 		     {  15, &(HSwimming), "ready to swim","afraid of the water" },
 		     {   0, 0, 0, 0 } },
 
+	fre_abil[] = { {   2, &(DifficultyIncreased), "", "" },
+		     {	 5, &(Dehydration), "", "" },
+		     {	 9, &(BlackNgWalls), "", "" },
+		     {	 14, &(FeelerGauges), "", "" },
+		     {	 18, &(AutocursingEquipment), "", "" },
+		     {	 22, &(DischargeBug), "", "" },
+		     {	 25, &(HardModeEffect), "", "" },
+		     {	 29, &(Superscroller), "", "" },
+		     {   0, 0, 0, 0 } },
+
+	uri_abil[] = { {   3, &(BigscriptEffect), "", "" },
+		     {	 6, &(TurnLimitation), "", "" },
+		     {	 8, &(TimerunBug), "", "" },
+		     {	 12, &(PlayerCannotTrainSkills), "", "" },
+		     {	 13, &(MonnoiseEffect), "", "" },
+		     {	 17, &(SanityTrebleEffect), "", "" },
+		     {	 20, &(PermacurseEffect), "", "" },
+		     {	 24, &(CovetousnessBug), "", "" },
+		     {   0, 0, 0, 0 } },
+
+	ind_abil[] = { {   4, &(Dropcurses), "", "" },
+		     {	 7, &(verisiertEffect), "", "" },
+		     {	 10, &(DangerousTerrains), "", "" },
+		     {	 15, &(GushlushEffect), "", "" },
+		     {	 19, &(SimeoutBug), "", "" },
+		     {	 23, &(WingYellowChange), "", "" },
+		     {	 27, &(LowEffects), "", "" },
+		     {	 30, &(EngravingDoesntWork), "", "" },
+		     {   0, 0, 0, 0 } },
+
+	col_abil[] = { {   2, &(YellowSpells), "", "" },
+		     {	 4, &(VioletSpells), "", "" },
+		     {	 6, &(WhiteSpells), "", "" },
+		     {	 8, &(BrownSpells), "", "" },
+		     {	 10, &(CompleteGraySpells), "", "" },
+		     {	 11, &(BlueSpells), "", "" },
+		     {	 13, &(GreenSpells), "", "" },
+		     {	 15, &(MetalSpells), "", "" },
+		     {	 17, &(SilverSpells), "", "" },
+		     {	 19, &(PlatinumSpells), "", "" },
+		     {	 20, &(RedSpells), "", "" },
+		     {	 22, &(OrangeSpells), "", "" },
+		     {	 24, &(BlackSpells), "", "" },
+		     {	 26, &(CyanSpells), "", "" },
+		     {	 28, &(BrightCyanSpells), "", "" },
+		     {	 30, &(PinkSpells), "", "" },
+		     {   0, 0, 0, 0 } },
+
 	nor_abil[] = { {   1, &(HCold_resistance), "", "" },
 		     {	 15, &(HShock_resistance), "shock resistant", "less shock resistant" },
 		     {   0, 0, 0, 0 } },
@@ -707,6 +793,27 @@ const struct innate {
 		     {   0, 0, 0, 0 } },
 
 	nym_abil[] = { {  1, &(HTeleportation), "", "" },
+		     {   0, 0, 0, 0 } },
+
+	met_abil[] = { {  1, &(HFire_resistance), "", "" },
+		     {   1, &(HCold_resistance), "", "" },
+		     {  1, &(HShock_resistance), "", "" },
+		     {  1, &(HSleep_resistance), "", "" },
+		     {  1, &(HDisint_resistance), "", "" },
+		     {  1, &(HPoison_resistance), "", "" },
+		     {  1, &(HDrain_resistance), "", "" },
+		     {  1, &(HSick_resistance), "", "" },
+		     {  1, &(HAntimagic), "", "" },
+		     {  1, &(HAcid_resistance), "", "" },
+		     {  1, &(HStone_resistance), "", "" },
+		     {  1, &(HDeath_resistance), "", "" },
+		     {  1, &(HPsi_resist), "", "" },
+		     {   0, 0, 0, 0 } },
+
+	umb_abil[] = { {  1, &(HConf_resist), "", "" },
+		     {   0, 0, 0, 0 } },
+
+	qua_abil[] = { {  1, &(HTeleportation), "", "" },
 		     {   0, 0, 0, 0 } },
 
 	dvp_abil[] = { {  1, &(HTechnicality), "", "" },
@@ -921,9 +1028,10 @@ STATIC_DCL void postadjabil(long *);
 
 /* adjust an attribute; return TRUE if change is made, FALSE otherwise */
 boolean
-adjattrib(ndx, incr, msgflg)
+adjattrib(ndx, incr, msgflg, canresist)
 	int	ndx, incr;
 	int	msgflg;
+	boolean	canresist;
 
 /* 3 => no message at all and no development message, 2 => no message at all (but development can be given),
  * 1 => no message except encumber, zero => message, and negative => conditional (msg if change made) */
@@ -938,7 +1046,7 @@ adjattrib(ndx, incr, msgflg)
 	}
 
 	/* Mithril items can sometimes prevent the player's stats from decreasing --Amy */
-	if (incr < 0) {
+	if (incr < 0 && canresist) {
 
 		int mithrilitemcount = 0;
 
@@ -1030,12 +1138,13 @@ gainstr(otmp, incr)
 	    if(ABASE(A_STR) < 18) num = (rn2(4) ? 1 : rnd(6) );
 	    else if (ABASE(A_STR) < STR18(85)) num = rnd(10);
 	}
-	(void) adjattrib(A_STR, (otmp && otmp->cursed) ? -num : num, TRUE);
+	(void) adjattrib(A_STR, (otmp && otmp->cursed) ? -num : num, TRUE, TRUE);
 }
 
 void
-losestr(num)	/* may kill you; cause may be poison or monster like 'a' */
+losestr(num, canresist)	/* may kill you; cause may be poison or monster like 'a' */
 	register int num;
+	boolean canresist;
 {
 	int ustr = ABASE(A_STR) - num;
 
@@ -1058,7 +1167,7 @@ losestr(num)	/* may kill you; cause may be poison or monster like 'a' */
 		u.uhpmax -= hpreduce;
 	    }
 	}
-	(void) adjattrib(A_STR, -num, TRUE);
+	(void) adjattrib(A_STR, -num, TRUE, canresist);
 }
 
 void
@@ -1198,6 +1307,8 @@ boolean	inc_or_dec;
 		 *
 		 *	Note: *YES* ACURR is the right one to use.
 		 */
+
+		if (inc_or_dec && Race_if(PM_MAGYAR)) return;
 
 		if (inc_or_dec && Race_if(PM_TRAINER) && rn2(10)) return;
 
@@ -1419,7 +1530,7 @@ exerchk()
 #ifdef DEBUG
 		pline("exerchk: changing %d.", i);
 #endif
-		if(adjattrib(i, mod_val, -1)) {
+		if(adjattrib(i, mod_val, -1, TRUE)) {
 #ifdef DEBUG
 		    pline("exerchk: changed %d.", i);
 #endif
@@ -1586,6 +1697,7 @@ int oldlevel, newlevel;
 	case PM_BLOODSEEKER:      abil = blo_abil;	break;
 	case PM_DQ_SLIME:      abil = sli_abil;	break;
 	case PM_ERDRICK:      abil = erd_abil;	break;
+	case PM_CELLAR_CHILD:      abil = cel_abil;	break;
 	case PM_SLAVE_MASTER:      abil = sla_abil;	break;
 	case PM_SUPERMARKET_CASHIER:      abil = sup_abil;	break;
 	case PM_BARD:           abil = brd_abil;	break;
@@ -1665,6 +1777,7 @@ int oldlevel, newlevel;
 	case PM_GOLDMINER:		abil = gol_abil;	break;
 	case PM_VALKYRIE:       abil = val_abil;	break;
 	case PM_OFFICER:       abil = off_abil;	break;
+	case PM_GRENADONIN:       abil = gro_abil;	break;
 	case PM_WIZARD:         abil = wiz_abil;	break;
 	case PM_ZOOKEEPER:         abil = zoo_abil;	break;
 	case PM_YEOMAN:		abil = yeo_abil;	break;
@@ -1673,6 +1786,11 @@ int oldlevel, newlevel;
 	}
 
 	switch (Race_switch) {
+	case PM_AZTPOK:	rabil = azt_abil;	break;
+	case PM_JAVA:	rabil = jav_abil;	break;
+	case PM_CHIQUAI:	rabil = chi_abil;	break;
+	case PM_GREURO:	rabil = gru_abil;	break;
+	case PM_VIKING:	rabil = vik_abil;	break;
 	case PM_DOPPELGANGER:	rabil = dop_abil;	break;
 	case PM_DWARF:		rabil = dwa_abil;	break;
 	case PM_PLAYER_SLIME:		rabil = slm_abil;	break;
@@ -1713,6 +1831,9 @@ int oldlevel, newlevel;
 	case PM_EXPERT:            rabil = exp_abil;	break;
 	case PM_GIGANT:            rabil = gig_abil;	break;
 	case PM_NYMPH:            rabil = nym_abil;	break;
+	case PM_METAL:            rabil = met_abil;	break;
+	case PM_PLAYER_HULK:            rabil = umb_abil;	break;
+	case PM_PLAYER_MECHANIC:            rabil = qua_abil;	break;
 	case PM_PLAYER_DOLGSMAN:            rabil = dlg_abil;	break;
 	case PM_ROHIRRIM:            rabil = roh_abil;	break;
 	case PM_THUNDERLORD:            rabil = thu_abil;	break;
@@ -1745,6 +1866,10 @@ int oldlevel, newlevel;
 	case PM_HUMANOID_DEVIL:	rabil = dev_abil;	break;
 	case PM_ANCIPITAL:	rabil = anc_abil;	break;
 	case PM_TURTLE:	rabil = tur_abil;	break;
+	case PM_FRENDIAN:	rabil = fre_abil;	break;
+	case PM_COLORATOR:	rabil = col_abil;	break;
+	case PM_URIAN:	rabil = uri_abil;	break;
+	case PM_INDRAENIAN:	rabil = ind_abil;	break;
 	case PM_HUMAN:
 	case PM_VAMPIRE:
 	default:                rabil = 0;		break;
@@ -1949,6 +2074,7 @@ int x;
 		if (uarmf && uarmf->oartifact == ART_GNOMISH_BOOBS) tmp += 3;
 		if (uarmf && uarmf->oartifact == ART_EVELINE_S_LOVELIES) tmp += 3;
 		if (uarmf && uarmf->oartifact == ART_STEFANJE_S_PROBLEM) tmp += 2;
+		if (uarmf && uarmf->oartifact == ART_YVONNE_S_MODEL_AMBITION) tmp += 2;
 		if (uarmf && uarmf->oartifact == ART_KOKYO_NO_PAFOMANSUU_OKU) tmp += (5 + uarmf->spe);
 		if (uarmf && uarmf->oartifact == ART_EVA_S_INCONSPICUOUS_CHARM) tmp += (uarmf->spe);
 		if (uarmf && uarmf->oartifact == ART_SOLVEJG_S_STINKING_SLIPPER) tmp += 5;
@@ -1990,8 +2116,8 @@ int x;
 		if (uarmf && uarmf->oartifact == ART_JULIA_S_REAL_LOVE) tmp += 3;
 		if (uarmf && uarmf->oartifact == ART_ELIANE_S_COMBAT_SNEAKERS) tmp += 20;
 		if (uarmf && uarmf->oartifact == ART_ALISEH_S_RED_COLOR) tmp += 10;
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_THAI_S_EROTIC_BITCH_FU) tmp += 5;
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_WONDERLOVELINESS) tmp += 5;
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_THAI_S_EROTIC_BITCH_FU) tmp += 5;
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_WONDERLOVELINESS) tmp += 5;
 		if (uimplant && uimplant->oartifact == ART_WONDERLOVELINESS) tmp += 5;
 		if (uwep && uwep->oartifact == ART_CERULEAN_SMASH) tmp += 10;
 
@@ -2064,7 +2190,7 @@ int x;
 		if (x == A_INT && uwep && uwep->oartifact == ART_DIKKIN_S_FAVORITE_SPELL) tmp += 8;
 		if (uarmh && OBJ_DESCR(objects[uarmh->otyp]) && ( !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "thinking helmet") || !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "myslyashchiy shlem") || !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "fikr dubulg'a") )) tmp += 1;
 		if (x == A_INT && uwep && uwep->oartifact == ART_RIP_STRATEGY) tmp += 5;
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_THAI_S_EROTIC_BITCH_FU) tmp += 5;
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_THAI_S_EROTIC_BITCH_FU) tmp += 5;
 		if (uarmh && uarmh->otyp == HELM_OF_BRILLIANCE) tmp += uarmh->spe;
 		if (uarmh && uarmh->oartifact == ART_YOU_DON_T_KNOW_SHIT) tmp -= 3;
 
@@ -2092,7 +2218,7 @@ int x;
 		if (uarmf && uarmf->oartifact == ART_OUT_OF_TIME) tmp += 5;
 		if (uarmh && OBJ_DESCR(objects[uarmh->otyp]) && ( !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "thinking helmet") || !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "myslyashchiy shlem") || !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "fikr dubulg'a") )) tmp += 1;
 		if (uwep && uwep->oartifact == ART_RAFSCHAR_S_SUPERWEAPON) tmp += 1;
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_THAI_S_EROTIC_BITCH_FU) tmp += 10;
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_THAI_S_EROTIC_BITCH_FU) tmp += 10;
 
 		if (FemaleTrapThai) tmp -= 2;
 		if (uarmc && uarmc->oartifact == ART_ROKKO_CHAN_S_SUIT && tmp > 12) tmp = 12;
@@ -2171,10 +2297,10 @@ register int n;
 	}
 
 	if (uimplant && uimplant->oartifact == ART_SINFUL_REPENTER && n > 0) {
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER)) n *= 5;
+		if (powerfulimplants()) n *= 5;
 		else n *= 2;
 
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER)) u.alignlim += 1;
+		if (powerfulimplants()) u.alignlim += 1;
 	}
 
 	register int newalign = u.ualign.record + n;
@@ -2197,6 +2323,28 @@ register int n;
 	if (n < 0 && u.ualign.record < 0 && !rn2(500)) {
 		if (Race_if(PM_IMMUNIZER)) poisoned("The alignment", rn2(A_MAX), "immunized alignment failure", 30);
 		else punishx();
+	}
+
+	if (n < 0 && Race_if(PM_CHIQUAI) && program_state.something_worth_saving) {
+		badeffect();
+	}
+
+	if (n < 0 && Race_if(PM_JAPS)) {
+		losehp(rnd(-n), "violating the bushido", KILLED_BY);
+		if (!rn2(20)) {
+			if (u.uhpmax < 2) {
+				u.youaredead = 1;
+				pline("Due to all of your conduct violations, the gods declare you dead. Goodbye.");
+				killer_format = KILLED_BY;
+				killer = "constantly violating the holy conduct";
+				done(DIED);
+				u.youaredead = 0;
+
+			} else {
+				u.uhpmax--;
+			}
+			if (u.uhp > u.uhpmax) u.uhp = u.uhpmax;
+		}
 	}
 
 }
@@ -2300,6 +2448,31 @@ boolean displaymessage;
 	else if (u.ualign.type == A_LAWFUL && (targetattr == A_STR || targetattr == A_INT)) {
 		if (targetattr == A_STR && actuallimit >= 18 && actuallimit < STR18(100)) actuallimit += 10;
 		else actuallimit++;
+	}
+
+	if (StatDecreaseBug || u.uprops[STAT_DECREASE_BUG].extrinsic || have_statdecreasestone()) {
+		if (targetattr == A_STR && actuallimit >= STR19(25)) actuallimit = STR18(70);
+		else if (targetattr == A_STR && actuallimit >= STR19(24)) actuallimit = STR18(60);
+		else if (targetattr == A_STR && actuallimit >= STR19(23)) actuallimit = STR18(50);
+		else if (targetattr == A_STR && actuallimit >= STR19(22)) actuallimit = STR18(40);
+		else if (targetattr == A_STR && actuallimit >= STR19(21)) actuallimit = STR18(30);
+		else if (targetattr == A_STR && actuallimit >= STR19(20)) actuallimit = STR18(20);
+		else if (targetattr == A_STR && actuallimit >= STR19(19)) actuallimit = STR18(10);
+		else if (targetattr == A_STR && actuallimit >= STR18(100)) actuallimit = 18;
+		else if (targetattr == A_STR && actuallimit >= STR18(90)) actuallimit = 17;
+		else if (targetattr == A_STR && actuallimit >= STR18(80)) actuallimit = 16;
+		else if (targetattr == A_STR && actuallimit >= STR18(70)) actuallimit = 15;
+		else if (targetattr == A_STR && actuallimit >= STR18(60)) actuallimit = 14;
+		else if (targetattr == A_STR && actuallimit >= STR18(50)) actuallimit = 13;
+		else if (targetattr == A_STR && actuallimit >= STR18(40)) actuallimit = 12;
+		else if (targetattr == A_STR && actuallimit >= STR18(30)) actuallimit = 11;
+		else if (targetattr == A_STR && actuallimit >= STR18(20)) actuallimit = 10;
+		else if (targetattr == A_STR && actuallimit >= STR18(10)) actuallimit = 9;
+		else if (targetattr == A_STR && actuallimit >= 18) actuallimit = 8;
+		else {
+			actuallimit -= 10;
+			if (actuallimit < 3) actuallimit = 3;
+		}
 	}
 
 	/* set up the value to compare it to */

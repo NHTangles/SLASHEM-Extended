@@ -66,6 +66,441 @@ int incr;
     set_itimeout(which, itimeout_incr(*which, incr));
 }
 
+boolean
+is_musable(otmp)
+struct obj *otmp;
+{
+	if (!otmp) {
+		impossible("is_musable called with no object");
+		return FALSE;
+	}
+
+	switch (otmp->otyp) {
+
+		case SCR_TELEPORTATION:
+		case POT_HEALING:
+		case POT_CURE_WOUNDS:
+		case POT_CURE_SERIOUS_WOUNDS:
+		case POT_CURE_CRITICAL_WOUNDS:
+		case POT_EXTRA_HEALING:
+		case WAN_DIGGING:
+		case WAN_CREATE_MONSTER:
+		case SCR_CREATE_MONSTER:
+		case SCR_CREATE_VICTIM:
+		case WAN_TELEPORTATION:
+		case POT_FULL_HEALING:
+		case WAN_HEALING:
+		case WAN_EXTRA_HEALING:
+		case WAN_CREATE_HORDE:
+		case POT_VAMPIRE_BLOOD:
+		case POT_BLOOD:
+		case WAN_FULL_HEALING:
+		case SCR_TELE_LEVEL:
+		case WAN_TELE_LEVEL:
+		case SCR_ROOT_PASSWORD_DETECTION:
+		case RIN_TIMELY_BACKUP:
+		case SCR_SUMMON_UNDEAD:
+		case WAN_SUMMON_UNDEAD:
+		case SCR_HEALING:
+		case SCR_EXTRA_HEALING:
+		case SCR_POWER_HEALING:
+		case SCR_WARPING:
+		case WAN_DEATH:
+		case WAN_SLEEP:
+		case WAN_FIREBALL:
+		case WAN_FIRE:
+		case WAN_COLD:
+		case WAN_LIGHTNING:
+		case WAN_MAGIC_MISSILE:
+		case WAN_STRIKING:
+		case SCR_FIRE:
+		case POT_PARALYSIS:
+		case POT_BLINDNESS:
+		case POT_CONFUSION:
+		case POT_SLEEPING:
+		case POT_ACID:
+		case FROST_HORN:
+		case FIRE_HORN:
+		case TEMPEST_HORN:
+		case WAN_DRAINING:
+		case WAN_INCREASE_MAX_HITPOINTS:
+		case WAN_REDUCE_MAX_HITPOINTS:
+		case SCR_EARTH:
+		case POT_AMNESIA:
+		case WAN_CANCELLATION:
+		case POT_CYANIDE:
+		case POT_RADIUM:
+		case WAN_ACID:
+		case SCR_TRAP_CREATION:
+		case SCR_CREATE_TRAP:
+		case WAN_TRAP_CREATION:
+		case SCR_FLOOD:
+		case SCR_LAVA:
+		case SCR_GRAVE:
+		case SCR_TUNNELS:
+		case SCR_FARMING:
+		case SCR_MOUNTAINS:
+		case SCR_DIVING:
+		case SCR_CRYSTALLIZATION:
+		case SCR_MOORLAND:
+		case SCR_URINE:
+		case SCR_QUICKSAND:
+		case SCR_STYX:
+		case SCR_SNOW:
+		case SCR_ASH:
+		case SCR_SAND:
+		case SCR_PAVING:
+		case SCR_HIGHWAY:
+		case SCR_GRASSLAND:
+		case SCR_NETHER:
+		case SCR_STALACTITE:
+		case SCR_CRYPT:
+		case SCR_BUBBLE_BOBBLE:
+		case SCR_RAIN:
+		case SCR_GROWTH:
+		case SCR_ICE:
+		case SCR_CLOUDS:
+		case SCR_BARRHING:
+		case WAN_SOLAR_BEAM:
+		case WAN_POISON:
+		case SCR_LOCKOUT:
+		case WAN_BANISHMENT:
+		case POT_HALLUCINATION:
+		case POT_ICE:
+		case POT_STUNNING:
+		case POT_NUMBNESS:
+		case POT_URINE:
+		case POT_CANCELLATION:
+		case POT_SLIME:
+		case SCR_BAD_EFFECT:
+		case WAN_BAD_EFFECT:
+		case POT_FIRE:
+		case POT_DIMNESS:
+		case POT_SANITY:
+		case WAN_SLOW_MONSTER:
+		case WAN_FEAR:
+		case POT_FEAR:
+		case POT_GAIN_LEVEL:
+		case WAN_GAIN_LEVEL:
+		case WAN_MAKE_INVISIBLE:
+		case POT_INVISIBILITY:
+		case WAN_POLYMORPH:
+		case WAN_MUTATION:
+		case POT_SPEED:
+		case WAN_SPEED_MONSTER:
+		case POT_POLYMORPH:
+		case POT_MUTATION:
+		case WAN_CLONE_MONSTER:
+		case SCR_DESTROY_ARMOR:
+		case SCR_DESTROY_WEAPON:
+		case SCR_STONING:
+		case SCR_AMNESIA:
+		case BAG_OF_TRICKS:
+		case WAN_STONING:
+		case WAN_DISINTEGRATION:
+		case WAN_PARALYSIS:
+		case WAN_CURSE_ITEMS:
+		case WAN_AMNESIA:
+		case WAN_LEVITATION:
+		case WAN_PSYBEAM:
+		case WAN_HYPER_BEAM:
+		case WAN_BAD_LUCK:
+		case WAN_REMOVE_RESISTANCE:
+		case WAN_CORROSION:
+		case WAN_CHAOS_TERRAIN:
+		case WAN_FLEECY_TERRAIN:
+		case WAN_DISENCHANTMENT:
+		case WAN_TREMBLING:
+		case WAN_CONTAMINATION:
+		case WAN_STARVATION:
+		case WAN_CONFUSION:
+		case WAN_SLIMING:
+		case WAN_LYCANTHROPY:
+		case WAN_FUMBLING:
+		case WAN_PUNISHMENT:
+		case SCR_PUNISHMENT:
+		case WAN_MAKE_VISIBLE:
+		case SCR_SUMMON_BOSS:
+		case SCR_WOUNDS:
+		case SCR_BULLSHIT:
+		case SCR_CHAOS_TERRAIN:
+		case SCR_NASTINESS:
+		case SCR_NASTY_CURSE:
+		case SCR_DEMONOLOGY:
+		case SCR_ELEMENTALISM:
+		case SCR_GIRLINESS:
+		case WAN_SUMMON_SEXY_GIRL:
+		case WAN_DISINTEGRATION_BEAM:
+		case SCR_GROUP_SUMMONING:
+		case WAN_CHROMATIC_BEAM:
+		case WAN_STUN_MONSTER:
+		case SCR_SUMMON_GHOST:
+		case SCR_MEGALOAD:
+		case SCR_VILENESS:
+		case SCR_HYBRIDIZATION:
+		case SCR_BAD_EQUIPMENT:
+		case SCR_ENRAGE:
+		case WAN_TIDAL_WAVE:
+		case SCR_ANTIMATTER:
+		case SCR_SUMMON_ELM:
+		case WAN_SUMMON_ELM:
+		case SCR_RELOCATION:
+		case WAN_DRAIN_MANA:
+		case WAN_FINGER_BENDING:
+		case SCR_IMMOBILITY:
+		case WAN_IMMOBILITY:
+		case WAN_INSANITY:
+		case WAN_BAD_EQUIPMENT:
+		case SCR_FLOODING:
+		case SCR_EGOISM:
+		case WAN_EGOISM:
+		case SCR_RUMOR:
+		case SCR_MESSAGE:
+		case SCR_SIN:
+		case WAN_SIN:
+		case WAN_INERTIA:
+		case WAN_TIME:
+		case WAN_DESLEXIFICATION:
+		case WAN_INFERNO:
+		case WAN_ICE_BEAM:
+		case WAN_THUNDER:
+		case WAN_SLUDGE:
+		case WAN_TOXIC:
+		case WAN_NETHER_BEAM:
+		case WAN_AURORA_BEAM:
+		case WAN_GRAVITY_BEAM:
+		case WAN_CHLOROFORM:
+		case WAN_DREAM_EATER:
+		case WAN_BUBBLEBEAM:
+		case WAN_GOOD_NIGHT:
+		case SCR_RAGNAROK:
+		case SCR_OFFLEVEL_ITEM:
+		case WAN_HASTE_MONSTER:
+			return TRUE;
+		default:
+			return FALSE;
+
+	}
+
+	return FALSE;
+
+}
+
+boolean
+ismusablenumber(number)
+int number;
+{
+	switch (number) {
+
+		case SCR_TELEPORTATION:
+		case POT_HEALING:
+		case POT_CURE_WOUNDS:
+		case POT_CURE_SERIOUS_WOUNDS:
+		case POT_CURE_CRITICAL_WOUNDS:
+		case POT_EXTRA_HEALING:
+		case WAN_DIGGING:
+		case WAN_CREATE_MONSTER:
+		case SCR_CREATE_MONSTER:
+		case SCR_CREATE_VICTIM:
+		case WAN_TELEPORTATION:
+		case POT_FULL_HEALING:
+		case WAN_HEALING:
+		case WAN_EXTRA_HEALING:
+		case WAN_CREATE_HORDE:
+		case POT_VAMPIRE_BLOOD:
+		case POT_BLOOD:
+		case WAN_FULL_HEALING:
+		case SCR_TELE_LEVEL:
+		case WAN_TELE_LEVEL:
+		case SCR_ROOT_PASSWORD_DETECTION:
+		case RIN_TIMELY_BACKUP:
+		case SCR_SUMMON_UNDEAD:
+		case WAN_SUMMON_UNDEAD:
+		case SCR_HEALING:
+		case SCR_EXTRA_HEALING:
+		case SCR_POWER_HEALING:
+		case SCR_WARPING:
+		case WAN_DEATH:
+		case WAN_SLEEP:
+		case WAN_FIREBALL:
+		case WAN_FIRE:
+		case WAN_COLD:
+		case WAN_LIGHTNING:
+		case WAN_MAGIC_MISSILE:
+		case WAN_STRIKING:
+		case SCR_FIRE:
+		case POT_PARALYSIS:
+		case POT_BLINDNESS:
+		case POT_CONFUSION:
+		case POT_SLEEPING:
+		case POT_ACID:
+		case FROST_HORN:
+		case FIRE_HORN:
+		case TEMPEST_HORN:
+		case WAN_DRAINING:
+		case WAN_INCREASE_MAX_HITPOINTS:
+		case WAN_REDUCE_MAX_HITPOINTS:
+		case SCR_EARTH:
+		case POT_AMNESIA:
+		case WAN_CANCELLATION:
+		case POT_CYANIDE:
+		case POT_RADIUM:
+		case WAN_ACID:
+		case SCR_TRAP_CREATION:
+		case SCR_CREATE_TRAP:
+		case WAN_TRAP_CREATION:
+		case SCR_FLOOD:
+		case SCR_LAVA:
+		case SCR_GRAVE:
+		case SCR_TUNNELS:
+		case SCR_FARMING:
+		case SCR_MOUNTAINS:
+		case SCR_DIVING:
+		case SCR_CRYSTALLIZATION:
+		case SCR_MOORLAND:
+		case SCR_URINE:
+		case SCR_QUICKSAND:
+		case SCR_STYX:
+		case SCR_SNOW:
+		case SCR_ASH:
+		case SCR_SAND:
+		case SCR_PAVING:
+		case SCR_HIGHWAY:
+		case SCR_GRASSLAND:
+		case SCR_NETHER:
+		case SCR_STALACTITE:
+		case SCR_CRYPT:
+		case SCR_BUBBLE_BOBBLE:
+		case SCR_RAIN:
+		case SCR_GROWTH:
+		case SCR_ICE:
+		case SCR_CLOUDS:
+		case SCR_BARRHING:
+		case WAN_SOLAR_BEAM:
+		case WAN_POISON:
+		case SCR_LOCKOUT:
+		case WAN_BANISHMENT:
+		case POT_HALLUCINATION:
+		case POT_ICE:
+		case POT_STUNNING:
+		case POT_NUMBNESS:
+		case POT_URINE:
+		case POT_CANCELLATION:
+		case POT_SLIME:
+		case SCR_BAD_EFFECT:
+		case WAN_BAD_EFFECT:
+		case POT_FIRE:
+		case POT_DIMNESS:
+		case POT_SANITY:
+		case WAN_SLOW_MONSTER:
+		case WAN_FEAR:
+		case POT_FEAR:
+		case POT_GAIN_LEVEL:
+		case WAN_GAIN_LEVEL:
+		case WAN_MAKE_INVISIBLE:
+		case POT_INVISIBILITY:
+		case WAN_POLYMORPH:
+		case WAN_MUTATION:
+		case POT_SPEED:
+		case WAN_SPEED_MONSTER:
+		case POT_POLYMORPH:
+		case POT_MUTATION:
+		case WAN_CLONE_MONSTER:
+		case SCR_DESTROY_ARMOR:
+		case SCR_DESTROY_WEAPON:
+		case SCR_STONING:
+		case SCR_AMNESIA:
+		case BAG_OF_TRICKS:
+		case WAN_STONING:
+		case WAN_DISINTEGRATION:
+		case WAN_PARALYSIS:
+		case WAN_CURSE_ITEMS:
+		case WAN_AMNESIA:
+		case WAN_LEVITATION:
+		case WAN_PSYBEAM:
+		case WAN_HYPER_BEAM:
+		case WAN_BAD_LUCK:
+		case WAN_REMOVE_RESISTANCE:
+		case WAN_DISENCHANTMENT:
+		case WAN_TREMBLING:
+		case WAN_CONTAMINATION:
+		case WAN_CORROSION:
+		case WAN_CHAOS_TERRAIN:
+		case WAN_FLEECY_TERRAIN:
+		case WAN_STARVATION:
+		case WAN_CONFUSION:
+		case WAN_SLIMING:
+		case WAN_LYCANTHROPY:
+		case WAN_FUMBLING:
+		case WAN_PUNISHMENT:
+		case SCR_PUNISHMENT:
+		case WAN_MAKE_VISIBLE:
+		case SCR_SUMMON_BOSS:
+		case SCR_WOUNDS:
+		case SCR_BULLSHIT:
+		case SCR_CHAOS_TERRAIN:
+		case SCR_NASTINESS:
+		case SCR_NASTY_CURSE:
+		case SCR_DEMONOLOGY:
+		case SCR_ELEMENTALISM:
+		case SCR_GIRLINESS:
+		case WAN_SUMMON_SEXY_GIRL:
+		case WAN_DISINTEGRATION_BEAM:
+		case SCR_GROUP_SUMMONING:
+		case WAN_CHROMATIC_BEAM:
+		case WAN_STUN_MONSTER:
+		case SCR_SUMMON_GHOST:
+		case SCR_MEGALOAD:
+		case SCR_VILENESS:
+		case SCR_HYBRIDIZATION:
+		case SCR_BAD_EQUIPMENT:
+		case SCR_ENRAGE:
+		case WAN_TIDAL_WAVE:
+		case SCR_ANTIMATTER:
+		case SCR_SUMMON_ELM:
+		case WAN_SUMMON_ELM:
+		case SCR_RELOCATION:
+		case WAN_DRAIN_MANA:
+		case WAN_FINGER_BENDING:
+		case SCR_IMMOBILITY:
+		case WAN_IMMOBILITY:
+		case WAN_INSANITY:
+		case WAN_BAD_EQUIPMENT:
+		case SCR_FLOODING:
+		case SCR_EGOISM:
+		case WAN_EGOISM:
+		case SCR_RUMOR:
+		case SCR_MESSAGE:
+		case SCR_SIN:
+		case WAN_SIN:
+		case WAN_INERTIA:
+		case WAN_TIME:
+		case WAN_DESLEXIFICATION:
+		case WAN_INFERNO:
+		case WAN_ICE_BEAM:
+		case WAN_THUNDER:
+		case WAN_SLUDGE:
+		case WAN_TOXIC:
+		case WAN_NETHER_BEAM:
+		case WAN_AURORA_BEAM:
+		case WAN_GRAVITY_BEAM:
+		case WAN_CHLOROFORM:
+		case WAN_DREAM_EATER:
+		case WAN_BUBBLEBEAM:
+		case WAN_GOOD_NIGHT:
+		case SCR_RAGNAROK:
+		case SCR_OFFLEVEL_ITEM:
+		case WAN_HASTE_MONSTER:
+			return TRUE;
+		default:
+			return FALSE;
+
+	}
+
+	return FALSE;
+
+}
+
 void
 make_confused(xtime,talk)
 long xtime;
@@ -529,6 +964,87 @@ playerwearshighheels()
 }
 
 boolean
+automore_active()
+{
+	if (AutomaticMorePrompt) {
+		u.automorefuckthisshit = TRUE;
+		return TRUE;
+	}
+	else {
+		u.automorefuckthisshit = FALSE;
+		return FALSE;
+	}
+}
+
+boolean
+ishighheeled(otmp)
+struct obj *otmp;
+{
+	if (!otmp) return FALSE;
+
+	if ((otmp)->otyp == WEDGE_SANDALS || (otmp)->otyp == BUM_BUM_BOOTS || (otmp)->otyp == FEMININE_PUMPS || (otmp)->otyp == LEATHER_PEEP_TOES || (otmp)->otyp == HIPPIE_HEELS || (otmp)->otyp == SELF_WILLED_HEELS || (otmp)->otyp == PET_STOMPING_PLATFORM_BOOTS || (otmp)->otyp == SENTIENT_HIGH_HEELED_SHOES || (otmp)->otyp == ATSUZOKO_BOOTS || (otmp)->otyp == COMBAT_STILETTOS || (otmp)->otyp == HIGH_STILETTOS || (otmp)->otyp == HIGH_HEELED_SKIERS || (otmp)->otyp == UNFAIR_STILETTOS || (otmp)->otyp == COVETED_BOOTS || (otmp)->otyp == SKY_HIGH_HEELS || (otmp)->otyp == RED_SPELL_HEELS || (otmp)->otyp == VIOLET_BEAUTY_HEELS || (otmp)->otyp == AUTOSCOOTER_HEELS || (otmp)->otyp == DESTRUCTIVE_HEELS || (otmp)->otyp == SINFUL_HEELS || (otmp)->otyp == LONG_POINTY_HEELS || (otmp)->otyp == KILLER_HEELS || (otmp)->otyp == HIGH_SCORING_HEELS) return TRUE;
+
+	if (OBJ_DESCR(objects[otmp->otyp])) {
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "irregular boots") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "neregulyarnyye sapogi") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "tartibsizlik chizilmasin")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "wedge boots") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "klin sapogi") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "xanjar chizilmasin")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "winter stilettos") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "zima stilety") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "qish sandal chizilmasin")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "clunky heels") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "neuklyuzhiye kabluki") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "qisqa ko'chirish to'piqlarni")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "ankle boots") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "botil'ony") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "bilagi zo'r chizilmasin")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "block-heeled boots") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "blok kablukakh sapogi") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "blok-o'tish chizilmasin")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "beautiful heels") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "krasivyye kabluki") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "chiroyli ko'chirish to'piqlarni")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "erotic boots") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "eroticheskiye sapogi") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "erotik chizilmasin")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "sputa boots") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "mokrota sapogi") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "sputa chizilmasin")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "femmy boots") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "zhenskiye sapogi") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "nazokat etigi")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "sharp-edged sandals") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "ostrokonechnyye sandalii") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "o'tkir xanjarday kavushlari")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "ski heels") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "lyzhnyye kabluki") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "chang'i poshnalar")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "fetish heels") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "idol kabluki") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "but poshnalar")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "velvet pumps") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "barkhatnyye nasosy") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "duxoba nasoslar")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "buffalo boots") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "buyvolovyye sapogi") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "qo'tos botlarni")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "lolita boots") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "botinki s lolitoy") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "bosh ketish etigi")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "weapon light boots") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "legkiye botinki dlya oruzhiya") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "qurol engil etigi")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "radiant heels") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "izluchayushchiye kabluki") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "yorqin ko'chirish to'piqlarni")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "sexy heels") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "seksual'nyye kabluki") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "belgila sexy ko'chirish to'piqlarni")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[otmp->otyp]), "stroking boots") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "poglazhivaya sapogi") || !strcmp(OBJ_DESCR(objects[otmp->otyp]), "etiklar silay")) return TRUE;
+	}
+
+	return FALSE;
+
+}
+
+boolean
+ishighheeledb(number)
+int number;
+{
+	if (number == WEDGE_SANDALS || number == BUM_BUM_BOOTS || number == FEMININE_PUMPS || number == LEATHER_PEEP_TOES || number == HIPPIE_HEELS || number == SELF_WILLED_HEELS || number == PET_STOMPING_PLATFORM_BOOTS || number == SENTIENT_HIGH_HEELED_SHOES || number == ATSUZOKO_BOOTS || number == COMBAT_STILETTOS || number == HIGH_STILETTOS || number == HIGH_HEELED_SKIERS || number == UNFAIR_STILETTOS || number == COVETED_BOOTS || number == SKY_HIGH_HEELS || number == RED_SPELL_HEELS || number == VIOLET_BEAUTY_HEELS || number == AUTOSCOOTER_HEELS || number == DESTRUCTIVE_HEELS || number == SINFUL_HEELS || number == LONG_POINTY_HEELS || number == KILLER_HEELS || number == HIGH_SCORING_HEELS) return TRUE;
+
+	if (OBJ_DESCR(objects[number])) {
+		if (!strcmp(OBJ_DESCR(objects[number]), "irregular boots") || !strcmp(OBJ_DESCR(objects[number]), "neregulyarnyye sapogi") || !strcmp(OBJ_DESCR(objects[number]), "tartibsizlik chizilmasin")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "wedge boots") || !strcmp(OBJ_DESCR(objects[number]), "klin sapogi") || !strcmp(OBJ_DESCR(objects[number]), "xanjar chizilmasin")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "winter stilettos") || !strcmp(OBJ_DESCR(objects[number]), "zima stilety") || !strcmp(OBJ_DESCR(objects[number]), "qish sandal chizilmasin")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "clunky heels") || !strcmp(OBJ_DESCR(objects[number]), "neuklyuzhiye kabluki") || !strcmp(OBJ_DESCR(objects[number]), "qisqa ko'chirish to'piqlarni")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "ankle boots") || !strcmp(OBJ_DESCR(objects[number]), "botil'ony") || !strcmp(OBJ_DESCR(objects[number]), "bilagi zo'r chizilmasin")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "block-heeled boots") || !strcmp(OBJ_DESCR(objects[number]), "blok kablukakh sapogi") || !strcmp(OBJ_DESCR(objects[number]), "blok-o'tish chizilmasin")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "beautiful heels") || !strcmp(OBJ_DESCR(objects[number]), "krasivyye kabluki") || !strcmp(OBJ_DESCR(objects[number]), "chiroyli ko'chirish to'piqlarni")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "erotic boots") || !strcmp(OBJ_DESCR(objects[number]), "eroticheskiye sapogi") || !strcmp(OBJ_DESCR(objects[number]), "erotik chizilmasin")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "sputa boots") || !strcmp(OBJ_DESCR(objects[number]), "mokrota sapogi") || !strcmp(OBJ_DESCR(objects[number]), "sputa chizilmasin")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "femmy boots") || !strcmp(OBJ_DESCR(objects[number]), "zhenskiye sapogi") || !strcmp(OBJ_DESCR(objects[number]), "nazokat etigi")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "sharp-edged sandals") || !strcmp(OBJ_DESCR(objects[number]), "ostrokonechnyye sandalii") || !strcmp(OBJ_DESCR(objects[number]), "o'tkir xanjarday kavushlari")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "ski heels") || !strcmp(OBJ_DESCR(objects[number]), "lyzhnyye kabluki") || !strcmp(OBJ_DESCR(objects[number]), "chang'i poshnalar")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "fetish heels") || !strcmp(OBJ_DESCR(objects[number]), "idol kabluki") || !strcmp(OBJ_DESCR(objects[number]), "but poshnalar")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "velvet pumps") || !strcmp(OBJ_DESCR(objects[number]), "barkhatnyye nasosy") || !strcmp(OBJ_DESCR(objects[number]), "duxoba nasoslar")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "buffalo boots") || !strcmp(OBJ_DESCR(objects[number]), "buyvolovyye sapogi") || !strcmp(OBJ_DESCR(objects[number]), "qo'tos botlarni")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "lolita boots") || !strcmp(OBJ_DESCR(objects[number]), "botinki s lolitoy") || !strcmp(OBJ_DESCR(objects[number]), "bosh ketish etigi")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "weapon light boots") || !strcmp(OBJ_DESCR(objects[number]), "legkiye botinki dlya oruzhiya") || !strcmp(OBJ_DESCR(objects[number]), "qurol engil etigi")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "radiant heels") || !strcmp(OBJ_DESCR(objects[number]), "izluchayushchiye kabluki") || !strcmp(OBJ_DESCR(objects[number]), "yorqin ko'chirish to'piqlarni")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "sexy heels") || !strcmp(OBJ_DESCR(objects[number]), "seksual'nyye kabluki") || !strcmp(OBJ_DESCR(objects[number]), "belgila sexy ko'chirish to'piqlarni")) return TRUE;
+		if (!strcmp(OBJ_DESCR(objects[number]), "stroking boots") || !strcmp(OBJ_DESCR(objects[number]), "poglazhivaya sapogi") || !strcmp(OBJ_DESCR(objects[number]), "etiklar silay")) return TRUE;
+	}
+
+	return FALSE;
+
+}
+
+boolean
 playerwearssexyflats()
 {
 
@@ -673,6 +1189,7 @@ playerextrinsicaggravatemon()
 	if (u.heavyaggravation || EAggravate_monster) return TRUE;
 	if (RngePunishment) return TRUE;
 	if (FemaleTrapSolvejg) return TRUE;
+	if (Race_if(PM_HC_ALIEN) && !flags.female) return TRUE;
 
 	if (uarmc && OBJ_DESCR(objects[uarmc->otyp]) && (!strcmp(OBJ_DESCR(objects[uarmc->otyp]), "avenger cloak") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "mstitel' plashch") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "qasoskor plash") )) return TRUE;
 
@@ -1051,6 +1568,7 @@ badeffect()
 		if ((otmp = mksobj(LOADSTONE, TRUE, FALSE)) != (struct obj *)0) {
 		You_feel("burdened");
 		otmp->quan = 1;
+		otmp->owt = weight(otmp);
 		if (pickup_object(otmp, 1, FALSE, TRUE) <= 0) {
 		obj_extract_self(otmp);
 		place_object(otmp, u.ux, u.uy);
@@ -1081,11 +1599,11 @@ badeffect()
 		case 114:
 		case 115:
 		case 116:
-		{coord mm;   
-		mm.x = u.ux;   
-		mm.y = u.uy;   
+		{coord mm;
+		mm.x = u.ux;
+		mm.y = u.uy;
 		pline("Undead creatures are called forth from the grave!");   
-		mkundead(&mm, FALSE, 0);   
+		mkundead(&mm, FALSE, 0, FALSE);
 		}
 		break;
 
@@ -1167,7 +1685,7 @@ badeffect()
 		case 141:
 			if (!Antimagic || !rn2(StrongAntimagic ? 20 : 5)) {
 			    You("suddenly feel weaker!");
-			    losestr(rnz(4));
+			    losestr(rnz(4), TRUE);
 			    if (u.uhp < 1) {
 				u.youaredead = 1;
 				u.uhp = 0;
@@ -1724,7 +2242,7 @@ badeffect()
 
 		case 334:
 
-			if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_TIMEAGE_OF_REALMS) break;
+			if (powerfulimplants() && uimplant && uimplant->oartifact == ART_TIMEAGE_OF_REALMS) break;
 		{
 		int dmg;
 		dmg = (rnd(10) + rnd( (monster_difficulty() * 2) + 1));
@@ -2014,7 +2532,7 @@ badeffect()
 		case 413:
 		case 414:
 
-			bad_equipment();
+			bad_equipment(0);
 
 		break;
 
@@ -2117,16 +2635,16 @@ boolean guaranteed;
 				case 3:
 				case 4:
 				case 5:
-					(void) makemon(mkclass(S_DRAGON,0), x, y, MM_ADJACENTOK|MM_ANGRY);
+					(void) makemon(mkclass(S_DRAGON,0), x, y, rn2(10) ? MM_ADJACENTOK|MM_ANGRY : MM_ADJACENTOK|MM_ANGRY|MM_FRENZIED);
 					break;
 				case 6:
 				case 7:
 				case 8:
-					(void) makemon(mkclass(S_GIANT,0), x, y, MM_ADJACENTOK|MM_ANGRY);
+					(void) makemon(mkclass(S_GIANT,0), x, y, rn2(10) ? MM_ADJACENTOK|MM_ANGRY : MM_ADJACENTOK|MM_ANGRY|MM_FRENZIED);
 					break;
 				case 9:
 				case 10:
-					(void) makemon(mkclass(S_DEMON,0), x, y, MM_ADJACENTOK|MM_ANGRY);
+					(void) makemon(mkclass(S_DEMON,0), x, y, rn2(10) ? MM_ADJACENTOK|MM_ANGRY : MM_ADJACENTOK|MM_ANGRY|MM_FRENZIED);
 					break;
 			}
 
@@ -2796,9 +3314,14 @@ register struct monst *mtmp;
 }
 
 /* Make a negatively enchanted or cursed item and automatically equip it for the player --Amy
- * Please ensure that this effect isn't too common, because it might also result in good stuff */
+ * Please ensure that this effect isn't too common, because it might also result in good stuff
+ * eqflags controls a couple things:
+ * 0 = item's enchantment is always negative
+ * 1 = item's enchantment is randomized
+ */
 void
-bad_equipment()
+bad_equipment(eqflags)
+int eqflags;
 {
 	register struct obj *otmp;
 	int objtyp = 0;
@@ -2823,7 +3346,7 @@ newbadtry:
 	otmp = mksobj(objtyp, TRUE, FALSE);
 	if (!otmp) return; /* fail safe */
 
-	if (objects[otmp->otyp].oc_charged) {
+	if (objects[otmp->otyp].oc_charged && eqflags == 0) {
 		if (otmp->spe > 0) otmp->spe *= -1;
 		if (otmp->spe == 0) otmp->spe = -rne(Race_if(PM_LISTENER) ? 3 : 2);
 	}
@@ -2842,7 +3365,7 @@ newbadtry:
 				if (uswapwep) uswapwepgone();
 				if (uarms) remove_worn_item(uarms, TRUE);
 			}
-			if (!uwep) setuwep(otmp, FALSE);
+			if (!uwep) setuwep(otmp, FALSE, TRUE);
 			if (otmp) curse(otmp);
 		}
 
@@ -3162,6 +3685,8 @@ int snamount;
 
 	if (Race_if(PM_HUMANOID_ANGEL) || youmonst.data->mlet == S_ANGEL) snamount *= 2;
 
+	if (YouGetLotsOfSanity) snamount *= rnd(20);
+
 	u.usanity += snamount;
 	if (snamount < 10) pline("Your sanity increases.");
 	else if (snamount < 100) pline("Your sanity increases greatly.");
@@ -3271,15 +3796,15 @@ dodrink()
 		}
 		pline(Hallucination ? "Urgh - that tastes like cactus juice with full-length thorns in it!" : "Ecch - that must have been poisonous!");
 		if(!Poison_resistance) {
-		    losestr(rnd(4));
+		    losestr(rnd(4), TRUE);
 		    losehp(rnd(15), "quaffing from a poisoned well", KILLED_BY);
 		} else You("resist the effects but still don't feel so good.");
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_STR, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_DEX, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CON, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_INT, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_WIS, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CHA, -rnd(2), FALSE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_STR, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_DEX, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CON, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_INT, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_WIS, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CHA, -rnd(2), FALSE, TRUE);
 		poisoned("The water", rn2(A_MAX), "poisoned well", 30);
 		if (!rn2(20)) {
 			levl[u.ux][u.uy].typ = CORR;
@@ -3458,7 +3983,7 @@ dodrink()
 		if (evilfriday) evilragnarok(TRUE,level_difficulty());
 	    } else if (!strcmp(potion_descr, "deadweight") && !rn2(10)) {
 		pline("Some sinister force causes you to wear an item!");
-		bad_equipment();
+		bad_equipment(0);
 	    } else if (!strcmp(potion_descr, "present") && !rn2(10)) {
 		pline("Some sinister force causes you to wear an artifact!");
 		bad_artifact();
@@ -3467,7 +3992,7 @@ dodrink()
 		bad_equipment_heel();
 	    } else if (!strcmp(potion_descr, "gloss") && !rn2(10)) {
 		You("apply the lovely lip gloss that was contained inside.");
-		(void) adjattrib(A_CHA, 1, FALSE);
+		(void) adjattrib(A_CHA, 1, FALSE, TRUE);
 	    } else if (!strcmp(potion_descr, "glam")) {
 		if (u.nailpolish < 10) {
 			u.nailpolish++;
@@ -3476,7 +4001,7 @@ dodrink()
 	    }
 	}
 
-	if ((CurseuseEffect || u.uprops[CURSEUSE_EFFECT].extrinsic || have_curseusestone()) && otmp && otmp->otyp != CANDELABRUM_OF_INVOCATION && otmp->otyp != SPE_BOOK_OF_THE_DEAD && otmp->otyp != BELL_OF_OPENING) curse(otmp);
+	if (CurseAsYouUse && otmp && otmp->otyp != CANDELABRUM_OF_INVOCATION && otmp->otyp != SPE_BOOK_OF_THE_DEAD && otmp->otyp != BELL_OF_OPENING) curse(otmp);
 	return dopotion(otmp);
 }
 
@@ -3592,7 +4117,7 @@ peffects(otmp)
 		    pline("Ulch!  This makes you feel mediocre!");
 
 		    if (evilfriday) {
-			adjattrib(rn2(A_MAX), -1, 0);
+			adjattrib(rn2(A_MAX), -1, 0, TRUE);
 		    }
 
 		    break;
@@ -3759,7 +4284,7 @@ peffects(otmp)
 		}
 		else {
 			make_sick(Sick ? Sick/2L + 1L : 10, "urine potion", TRUE, SICK_VOMITABLE);
-			losestr(rnd(10));
+			losestr(rnd(10), TRUE);
 			losehp(d(otmp->cursed ? 4 : 2, otmp->blessed ? 8 : 16), "drinking poisonous urine", KILLED_BY);
 
 		}
@@ -3884,14 +4409,14 @@ peffects(otmp)
 			unkn++;
 			You("have an uneasy feeling...");
 			if (evilfriday) {
-				adjattrib(A_WIS, -1, 0);
-				adjattrib(A_INT, -1, 0);
+				adjattrib(A_WIS, -1, 0, TRUE);
+				adjattrib(A_INT, -1, 0, TRUE);
 			}
 			exercise(A_WIS, FALSE);
 		} else {
 			if (otmp->blessed) {
-				if (!rn2(3)) (void) adjattrib(A_INT, 1, FALSE);
-				if (!rn2(3)) (void) adjattrib(A_WIS, 1, FALSE);
+				if (!rn2(3)) (void) adjattrib(A_INT, 1, FALSE, TRUE);
+				if (!rn2(3)) (void) adjattrib(A_WIS, 1, FALSE, TRUE);
 			}
 			You_feel("self-knowledgeable...");
 			display_nhwindow(WIN_MESSAGE, FALSE);
@@ -4161,7 +4686,7 @@ peffects(otmp)
 		int time;
 		if (otmp->cursed) {
 			pline("Ulch! What in the hell was that???");
-			adjattrib(A_CON,-1,-1);
+			adjattrib(A_CON,-1,-1, TRUE);
 			break;
 		}
 		You_feel("super-powerful!");
@@ -4177,7 +4702,7 @@ peffects(otmp)
 		pline("%s", fauxmessage());
 		if (!rn2(3)) pline("%s", fauxmessage());
 		if (otmp->cursed || !rn2(3)) {
-			adjattrib(A_CON,-1,-1);
+			adjattrib(A_CON,-1,-1, TRUE);
 		}
 		morehungry(rn1(50, 101));
 		make_confused(HConfusion + d(10,2),FALSE);
@@ -4421,19 +4946,19 @@ peffects(otmp)
 
 	case POT_BENEFICIAL_EFFECT:
 
-		switch (rnd(12)) {
+		switch (rnd(13)) {
 
 			case 1:
 				if (ABASE(A_CHA) < ATTRMAX(A_CHA)) {
 					You_feel("more %s!", flags.female ? "pretty" : "attractive");
-					(void) adjattrib(A_CHA, 1, FALSE);
+					(void) adjattrib(A_CHA, 1, FALSE, TRUE);
 					break;
 				}
 			break;
 			case 2:
 				if (ABASE(A_CON) < ATTRMAX(A_CON)) {
 					You_feel("tougher!");
-					(void) adjattrib(A_CON, 1, FALSE);
+					(void) adjattrib(A_CON, 1, FALSE, TRUE);
 					}
 			break;
 			case 3:
@@ -4480,7 +5005,7 @@ peffects(otmp)
 			break;
 			case 10:
 				if (ABASE(A_INT) < ATTRMAX(A_INT)) {
-					(void) adjattrib(A_INT, 1, FALSE);
+					(void) adjattrib(A_INT, 1, FALSE, TRUE);
 				}
 				else {
 					pline(Hallucination ? "Eek, that tasted like rotten oversalted seaweed!" : "For some reason, that tasted bland.");
@@ -4498,6 +5023,10 @@ peffects(otmp)
 					Your("%s get new energy.", makeplural(body_part(LEG)));
 				}
 				incr_itimeout(&HFast, rn1(1000, 1000));
+			break;
+			case 13:
+				You_feel("ethereal.");
+				incr_itimeout(&HPasses_walls, rn1(10, 50));
 			break;
 
 		}
@@ -4606,7 +5135,7 @@ peffects(otmp)
 			if (!Fixed_abil && !Race_if(PM_SUSTAINER) && !(uarms && uarms->oartifact == ART_SYSTEMATIC_CHAOS) && !(uarms && uarms->oartifact == ART_BONUS_HOLD) && !(uamul && uamul->oartifact == ART_FIX_EVERYTHING) && !(uarmf && uarmf->oartifact == ART_ELENETTES) ) {
 			    poisontell(typ);
 			    if (!StrongPoison_resistance || !rn2(3)) {
-				(void) adjattrib(typ, Poison_resistance ? -1 : -rn1(4,3), TRUE);
+				(void) adjattrib(typ, Poison_resistance ? -1 : -rn1(4,3), TRUE, TRUE);
 			    }
 			}
 			if(!Poison_resistance) {
@@ -4704,7 +5233,7 @@ peffects(otmp)
 		if(otmp->cursed) {
 		    pline("Ulch!  That potion tasted foul!");
 		    if (evilfriday) {
-			adjattrib(rn2(A_MAX), -1, 0);
+			adjattrib(rn2(A_MAX), -1, 0, TRUE);
 		    }
 		    unkn++;
 		} else if (Fixed_abil || Race_if(PM_SUSTAINER) || (uarms && uarms->oartifact == ART_SYSTEMATIC_CHAOS) || (uarms && uarms->oartifact == ART_BONUS_HOLD) || (uamul && uamul->oartifact == ART_FIX_EVERYTHING) || (uarmf && uarmf->oartifact == ART_ELENETTES) ) {
@@ -4717,7 +5246,7 @@ peffects(otmp)
 			/* only give "your X is already as high as it can get"
 			   message on last attempt (except blessed potions) */
 			itmp = (otmp->blessed || ii == 1) ? 0 : -1;
-			if (adjattrib(i, 1, itmp) && !otmp->blessed)
+			if (adjattrib(i, 1, itmp, TRUE) && !otmp->blessed)
 			    break;
 			if (rn2(5)) break; /* now, blessed ones no longer always increase every stat --Amy */
 		    } /* but a blessed one has a chance to increase more than one stat, or increase one stat twice */
@@ -5164,7 +5693,7 @@ peffects(otmp)
 
 	case POT_CYANIDE:
 		make_sick(Sick ? Sick/2L + 1L : 20, "cyanide potion", TRUE, SICK_VOMITABLE);
-		losestr(rnd(10));
+		losestr(rnd(10), TRUE);
 		pline(Hallucination ? "This tastes a little bitter; maybe it's some sort of medicine?" : "CN(-) + HCl <==> HCN + Cl(-) ");
 			losehp(d(otmp->cursed ? 4 : 2, otmp->blessed ? 8 : 16),
 					"drinking cyanide", KILLED_BY);
@@ -5310,7 +5839,7 @@ peffects(otmp)
 		You_feel("like having your brain smashed out by a slice of lemon wrapped");
 		pline("around a large gold brick.");
 		if (otmp->cursed || !rn2(4)) {
-			adjattrib(A_INT,-1,-1);
+			adjattrib(A_INT,-1,-1, TRUE);
 		}
 		make_confused(itimeout_incr(HConfusion, d(6,7)), FALSE);	/* 6d7 is max. 42 */
 
@@ -5954,7 +6483,7 @@ register struct obj *obj;
 			     (numeyes == 1) ? "s" : "");
 		    }
 		    if (evilfriday) {
-			adjattrib(rn2(A_MAX), -1, 0);
+			adjattrib(rn2(A_MAX), -1, 0, TRUE);
 		    }
 		    break;
 		} else {
@@ -6801,7 +7330,7 @@ boolean amnesia;
 		    pre_downgrade_obj(obj, &used);
 		    drain_item(obj);
 		}
-		if (!obj->oerodeproof && !(obj->oartifact && rn2(4)) && (!rn2(2) || !(uarmf && uarmf->oartifact == ART_LUISA_S_IRRESISTIBLE_CHARM) ) && is_rustprone(obj) &&
+		if (!obj->oerodeproof && !(Race_if(PM_CHIQUAI) && rn2(4)) && !(obj->oartifact && rn2(4)) && (!rn2(2) || !(uarmf && uarmf->oartifact == ART_LUISA_S_IRRESISTIBLE_CHARM) ) && is_rustprone(obj) &&
 		    (obj->oeroded < MAX_ERODE) && !rn2(2)) {
 			pline("%s %s some%s.",
 			      Your_buf, aobjnam(obj, "rust"),
@@ -6877,7 +7406,7 @@ register struct obj *obj;
 		return 0;
 
 	if (stack_too_big(obj))
-		return 0;
+		return 1;
 
 	switch (obj->otyp)
 	{
@@ -7449,7 +7978,7 @@ dodip()
 		if (yn(qbuf) == 'y') {
 		    if (Levitation) {
 			floating_above(tmp);
-		    } else if (u.usteed && !(nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) && !is_swimmer(u.usteed->data) && !u.usteed->egotype_watersplasher &&
+		    } else if (u.usteed && !(powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) && !is_swimmer(u.usteed->data) && !u.usteed->egotype_watersplasher &&
 			    (PlayerCannotUseSkills || P_SKILL(P_RIDING) < P_BASIC) ) {
 			rider_cant_reach(); /* not skilled enough to reach */
 		    } else {
@@ -7475,7 +8004,7 @@ dodip()
 		if (yn(qbuf) == 'y') {
 		    if (Levitation) {
 			floating_above("lava");
-		    } else if (u.usteed && !(nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) && !is_swimmer(u.usteed->data) && !u.usteed->egotype_watersplasher &&
+		    } else if (u.usteed && !(powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) && !is_swimmer(u.usteed->data) && !u.usteed->egotype_watersplasher &&
 			    (PlayerCannotUseSkills || P_SKILL(P_RIDING) < P_BASIC) ) {
 			rider_cant_reach(); /* not skilled enough to reach */
 		    } else {
@@ -7674,9 +8203,9 @@ dodip()
 		else if (obj == uswapwep) was_swapwep = TRUE;
 		else if (obj == uquiver) was_quiver = TRUE;
 
-		obj = poly_obj(obj, STRANGE_OBJECT);
+		obj = poly_obj(obj, STRANGE_OBJECT, FALSE);
 
-		if (was_wep) setuwep(obj, TRUE);
+		if (was_wep) setuwep(obj, TRUE, TRUE);
 		else if (was_swapwep) setuswapwep(obj, TRUE);
 		else if (was_quiver) setuqwep(obj);
 
@@ -8123,7 +8652,7 @@ int kind;
 
 	switch (chance) {
 	case 0 : verbalize("I am in your debt.  I will grant a boon!");
-		if (!rn2(4)) makewish();
+		if (!rn2(4)) makewish(evilfriday ? FALSE : TRUE);
 		else othergreateffect();
 		mongone(mtmp);
 		break;

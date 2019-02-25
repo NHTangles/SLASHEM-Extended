@@ -383,6 +383,12 @@ struct toptenentry *tt;
   (void)fprintf(rfile, XLOG_SEP "endtime=%ld", (long)deathtime);
 #endif
 
+	/* Amy addition: unlike any other variant, your role and race can change during gameplay. This is for junethack,
+	 * where a certain competition is about ascending as many as possible starting combinations. */
+  (void)fprintf(rfile, XLOG_SEP "role0=%s", ustartrole.filecode);
+
+  (void)fprintf(rfile, XLOG_SEP "race0=%s", ustartrace.filecode);
+
 #ifdef RECORD_GENDER0
   (void)fprintf(rfile, XLOG_SEP "gender0=%s", genders[flags.initgend].filecode);
 #endif
@@ -391,6 +397,7 @@ struct toptenentry *tt;
   (void)fprintf(rfile, XLOG_SEP "align0=%s", 
           aligns[1 - u.ualignbase[A_ORIGINAL]].filecode);
 #endif
+
   fprintf(rfile, XLOG_SEP "flags=0x%lx", encodexlogflags());
 
   (void)fprintf(rfile, "\n");
@@ -1578,8 +1585,9 @@ gamemode_strcode()
 	if (flags.gmmode) sprintf(eos(string), "gmmode");
 	if (flags.supergmmode) sprintf(eos(string), "supergmmode");
 	if (flags.wonderland) sprintf(eos(string), "wonderland");
+	if (flags.zapem) sprintf(eos(string), "zapm");
 
-	if (!(flags.gehenna) && !(flags.dudley) && !(flags.gmmode) && !(flags.supergmmode) && !(flags.iwbtg) && !(flags.elmstreet) && !(flags.hippie) && !(flags.blindfox) && !(flags.uberlostsoul) && !(flags.lostsoul) && !(flags.wonderland)) sprintf(eos(string), "none");
+	if (!(flags.gehenna) && !(flags.dudley) && !(flags.gmmode) && !(flags.supergmmode) && !(flags.iwbtg) && !(flags.elmstreet) && !(flags.hippie) && !(flags.blindfox) && !(flags.uberlostsoul) && !(flags.lostsoul) && !(flags.wonderland) && !(flags.zapem)) sprintf(eos(string), "none");
 
     return (string);
 }

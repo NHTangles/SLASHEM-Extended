@@ -108,12 +108,12 @@ E void intrinsicgainorloss(void);
 
 /* ### attrib.c ### */
 
-E boolean adjattrib(int,int,int);
+E boolean adjattrib(int,int,int,BOOLEAN_P);
 E void change_luck(SCHAR_P);
 E int stone_luck(BOOLEAN_P);
 E void set_moreluck(void);
 E void gainstr(struct obj *,int);
-E void losestr(int);
+E void losestr(int,BOOLEAN_P);
 E void restore_attrib(void);
 E void exercise(int,BOOLEAN_P);
 E void exerchk(void);
@@ -582,6 +582,7 @@ E void assign_rogue_graphics(BOOLEAN_P);
 
 /* ### dungeon.c ### */
 
+E xchar dname_to_dnum(const char *);
 E void save_dungeon(int,BOOLEAN_P,BOOLEAN_P);
 E void restore_dungeon(int);
 E void insert_branch(branch *,BOOLEAN_P);
@@ -698,6 +699,7 @@ E boolean bite_monster(struct monst *mon);
 E void fix_petrification(void);
 E void consume_oeaten(struct obj *,int);
 E boolean maybe_finished_meal(BOOLEAN_P);
+E void energysap(struct obj *);
 
 /* ### end.c ### */
 
@@ -993,6 +995,7 @@ E boolean have_magicresstone(void);
 E boolean have_cursedmagicresstone(void);
 E boolean have_loadboulder(void);
 E boolean have_starlightstone(void);
+E boolean sjwcheck(int);
 
 E int numberofetheritems(void);
 E int numberofwornetheritems(void);
@@ -1101,6 +1104,10 @@ E boolean have_highlevelstone(void);
 E boolean have_spellforgettingstone(void);
 E boolean have_soundeffectstone(void);
 E boolean have_timerunstone(void);
+
+E boolean have_sanitytreblestone(void);
+E boolean have_statdecreasestone(void);
+E boolean have_simeoutstone(void);
 
 E boolean have_orangespellstone(void);
 E boolean have_violetspellstone(void);
@@ -1599,7 +1606,7 @@ E int somex(struct mkroom *);
 E int somey(struct mkroom *);
 E boolean inside_room(struct mkroom *,XCHAR_P,XCHAR_P);
 E boolean somexy(struct mkroom *,coord *);
-E void mkundead(coord *,BOOLEAN_P,int);
+E void mkundead(coord *,BOOLEAN_P,int,BOOLEAN_P);
 /*E void mkundeadboo(coord *,BOOLEAN_P,int);*/
 E void mkundeadX(coord *,BOOLEAN_P,int);
 E struct permonst *courtmon(void);
@@ -1919,6 +1926,7 @@ E int find_erotic_boots(void);
 E int find_secret_helmet(void);
 E int find_difficult_cloak(void);
 E int find_velvet_gloves(void);
+E int find_velvet_pumps(void);
 E int find_sputa_boots(void);
 E int find_formula_one_helmet(void);
 E int find_excrement_cloak(void);
@@ -2066,9 +2074,13 @@ E const char *gangscholartaunt3(void);
 E const char *gangscholartaunt_specific(void);
 E const char *gangscholartaunt_specific2(void);
 E const char *longingmessage(void);
+E const char *walscholartaunt(void);
+E const char *walscholartaunt2(void);
 
 E void gangscholarmessage(void);
+E void walscholarmessage(void);
 E void longingtrapeffect(void);
+E void demagogueparole(void);
 
 /* ### pcmain.c ### */
 
@@ -2201,6 +2213,7 @@ E int poly_gender(void);
 E void ugolemeffects(int,int);
 E int polyatwill(void);
 E boolean polyskillchance(void);
+E boolean powerfulimplants(void);
 
 /* ### potion.c ### */
 
@@ -2237,11 +2250,16 @@ E void djinni_from_bottle(struct obj *,int);
 E int upgrade_obj(struct obj *);
 E struct monst *split_mon(struct monst *,struct monst *);
 E const char *bottlename(void);
-E void bad_equipment(void);
+E void bad_equipment(int);
 E void bad_equipment_heel(void);
 E void increasesanity(int);
 E void statdrain(void);
 E void nastytrapcurse(void);
+
+E boolean is_musable(struct obj *);
+E boolean ismusablenumber(int);
+E boolean ishighheeled(struct obj *);
+E boolean ishighheeledb(int);
 
 E boolean playerwearshighheels(void);
 E boolean playerwearssexyflats(void);
@@ -2250,6 +2268,7 @@ E boolean maybeconeheels(void);
 E boolean maybeblockheels(void);
 E boolean maybewedgeheels(void);
 E boolean playerextrinsicaggravatemon(void);
+E boolean automore_active(void);
 
 /* ### pray.c ### */
 
@@ -2356,6 +2375,8 @@ E struct monst *create_particular(void);
 #endif
 E void gmmode_genesis(const char *);
 E void forget_single_object(int);
+E void wandofchaosterrain(void);
+E void wandoffleecyterrain(void);
 
 /* ### rect.c ### */
 
@@ -2449,6 +2470,7 @@ E int goodimplanteffect(struct obj *);
 E void randomnastytrapeffect(int, int);
 E int randomgoodskill(void);
 E int randomgoodcombatskill(void);
+E void getnastytrapintrinsic(void);
 
 /* ### role.c ### */
 
@@ -2484,6 +2506,7 @@ E void recursioneffect(void);
 E void greenslimetransformation(void);
 E void bindertransformation(void);
 E void changehybridization(int);
+E void demagoguerecursioneffect(void);
 
 /* ### rumors.c ### */
 
@@ -2608,6 +2631,7 @@ E void rndcurse(void);
 E void attrcurse(void);
 E void skillcaploss(void);
 E void skillcaploss_severe(void);
+E void skillcaploss_specific(int);
 
 /* ### sounds.c ### */
 
@@ -2879,7 +2903,7 @@ E void fartingweb(void);
 /* ### u_init.c ### */
 
 E void u_init(void);
-E void alter_reality(void);
+E void alter_reality(int);
 E void polyinitors(void);
 E void reinitgods(void);
 
@@ -3130,7 +3154,7 @@ E void you_unwere(BOOLEAN_P);
 
 /* ### wield.c ### */
 
-E void setuwep(struct obj *,BOOLEAN_P);
+E void setuwep(struct obj *,BOOLEAN_P,BOOLEAN_P);
 E void swaptech(void);
 E void setuqwep(struct obj *);
 E void setuswapwep(struct obj *,BOOLEAN_P);
@@ -3232,7 +3256,7 @@ E boolean obj_resists(struct obj *,int,int);
 E boolean obj_shudders(struct obj *);
 E void do_osshock(struct obj *);
 E void puton_worn_item(struct obj *);
-E struct obj *poly_obj(struct obj *, int);
+E struct obj *poly_obj(struct obj *, int, BOOLEAN_P);
 E int bhito(struct obj *,struct obj *);
 E int bhitpile(struct obj *,int (*)(OBJ_P,OBJ_P),int,int);
 E int zappable(struct obj *);
@@ -3256,7 +3280,7 @@ E boolean break_statue(struct obj *);
 E void destroy_item(int,int);
 E int destroy_mitem(struct monst *,int,int);
 E int resist(struct monst *,CHAR_P,int,int);
-E void makewish(void);
+E void makewish(BOOLEAN_P);
 E void makenonworkingwish(void);
 E void othergreateffect(void);
 /* KMH -- xchar to XCHAR_P */

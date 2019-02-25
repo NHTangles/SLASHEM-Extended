@@ -367,11 +367,11 @@ struct obj *obj;
 				if (Upolyd) u.mhmax += 10;
 				pline("Well done! Your maximum health and mana were increased to make sure you'll get even more trophies! Go for it!");
 			}
+			qt_pager(QT_VLAD);
 
 		}
 
                 achieve.get_candelabrum = 1;
-			qt_pager(QT_VLAD);
 #ifdef LIVELOGFILE
 		livelog_achieve_update();
 		livelog_report_trophy("obtained the Candelabrum of Invocation");
@@ -431,11 +431,11 @@ struct obj *obj;
 				if (Upolyd) u.mhmax += 10;
 				pline("Well done! Your maximum health and mana were increased to make sure you'll get even more trophies! Go for it!");
 			}
+			qt_pager(QT_RODNEY);
 
 		}
 
                 achieve.get_book = 1;
-			qt_pager(QT_RODNEY);
 #ifdef LIVELOGFILE
 		livelog_achieve_update();
 		livelog_report_trophy("obtained the Book of the Dead");
@@ -937,10 +937,6 @@ struct obj *obj;
 		set_artifact_intrinsic(obj, 0, W_ART);
 	}
 
-	if (u.uprops[DROPCURSES_EFFECT].extrinsic || Dropcurses || have_dropcursestone() || (uleft && uleft->oartifact == ART_ARABELLA_S_RADAR) || (uright && uright->oartifact == ART_ARABELLA_S_RADAR) ) {
-		curse(obj);
-	}
-
 	if (obj->otyp == LOADSTONE || obj->otyp == SLEEPSTONE || obj->otyp == LOADBOULDER || obj->otyp == STARLIGHTSTONE || is_nastygraystone(obj) ) {
 		curse(obj);
 	} else if (confers_luck(obj)) {
@@ -1353,6 +1349,460 @@ usingquestarti()
 	return(FALSE);
 }
 
+/* for SJW role: do you have a specific nastytrap effect at your current XL? --Amy */
+
+boolean
+sjwcheck(nastynumber)
+int nastynumber;
+{
+	int sjwlevel;
+	if (!Role_if(PM_SOCIAL_JUSTICE_WARRIOR)) return FALSE;
+
+	sjwlevel = u.ulevel + u.xtralevelmult - 1; /* because u.xtralevelmult starts at 1, not 0 */
+
+	while (sjwlevel > 59) sjwlevel -= 30; /* it goes from XL1 to 59 and then loops from 30 again */
+
+	switch (u.ulevel) {
+
+		case 1:
+			if (u.sjwL1E1 == nastynumber) return TRUE;
+			break;
+		case 2:
+			if (u.sjwL2E1 == nastynumber) return TRUE;
+			break;
+		case 3:
+			if (u.sjwL3E1 == nastynumber) return TRUE;
+			break;
+		case 4:
+			if (u.sjwL4E1 == nastynumber) return TRUE;
+			break;
+		case 5:
+			if (u.sjwL5E1 == nastynumber) return TRUE;
+			if (u.sjwL5E2 == nastynumber) return TRUE;
+			break;
+		case 6:
+			if (u.sjwL6E1 == nastynumber) return TRUE;
+			if (u.sjwL6E2 == nastynumber) return TRUE;
+			break;
+		case 7:
+			if (u.sjwL7E1 == nastynumber) return TRUE;
+			if (u.sjwL7E2 == nastynumber) return TRUE;
+			break;
+		case 8:
+			if (u.sjwL8E1 == nastynumber) return TRUE;
+			if (u.sjwL8E2 == nastynumber) return TRUE;
+			break;
+		case 9:
+			if (u.sjwL9E1 == nastynumber) return TRUE;
+			if (u.sjwL9E2 == nastynumber) return TRUE;
+			break;
+		case 10:
+			if (u.sjwL10E1 == nastynumber) return TRUE;
+			if (u.sjwL10E2 == nastynumber) return TRUE;
+			if (u.sjwL10E3 == nastynumber) return TRUE;
+			break;
+		case 11:
+			if (u.sjwL11E1 == nastynumber) return TRUE;
+			if (u.sjwL11E2 == nastynumber) return TRUE;
+			if (u.sjwL11E3 == nastynumber) return TRUE;
+			break;
+		case 12:
+			if (u.sjwL12E1 == nastynumber) return TRUE;
+			if (u.sjwL12E2 == nastynumber) return TRUE;
+			if (u.sjwL12E3 == nastynumber) return TRUE;
+			break;
+		case 13:
+			if (u.sjwL13E1 == nastynumber) return TRUE;
+			if (u.sjwL13E2 == nastynumber) return TRUE;
+			if (u.sjwL13E3 == nastynumber) return TRUE;
+			break;
+		case 14:
+			if (u.sjwL14E1 == nastynumber) return TRUE;
+			if (u.sjwL14E2 == nastynumber) return TRUE;
+			if (u.sjwL14E3 == nastynumber) return TRUE;
+			break;
+		case 15:
+			if (u.sjwL15E1 == nastynumber) return TRUE;
+			if (u.sjwL15E2 == nastynumber) return TRUE;
+			if (u.sjwL15E3 == nastynumber) return TRUE;
+			if (u.sjwL15E4 == nastynumber) return TRUE;
+			break;
+		case 16:
+			if (u.sjwL16E1 == nastynumber) return TRUE;
+			if (u.sjwL16E2 == nastynumber) return TRUE;
+			if (u.sjwL16E3 == nastynumber) return TRUE;
+			if (u.sjwL16E4 == nastynumber) return TRUE;
+			break;
+		case 17:
+			if (u.sjwL17E1 == nastynumber) return TRUE;
+			if (u.sjwL17E2 == nastynumber) return TRUE;
+			if (u.sjwL17E3 == nastynumber) return TRUE;
+			if (u.sjwL17E4 == nastynumber) return TRUE;
+			break;
+		case 18:
+			if (u.sjwL18E1 == nastynumber) return TRUE;
+			if (u.sjwL18E2 == nastynumber) return TRUE;
+			if (u.sjwL18E3 == nastynumber) return TRUE;
+			if (u.sjwL18E4 == nastynumber) return TRUE;
+			break;
+		case 19:
+			if (u.sjwL19E1 == nastynumber) return TRUE;
+			if (u.sjwL19E2 == nastynumber) return TRUE;
+			if (u.sjwL19E3 == nastynumber) return TRUE;
+			if (u.sjwL19E4 == nastynumber) return TRUE;
+			break;
+		case 20:
+			if (u.sjwL20E1 == nastynumber) return TRUE;
+			if (u.sjwL20E2 == nastynumber) return TRUE;
+			if (u.sjwL20E3 == nastynumber) return TRUE;
+			if (u.sjwL20E4 == nastynumber) return TRUE;
+			if (u.sjwL20E5 == nastynumber) return TRUE;
+			break;
+		case 21:
+			if (u.sjwL21E1 == nastynumber) return TRUE;
+			if (u.sjwL21E2 == nastynumber) return TRUE;
+			if (u.sjwL21E3 == nastynumber) return TRUE;
+			if (u.sjwL21E4 == nastynumber) return TRUE;
+			if (u.sjwL21E5 == nastynumber) return TRUE;
+			break;
+		case 22:
+			if (u.sjwL22E1 == nastynumber) return TRUE;
+			if (u.sjwL22E2 == nastynumber) return TRUE;
+			if (u.sjwL22E3 == nastynumber) return TRUE;
+			if (u.sjwL22E4 == nastynumber) return TRUE;
+			if (u.sjwL22E5 == nastynumber) return TRUE;
+			break;
+		case 23:
+			if (u.sjwL23E1 == nastynumber) return TRUE;
+			if (u.sjwL23E2 == nastynumber) return TRUE;
+			if (u.sjwL23E3 == nastynumber) return TRUE;
+			if (u.sjwL23E4 == nastynumber) return TRUE;
+			if (u.sjwL23E5 == nastynumber) return TRUE;
+			break;
+		case 24:
+			if (u.sjwL24E1 == nastynumber) return TRUE;
+			if (u.sjwL24E2 == nastynumber) return TRUE;
+			if (u.sjwL24E3 == nastynumber) return TRUE;
+			if (u.sjwL24E4 == nastynumber) return TRUE;
+			if (u.sjwL24E5 == nastynumber) return TRUE;
+			break;
+		case 25:
+			if (u.sjwL25E1 == nastynumber) return TRUE;
+			if (u.sjwL25E2 == nastynumber) return TRUE;
+			if (u.sjwL25E3 == nastynumber) return TRUE;
+			if (u.sjwL25E4 == nastynumber) return TRUE;
+			if (u.sjwL25E5 == nastynumber) return TRUE;
+			if (u.sjwL25E6 == nastynumber) return TRUE;
+			break;
+		case 26:
+			if (u.sjwL26E1 == nastynumber) return TRUE;
+			if (u.sjwL26E2 == nastynumber) return TRUE;
+			if (u.sjwL26E3 == nastynumber) return TRUE;
+			if (u.sjwL26E4 == nastynumber) return TRUE;
+			if (u.sjwL26E5 == nastynumber) return TRUE;
+			if (u.sjwL26E6 == nastynumber) return TRUE;
+			break;
+		case 27:
+			if (u.sjwL27E1 == nastynumber) return TRUE;
+			if (u.sjwL27E2 == nastynumber) return TRUE;
+			if (u.sjwL27E3 == nastynumber) return TRUE;
+			if (u.sjwL27E4 == nastynumber) return TRUE;
+			if (u.sjwL27E5 == nastynumber) return TRUE;
+			if (u.sjwL27E6 == nastynumber) return TRUE;
+			break;
+		case 28:
+			if (u.sjwL28E1 == nastynumber) return TRUE;
+			if (u.sjwL28E2 == nastynumber) return TRUE;
+			if (u.sjwL28E3 == nastynumber) return TRUE;
+			if (u.sjwL28E4 == nastynumber) return TRUE;
+			if (u.sjwL28E5 == nastynumber) return TRUE;
+			if (u.sjwL28E6 == nastynumber) return TRUE;
+			break;
+		case 29:
+			if (u.sjwL29E1 == nastynumber) return TRUE;
+			if (u.sjwL29E2 == nastynumber) return TRUE;
+			if (u.sjwL29E3 == nastynumber) return TRUE;
+			if (u.sjwL29E4 == nastynumber) return TRUE;
+			if (u.sjwL29E5 == nastynumber) return TRUE;
+			if (u.sjwL29E6 == nastynumber) return TRUE;
+			break;
+		case 30:
+			if (u.sjwL30E1 == nastynumber) return TRUE;
+			if (u.sjwL30E2 == nastynumber) return TRUE;
+			if (u.sjwL30E3 == nastynumber) return TRUE;
+			if (u.sjwL30E4 == nastynumber) return TRUE;
+			if (u.sjwL30E5 == nastynumber) return TRUE;
+			if (u.sjwL30E6 == nastynumber) return TRUE;
+			if (u.sjwL30E7 == nastynumber) return TRUE;
+			break;
+		case 31:
+			if (u.sjwL31E1 == nastynumber) return TRUE;
+			if (u.sjwL31E2 == nastynumber) return TRUE;
+			if (u.sjwL31E3 == nastynumber) return TRUE;
+			if (u.sjwL31E4 == nastynumber) return TRUE;
+			if (u.sjwL31E5 == nastynumber) return TRUE;
+			if (u.sjwL31E6 == nastynumber) return TRUE;
+			if (u.sjwL31E7 == nastynumber) return TRUE;
+			break;
+		case 32:
+			if (u.sjwL32E1 == nastynumber) return TRUE;
+			if (u.sjwL32E2 == nastynumber) return TRUE;
+			if (u.sjwL32E3 == nastynumber) return TRUE;
+			if (u.sjwL32E4 == nastynumber) return TRUE;
+			if (u.sjwL32E5 == nastynumber) return TRUE;
+			if (u.sjwL32E6 == nastynumber) return TRUE;
+			if (u.sjwL32E7 == nastynumber) return TRUE;
+			break;
+		case 33:
+			if (u.sjwL33E1 == nastynumber) return TRUE;
+			if (u.sjwL33E2 == nastynumber) return TRUE;
+			if (u.sjwL33E3 == nastynumber) return TRUE;
+			if (u.sjwL33E4 == nastynumber) return TRUE;
+			if (u.sjwL33E5 == nastynumber) return TRUE;
+			if (u.sjwL33E6 == nastynumber) return TRUE;
+			if (u.sjwL33E7 == nastynumber) return TRUE;
+			break;
+		case 34:
+			if (u.sjwL34E1 == nastynumber) return TRUE;
+			if (u.sjwL34E2 == nastynumber) return TRUE;
+			if (u.sjwL34E3 == nastynumber) return TRUE;
+			if (u.sjwL34E4 == nastynumber) return TRUE;
+			if (u.sjwL34E5 == nastynumber) return TRUE;
+			if (u.sjwL34E6 == nastynumber) return TRUE;
+			if (u.sjwL34E7 == nastynumber) return TRUE;
+			break;
+		case 35:
+			if (u.sjwL35E1 == nastynumber) return TRUE;
+			if (u.sjwL35E2 == nastynumber) return TRUE;
+			if (u.sjwL35E3 == nastynumber) return TRUE;
+			if (u.sjwL35E4 == nastynumber) return TRUE;
+			if (u.sjwL35E5 == nastynumber) return TRUE;
+			if (u.sjwL35E6 == nastynumber) return TRUE;
+			if (u.sjwL35E7 == nastynumber) return TRUE;
+			break;
+		case 36:
+			if (u.sjwL36E1 == nastynumber) return TRUE;
+			if (u.sjwL36E2 == nastynumber) return TRUE;
+			if (u.sjwL36E3 == nastynumber) return TRUE;
+			if (u.sjwL36E4 == nastynumber) return TRUE;
+			if (u.sjwL36E5 == nastynumber) return TRUE;
+			if (u.sjwL36E6 == nastynumber) return TRUE;
+			if (u.sjwL36E7 == nastynumber) return TRUE;
+			break;
+		case 37:
+			if (u.sjwL37E1 == nastynumber) return TRUE;
+			if (u.sjwL37E2 == nastynumber) return TRUE;
+			if (u.sjwL37E3 == nastynumber) return TRUE;
+			if (u.sjwL37E4 == nastynumber) return TRUE;
+			if (u.sjwL37E5 == nastynumber) return TRUE;
+			if (u.sjwL37E6 == nastynumber) return TRUE;
+			if (u.sjwL37E7 == nastynumber) return TRUE;
+			break;
+		case 38:
+			if (u.sjwL38E1 == nastynumber) return TRUE;
+			if (u.sjwL38E2 == nastynumber) return TRUE;
+			if (u.sjwL38E3 == nastynumber) return TRUE;
+			if (u.sjwL38E4 == nastynumber) return TRUE;
+			if (u.sjwL38E5 == nastynumber) return TRUE;
+			if (u.sjwL38E6 == nastynumber) return TRUE;
+			if (u.sjwL38E7 == nastynumber) return TRUE;
+			break;
+		case 39:
+			if (u.sjwL39E1 == nastynumber) return TRUE;
+			if (u.sjwL39E2 == nastynumber) return TRUE;
+			if (u.sjwL39E3 == nastynumber) return TRUE;
+			if (u.sjwL39E4 == nastynumber) return TRUE;
+			if (u.sjwL39E5 == nastynumber) return TRUE;
+			if (u.sjwL39E6 == nastynumber) return TRUE;
+			if (u.sjwL39E7 == nastynumber) return TRUE;
+			break;
+		case 40:
+			if (u.sjwL40E1 == nastynumber) return TRUE;
+			if (u.sjwL40E2 == nastynumber) return TRUE;
+			if (u.sjwL40E3 == nastynumber) return TRUE;
+			if (u.sjwL40E4 == nastynumber) return TRUE;
+			if (u.sjwL40E5 == nastynumber) return TRUE;
+			if (u.sjwL40E6 == nastynumber) return TRUE;
+			if (u.sjwL40E7 == nastynumber) return TRUE;
+			break;
+		case 41:
+			if (u.sjwL41E1 == nastynumber) return TRUE;
+			if (u.sjwL41E2 == nastynumber) return TRUE;
+			if (u.sjwL41E3 == nastynumber) return TRUE;
+			if (u.sjwL41E4 == nastynumber) return TRUE;
+			if (u.sjwL41E5 == nastynumber) return TRUE;
+			if (u.sjwL41E6 == nastynumber) return TRUE;
+			if (u.sjwL41E7 == nastynumber) return TRUE;
+			break;
+		case 42:
+			if (u.sjwL42E1 == nastynumber) return TRUE;
+			if (u.sjwL42E2 == nastynumber) return TRUE;
+			if (u.sjwL42E3 == nastynumber) return TRUE;
+			if (u.sjwL42E4 == nastynumber) return TRUE;
+			if (u.sjwL42E5 == nastynumber) return TRUE;
+			if (u.sjwL42E6 == nastynumber) return TRUE;
+			if (u.sjwL42E7 == nastynumber) return TRUE;
+			break;
+		case 43:
+			if (u.sjwL43E1 == nastynumber) return TRUE;
+			if (u.sjwL43E2 == nastynumber) return TRUE;
+			if (u.sjwL43E3 == nastynumber) return TRUE;
+			if (u.sjwL43E4 == nastynumber) return TRUE;
+			if (u.sjwL43E5 == nastynumber) return TRUE;
+			if (u.sjwL43E6 == nastynumber) return TRUE;
+			if (u.sjwL43E7 == nastynumber) return TRUE;
+			break;
+		case 44:
+			if (u.sjwL44E1 == nastynumber) return TRUE;
+			if (u.sjwL44E2 == nastynumber) return TRUE;
+			if (u.sjwL44E3 == nastynumber) return TRUE;
+			if (u.sjwL44E4 == nastynumber) return TRUE;
+			if (u.sjwL44E5 == nastynumber) return TRUE;
+			if (u.sjwL44E6 == nastynumber) return TRUE;
+			if (u.sjwL44E7 == nastynumber) return TRUE;
+			break;
+		case 45:
+			if (u.sjwL45E1 == nastynumber) return TRUE;
+			if (u.sjwL45E2 == nastynumber) return TRUE;
+			if (u.sjwL45E3 == nastynumber) return TRUE;
+			if (u.sjwL45E4 == nastynumber) return TRUE;
+			if (u.sjwL45E5 == nastynumber) return TRUE;
+			if (u.sjwL45E6 == nastynumber) return TRUE;
+			if (u.sjwL45E7 == nastynumber) return TRUE;
+			break;
+		case 46:
+			if (u.sjwL46E1 == nastynumber) return TRUE;
+			if (u.sjwL46E2 == nastynumber) return TRUE;
+			if (u.sjwL46E3 == nastynumber) return TRUE;
+			if (u.sjwL46E4 == nastynumber) return TRUE;
+			if (u.sjwL46E5 == nastynumber) return TRUE;
+			if (u.sjwL46E6 == nastynumber) return TRUE;
+			if (u.sjwL46E7 == nastynumber) return TRUE;
+			break;
+		case 47:
+			if (u.sjwL47E1 == nastynumber) return TRUE;
+			if (u.sjwL47E2 == nastynumber) return TRUE;
+			if (u.sjwL47E3 == nastynumber) return TRUE;
+			if (u.sjwL47E4 == nastynumber) return TRUE;
+			if (u.sjwL47E5 == nastynumber) return TRUE;
+			if (u.sjwL47E6 == nastynumber) return TRUE;
+			if (u.sjwL47E7 == nastynumber) return TRUE;
+			break;
+		case 48:
+			if (u.sjwL48E1 == nastynumber) return TRUE;
+			if (u.sjwL48E2 == nastynumber) return TRUE;
+			if (u.sjwL48E3 == nastynumber) return TRUE;
+			if (u.sjwL48E4 == nastynumber) return TRUE;
+			if (u.sjwL48E5 == nastynumber) return TRUE;
+			if (u.sjwL48E6 == nastynumber) return TRUE;
+			if (u.sjwL48E7 == nastynumber) return TRUE;
+			break;
+		case 49:
+			if (u.sjwL49E1 == nastynumber) return TRUE;
+			if (u.sjwL49E2 == nastynumber) return TRUE;
+			if (u.sjwL49E3 == nastynumber) return TRUE;
+			if (u.sjwL49E4 == nastynumber) return TRUE;
+			if (u.sjwL49E5 == nastynumber) return TRUE;
+			if (u.sjwL49E6 == nastynumber) return TRUE;
+			if (u.sjwL49E7 == nastynumber) return TRUE;
+			break;
+		case 50:
+			if (u.sjwL50E1 == nastynumber) return TRUE;
+			if (u.sjwL50E2 == nastynumber) return TRUE;
+			if (u.sjwL50E3 == nastynumber) return TRUE;
+			if (u.sjwL50E4 == nastynumber) return TRUE;
+			if (u.sjwL50E5 == nastynumber) return TRUE;
+			if (u.sjwL50E6 == nastynumber) return TRUE;
+			if (u.sjwL50E7 == nastynumber) return TRUE;
+			break;
+		case 51:
+			if (u.sjwL51E1 == nastynumber) return TRUE;
+			if (u.sjwL51E2 == nastynumber) return TRUE;
+			if (u.sjwL51E3 == nastynumber) return TRUE;
+			if (u.sjwL51E4 == nastynumber) return TRUE;
+			if (u.sjwL51E5 == nastynumber) return TRUE;
+			if (u.sjwL51E6 == nastynumber) return TRUE;
+			if (u.sjwL51E7 == nastynumber) return TRUE;
+			break;
+		case 52:
+			if (u.sjwL52E1 == nastynumber) return TRUE;
+			if (u.sjwL52E2 == nastynumber) return TRUE;
+			if (u.sjwL52E3 == nastynumber) return TRUE;
+			if (u.sjwL52E4 == nastynumber) return TRUE;
+			if (u.sjwL52E5 == nastynumber) return TRUE;
+			if (u.sjwL52E6 == nastynumber) return TRUE;
+			if (u.sjwL52E7 == nastynumber) return TRUE;
+			break;
+		case 53:
+			if (u.sjwL53E1 == nastynumber) return TRUE;
+			if (u.sjwL53E2 == nastynumber) return TRUE;
+			if (u.sjwL53E3 == nastynumber) return TRUE;
+			if (u.sjwL53E4 == nastynumber) return TRUE;
+			if (u.sjwL53E5 == nastynumber) return TRUE;
+			if (u.sjwL53E6 == nastynumber) return TRUE;
+			if (u.sjwL53E7 == nastynumber) return TRUE;
+			break;
+		case 54:
+			if (u.sjwL54E1 == nastynumber) return TRUE;
+			if (u.sjwL54E2 == nastynumber) return TRUE;
+			if (u.sjwL54E3 == nastynumber) return TRUE;
+			if (u.sjwL54E4 == nastynumber) return TRUE;
+			if (u.sjwL54E5 == nastynumber) return TRUE;
+			if (u.sjwL54E6 == nastynumber) return TRUE;
+			if (u.sjwL54E7 == nastynumber) return TRUE;
+			break;
+		case 55:
+			if (u.sjwL55E1 == nastynumber) return TRUE;
+			if (u.sjwL55E2 == nastynumber) return TRUE;
+			if (u.sjwL55E3 == nastynumber) return TRUE;
+			if (u.sjwL55E4 == nastynumber) return TRUE;
+			if (u.sjwL55E5 == nastynumber) return TRUE;
+			if (u.sjwL55E6 == nastynumber) return TRUE;
+			if (u.sjwL55E7 == nastynumber) return TRUE;
+			break;
+		case 56:
+			if (u.sjwL56E1 == nastynumber) return TRUE;
+			if (u.sjwL56E2 == nastynumber) return TRUE;
+			if (u.sjwL56E3 == nastynumber) return TRUE;
+			if (u.sjwL56E4 == nastynumber) return TRUE;
+			if (u.sjwL56E5 == nastynumber) return TRUE;
+			if (u.sjwL56E6 == nastynumber) return TRUE;
+			if (u.sjwL56E7 == nastynumber) return TRUE;
+			break;
+		case 57:
+			if (u.sjwL57E1 == nastynumber) return TRUE;
+			if (u.sjwL57E2 == nastynumber) return TRUE;
+			if (u.sjwL57E3 == nastynumber) return TRUE;
+			if (u.sjwL57E4 == nastynumber) return TRUE;
+			if (u.sjwL57E5 == nastynumber) return TRUE;
+			if (u.sjwL57E6 == nastynumber) return TRUE;
+			if (u.sjwL57E7 == nastynumber) return TRUE;
+			break;
+		case 58:
+			if (u.sjwL58E1 == nastynumber) return TRUE;
+			if (u.sjwL58E2 == nastynumber) return TRUE;
+			if (u.sjwL58E3 == nastynumber) return TRUE;
+			if (u.sjwL58E4 == nastynumber) return TRUE;
+			if (u.sjwL58E5 == nastynumber) return TRUE;
+			if (u.sjwL58E6 == nastynumber) return TRUE;
+			if (u.sjwL58E7 == nastynumber) return TRUE;
+			break;
+		case 59:
+			if (u.sjwL59E1 == nastynumber) return TRUE;
+			if (u.sjwL59E2 == nastynumber) return TRUE;
+			if (u.sjwL59E3 == nastynumber) return TRUE;
+			if (u.sjwL59E4 == nastynumber) return TRUE;
+			if (u.sjwL59E5 == nastynumber) return TRUE;
+			if (u.sjwL59E6 == nastynumber) return TRUE;
+			if (u.sjwL59E7 == nastynumber) return TRUE;
+			break;
+
+	}
+
+	return FALSE;
+
+}
+
 /* are you carrying or even using quest artifacts that aren't your own? if yes, you might get downsides --Amy */
 int
 foreignartifactcount()
@@ -1470,6 +1920,7 @@ have_rmbstone()
 		}
 
 	if (u.nastinator01) return TRUE;
+	if (sjwcheck(1)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 6 && u.femauspices6 == 1) return TRUE;
 	return(FALSE);
 }
@@ -1484,6 +1935,7 @@ have_displaystone()
 			return(TRUE);
 		}
 	if (u.nastinator02) return TRUE;
+	if (sjwcheck(2)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 6 && u.femauspices6 == 2) return TRUE;
 	return(FALSE);
 }
@@ -1498,6 +1950,7 @@ have_yellowspellstone()
 			return(TRUE);
 		}
 	if (u.nastinator03) return TRUE;
+	if (sjwcheck(3)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 11 && u.femauspices11 == 1) return TRUE;
 	return(FALSE);
 }
@@ -1512,6 +1965,7 @@ have_spelllossstone()
 			return(TRUE);
 		}
 	if (u.nastinator04) return TRUE;
+	if (sjwcheck(4)) return TRUE;
 	return(FALSE);
 }
 
@@ -1525,6 +1979,7 @@ have_autodestructstone()
 			return(TRUE);
 		}
 	if (u.nastinator05) return TRUE;
+	if (sjwcheck(5)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 15 && u.femauspices15 == 2) return TRUE;
 	return(FALSE);
 }
@@ -1539,6 +1994,7 @@ have_memorylossstone()
 			return(TRUE);
 		}
 	if (u.nastinator06) return TRUE;
+	if (sjwcheck(6)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 6 && u.femauspices6 == 3) return TRUE;
 	return(FALSE);
 }
@@ -1553,6 +2009,7 @@ have_inventorylossstone()
 			return(TRUE);
 		}
 	if (u.nastinator07) return TRUE;
+	if (sjwcheck(7)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 30 && u.femauspices30 == 1) return TRUE;
 	return(FALSE);
 }
@@ -1567,6 +2024,7 @@ have_blackystone()
 			return(TRUE);
 		}
 	if (u.nastinator08) return TRUE;
+	if (sjwcheck(8)) return TRUE;
 	return(FALSE);
 }
 
@@ -1580,6 +2038,7 @@ have_menubugstone()
 			return(TRUE);
 		}
 	if (u.nastinator09) return TRUE;
+	if (sjwcheck(9)) return TRUE;
 	return(FALSE);
 }
 
@@ -1593,6 +2052,7 @@ have_speedbugstone()
 			return(TRUE);
 		}
 	if (u.nastinator10) return TRUE;
+	if (sjwcheck(10)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 15 && u.femauspices15 == 1) return TRUE;
 	return(FALSE);
 }
@@ -1607,6 +2067,7 @@ have_superscrollerstone()
 			return(TRUE);
 		}
 	if (u.nastinator11) return TRUE;
+	if (sjwcheck(11)) return TRUE;
 	return(FALSE);
 }
 
@@ -1620,6 +2081,7 @@ have_freehandbugstone()
 			return(TRUE);
 		}
 	if (u.nastinator12) return TRUE;
+	if (sjwcheck(12)) return TRUE;
 	return(FALSE);
 }
 
@@ -1633,6 +2095,7 @@ have_unidentifystone()
 			return(TRUE);
 		}
 	if (u.nastinator13) return TRUE;
+	if (sjwcheck(13)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 20 && u.femauspices20 == 1) return TRUE;
 	return(FALSE);
 }
@@ -1647,6 +2110,7 @@ have_thirststone()
 			return(TRUE);
 		}
 	if (u.nastinator14) return TRUE;
+	if (sjwcheck(14)) return TRUE;
 	return(FALSE);
 }
 
@@ -1660,6 +2124,7 @@ have_unluckystone()
 			return(TRUE);
 		}
 	if (u.nastinator15) return TRUE;
+	if (sjwcheck(15)) return TRUE;
 	return(FALSE);
 }
 
@@ -1673,6 +2138,7 @@ have_shadesofgreystone()
 			return(TRUE);
 		}
 	if (u.nastinator16) return TRUE;
+	if (sjwcheck(16)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 8 && u.femauspices8 == 1) return TRUE;
 	return(FALSE);
 }
@@ -1687,6 +2153,7 @@ have_faintingstone()
 			return(TRUE);
 		}
 	if (u.nastinator17) return TRUE;
+	if (sjwcheck(17)) return TRUE;
 	return(FALSE);
 }
 
@@ -1700,6 +2167,7 @@ have_cursingstone()
 			return(TRUE);
 		}
 	if (u.nastinator18) return TRUE;
+	if (sjwcheck(18)) return TRUE;
 	return(FALSE);
 }
 
@@ -1713,6 +2181,7 @@ have_difficultystone()
 			return(TRUE);
 		}
 	if (u.nastinator19) return TRUE;
+	if (sjwcheck(19)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 17 && u.femauspices17 == 1) return TRUE;
 	return(FALSE);
 }
@@ -1727,6 +2196,7 @@ have_deafnessstone()
 			return(TRUE);
 		}
 	if (u.nastinator20) return TRUE;
+	if (sjwcheck(20)) return TRUE;
 	return(FALSE);
 }
 
@@ -1740,6 +2210,7 @@ have_weaknessstone()
 			return(TRUE);
 		}
 	if (u.nastinator21) return TRUE;
+	if (sjwcheck(21)) return TRUE;
 	return(FALSE);
 }
 
@@ -1753,6 +2224,7 @@ have_antimagicstone()
 			return(TRUE);
 		}
 	if (u.nastinator22) return TRUE;
+	if (sjwcheck(22)) return TRUE;
 	return(FALSE);
 }
 
@@ -1766,6 +2238,7 @@ have_rotthirteenstone()
 			return(TRUE);
 		}
 	if (u.nastinator23) return TRUE;
+	if (sjwcheck(23)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 8 && u.femauspices8 == 2) return TRUE;
 	return(FALSE);
 }
@@ -1780,6 +2253,7 @@ have_bishopstone()
 			return(TRUE);
 		}
 	if (u.nastinator24) return TRUE;
+	if (sjwcheck(24)) return TRUE;
 	return(FALSE);
 }
 
@@ -1793,6 +2267,7 @@ have_confusionstone()
 			return(TRUE);
 		}
 	if (u.nastinator25) return TRUE;
+	if (sjwcheck(25)) return TRUE;
 	return(FALSE);
 }
 
@@ -1806,6 +2281,7 @@ have_dropbugstone()
 			return(TRUE);
 		}
 	if (u.nastinator26) return TRUE;
+	if (sjwcheck(26)) return TRUE;
 	return(FALSE);
 }
 
@@ -1819,6 +2295,7 @@ have_dstwstone()
 			return(TRUE);
 		}
 	if (u.nastinator27) return TRUE;
+	if (sjwcheck(27)) return TRUE;
 
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 4 && u.femauspices4 == 1) return TRUE;
 
@@ -1835,6 +2312,7 @@ have_amnesiastone()
 			return(TRUE);
 		}
 	if (u.nastinator28) return TRUE;
+	if (sjwcheck(28)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 28 && u.femauspices28 == 2) return TRUE;
 	return(FALSE);
 }
@@ -1849,6 +2327,7 @@ have_bigscriptstone()
 			return(TRUE);
 		}
 	if (u.nastinator29) return TRUE;
+	if (sjwcheck(29)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 6 && u.femauspices6 == 4) return TRUE;
 	return(FALSE);
 }
@@ -1863,6 +2342,7 @@ have_bankstone()
 			return(TRUE);
 		}
 	if (u.nastinator30) return TRUE;
+	if (sjwcheck(30)) return TRUE;
 	return(FALSE);
 }
 
@@ -1876,6 +2356,7 @@ have_mapstone()
 			return(TRUE);
 		}
 	if (u.nastinator31) return TRUE;
+	if (sjwcheck(31)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 20 && u.femauspices20 == 3) return TRUE;
 	return(FALSE);
 }
@@ -1890,6 +2371,7 @@ have_techniquestone()
 			return(TRUE);
 		}
 	if (u.nastinator32) return TRUE;
+	if (sjwcheck(32)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 4 && u.femauspices4 == 2) return TRUE;
 	return(FALSE);
 }
@@ -1904,6 +2386,7 @@ have_disenchantmentstone()
 			return(TRUE);
 		}
 	if (u.nastinator33) return TRUE;
+	if (sjwcheck(33)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 28 && u.femauspices28 == 3) return TRUE;
 	return(FALSE);
 }
@@ -1918,6 +2401,7 @@ have_verisiertstone()
 			return(TRUE);
 		}
 	if (u.nastinator34) return TRUE;
+	if (sjwcheck(34)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 17 && u.femauspices17 == 2) return TRUE;
 	return(FALSE);
 }
@@ -1932,6 +2416,7 @@ have_chaosterrainstone()
 			return(TRUE);
 		}
 	if (u.nastinator35) return TRUE;
+	if (sjwcheck(35)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 22 && u.femauspices22 == 2) return TRUE;
 	return(FALSE);
 }
@@ -1946,6 +2431,7 @@ have_mutenessstone()
 			return(TRUE);
 		}
 	if (u.nastinator36) return TRUE;
+	if (sjwcheck(36)) return TRUE;
 	return(FALSE);
 }
 
@@ -1959,6 +2445,7 @@ have_engravingstone()
 			return(TRUE);
 		}
 	if (u.nastinator37) return TRUE;
+	if (sjwcheck(37)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 4 && u.femauspices4 == 3) return TRUE;
 	return(FALSE);
 }
@@ -1973,6 +2460,7 @@ have_magicdevicestone()
 			return(TRUE);
 		}
 	if (u.nastinator38) return TRUE;
+	if (sjwcheck(38)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 4 && u.femauspices4 == 4) return TRUE;
 	return(FALSE);
 }
@@ -1987,6 +2475,7 @@ have_bookstone()
 			return(TRUE);
 		}
 	if (u.nastinator39) return TRUE;
+	if (sjwcheck(39)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 4 && u.femauspices4 == 5) return TRUE;
 	return(FALSE);
 }
@@ -2001,6 +2490,7 @@ have_levelstone()
 			return(TRUE);
 		}
 	if (u.nastinator40) return TRUE;
+	if (sjwcheck(40)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 20 && u.femauspices20 == 4) return TRUE;
 	return(FALSE);
 }
@@ -2015,6 +2505,7 @@ have_quizstone()
 			return(TRUE);
 		}
 	if (u.nastinator41) return TRUE;
+	if (sjwcheck(41)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 8 && u.femauspices8 == 4) return TRUE;
 	return(FALSE);
 }
@@ -2029,6 +2520,7 @@ have_statusstone()
 			return(TRUE);
 		}
 	if (u.nastinator42) return TRUE;
+	if (sjwcheck(42)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 22 && u.femauspices22 == 1) return TRUE;
 	return(FALSE);
 }
@@ -2043,6 +2535,7 @@ have_alignmentstone()
 			return(TRUE);
 		}
 	if (u.nastinator43) return TRUE;
+	if (sjwcheck(43)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 28 && u.femauspices28 == 1) return TRUE;
 	return(FALSE);
 }
@@ -2057,6 +2550,7 @@ have_stairstrapstone()
 			return(TRUE);
 		}
 	if (u.nastinator44) return TRUE;
+	if (sjwcheck(44)) return TRUE;
 	return(FALSE);
 }
 
@@ -2070,6 +2564,7 @@ have_uninformationstone()
 			return(TRUE);
 		}
 	if (u.nastinator45) return TRUE;
+	if (sjwcheck(45)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 20 && u.femauspices20 == 2) return TRUE;
 	return(FALSE);
 }
@@ -2084,6 +2579,7 @@ have_captchastone()
 			return(TRUE);
 		}
 	if (u.nastinator46) return TRUE;
+	if (sjwcheck(46)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 8 && u.femauspices8 == 3) return TRUE;
 	return(FALSE);
 }
@@ -2098,6 +2594,7 @@ have_farlookstone()
 			return(TRUE);
 		}
 	if (u.nastinator47) return TRUE;
+	if (sjwcheck(47)) return TRUE;
 	return(FALSE);
 }
 
@@ -2111,6 +2608,7 @@ have_respawnstone()
 			return(TRUE);
 		}
 	if (u.nastinator48) return TRUE;
+	if (sjwcheck(48)) return TRUE;
 	return(FALSE);
 }
 
@@ -2124,6 +2622,7 @@ have_intrinsiclossstone()
 			return(TRUE);
 		}
 	if (u.nastinator49) return TRUE;
+	if (sjwcheck(49)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 13 && u.femauspices13 == 1) return TRUE;
 	return(FALSE);
 }
@@ -2138,6 +2637,7 @@ have_bloodlossstone()
 			return(TRUE);
 		}
 	if (u.nastinator50) return TRUE;
+	if (sjwcheck(50)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 13 && u.femauspices13 == 3) return TRUE;
 	return(FALSE);
 }
@@ -2152,6 +2652,7 @@ have_badeffectstone()
 			return(TRUE);
 		}
 	if (u.nastinator51) return TRUE;
+	if (sjwcheck(51)) return TRUE;
 	return(FALSE);
 }
 
@@ -2165,6 +2666,7 @@ have_trapcreationstone()
 			return(TRUE);
 		}
 	if (u.nastinator52) return TRUE;
+	if (sjwcheck(52)) return TRUE;
 	return(FALSE);
 }
 
@@ -2178,6 +2680,7 @@ have_vulnerabilitystone()
 			return(TRUE);
 		}
 	if (u.nastinator53) return TRUE;
+	if (sjwcheck(53)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 13 && u.femauspices13 == 2) return TRUE;
 	return(FALSE);
 }
@@ -2192,6 +2695,7 @@ have_itemportstone()
 			return(TRUE);
 		}
 	if (u.nastinator54) return TRUE;
+	if (sjwcheck(54)) return TRUE;
 	return(FALSE);
 }
 
@@ -2205,6 +2709,7 @@ have_nastystone()
 			return(TRUE);
 		}
 	if (u.nastinator55) return TRUE;
+	if (sjwcheck(55)) return TRUE;
 	return(FALSE);
 }
 
@@ -2218,6 +2723,7 @@ have_metabolicstone()
 			return(TRUE);
 		}
 	if (u.nastinator56) return TRUE;
+	if (sjwcheck(56)) return TRUE;
 	return(FALSE);
 }
 
@@ -2231,6 +2737,7 @@ have_noreturnstone()
 			return(TRUE);
 		}
 	if (u.nastinator57) return TRUE;
+	if (sjwcheck(57)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 15 && u.femauspices15 == 3) return TRUE;
 	return(FALSE);
 }
@@ -2245,6 +2752,7 @@ have_egostone()
 			return(TRUE);
 		}
 	if (u.nastinator58) return TRUE;
+	if (sjwcheck(58)) return TRUE;
 	return(FALSE);
 }
 
@@ -2258,6 +2766,7 @@ have_fastforwardstone()
 			return(TRUE);
 		}
 	if (u.nastinator59) return TRUE;
+	if (sjwcheck(59)) return TRUE;
 	return(FALSE);
 }
 
@@ -2271,6 +2780,7 @@ have_rottenstone()
 			return(TRUE);
 		}
 	if (u.nastinator60) return TRUE;
+	if (sjwcheck(60)) return TRUE;
 	return(FALSE);
 }
 
@@ -2284,6 +2794,7 @@ have_unskilledstone()
 			return(TRUE);
 		}
 	if (u.nastinator61) return TRUE;
+	if (sjwcheck(61)) return TRUE;
 	return(FALSE);
 }
 
@@ -2297,6 +2808,7 @@ have_lowstatstone()
 			return(TRUE);
 		}
 	if (u.nastinator62) return TRUE;
+	if (sjwcheck(62)) return TRUE;
 	return(FALSE);
 }
 
@@ -2310,6 +2822,7 @@ have_trainingstone()
 			return(TRUE);
 		}
 	if (u.nastinator63) return TRUE;
+	if (sjwcheck(63)) return TRUE;
 	return(FALSE);
 }
 
@@ -2323,6 +2836,7 @@ have_exercisestone()
 			return(TRUE);
 		}
 	if (u.nastinator64) return TRUE;
+	if (sjwcheck(64)) return TRUE;
 	return(FALSE);
 }
 
@@ -2336,6 +2850,7 @@ have_limitationstone()
 			return(TRUE);
 		}
 	if (u.nastinator65) return TRUE;
+	if (sjwcheck(65)) return TRUE;
 	return(FALSE);
 }
 
@@ -2349,6 +2864,7 @@ have_weaksightstone()
 			return(TRUE);
 		}
 	if (u.nastinator66) return TRUE;
+	if (sjwcheck(66)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 6 && u.femauspices6 == 5) return TRUE;
 	return(FALSE);
 }
@@ -2363,6 +2879,7 @@ have_messagestone()
 			return(TRUE);
 		}
 	if (u.nastinator67) return TRUE;
+	if (sjwcheck(67)) return TRUE;
 	return(FALSE);
 }
 
@@ -2376,6 +2893,7 @@ have_nonsacredstone()
 			return(TRUE);
 		}
 	if (u.nastinator68) return TRUE;
+	if (sjwcheck(68)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 22 && u.femauspices22 == 3) return TRUE;
 	return(FALSE);
 }
@@ -2390,6 +2908,7 @@ have_starvationstone()
 			return(TRUE);
 		}
 	if (u.nastinator69) return TRUE;
+	if (sjwcheck(69)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 30 && u.femauspices30 == 2) return TRUE;
 	return(FALSE);
 }
@@ -2404,6 +2923,7 @@ have_droplessstone()
 			return(TRUE);
 		}
 	if (u.nastinator70) return TRUE;
+	if (sjwcheck(70)) return TRUE;
 	return(FALSE);
 }
 
@@ -2417,6 +2937,7 @@ have_loweffectstone()
 			return(TRUE);
 		}
 	if (u.nastinator71) return TRUE;
+	if (sjwcheck(71)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 4 && u.femauspices4 == 6) return TRUE;
 	return(FALSE);
 }
@@ -2431,6 +2952,7 @@ have_invisostone()
 			return(TRUE);
 		}
 	if (u.nastinator72) return TRUE;
+	if (sjwcheck(72)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 22 && u.femauspices22 == 5) return TRUE;
 	return(FALSE);
 }
@@ -2445,6 +2967,7 @@ have_ghostlystone()
 			return(TRUE);
 		}
 	if (u.nastinator73) return TRUE;
+	if (sjwcheck(73)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 22 && u.femauspices22 == 4) return TRUE;
 	return(FALSE);
 }
@@ -2459,6 +2982,7 @@ have_dehydratingstone()
 			return(TRUE);
 		}
 	if (u.nastinator74) return TRUE;
+	if (sjwcheck(74)) return TRUE;
 	return(FALSE);
 }
 
@@ -2472,6 +2996,7 @@ have_hatestone()
 			return(TRUE);
 		}
 	if (u.nastinator75) return TRUE;
+	if (sjwcheck(75)) return TRUE;
 	return(FALSE);
 }
 
@@ -2485,6 +3010,7 @@ have_directionswapstone()
 			return(TRUE);
 		}
 	if (u.nastinator76) return TRUE;
+	if (sjwcheck(76)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 30 && u.femauspices30 == 3) return TRUE;
 	return(FALSE);
 }
@@ -2499,6 +3025,7 @@ have_nonintrinsicstone()
 			return(TRUE);
 		}
 	if (u.nastinator77) return TRUE;
+	if (sjwcheck(77)) return TRUE;
 	return(FALSE);
 }
 
@@ -2512,6 +3039,7 @@ have_dropcursestone()
 			return(TRUE);
 		}
 	if (u.nastinator78) return TRUE;
+	if (sjwcheck(78)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 15 && u.femauspices15 == 4) return TRUE;
 	return(FALSE);
 }
@@ -2526,6 +3054,7 @@ have_nakedstone()
 			return(TRUE);
 		}
 	if (u.nastinator79) return TRUE;
+	if (sjwcheck(79)) return TRUE;
 	return(FALSE);
 }
 
@@ -2539,6 +3068,7 @@ have_antilevelstone()
 			return(TRUE);
 		}
 	if (u.nastinator80) return TRUE;
+	if (sjwcheck(80)) return TRUE;
 	return(FALSE);
 }
 
@@ -2552,6 +3082,7 @@ have_stealerstone()
 			return(TRUE);
 		}
 	if (u.nastinator81) return TRUE;
+	if (sjwcheck(81)) return TRUE;
 	return(FALSE);
 }
 
@@ -2565,6 +3096,7 @@ have_rebelstone()
 			return(TRUE);
 		}
 	if (u.nastinator82) return TRUE;
+	if (sjwcheck(82)) return TRUE;
 	return(FALSE);
 }
 
@@ -2578,6 +3110,7 @@ have_shitstone()
 			return(TRUE);
 		}
 	if (u.nastinator83) return TRUE;
+	if (sjwcheck(83)) return TRUE;
 	return(FALSE);
 }
 
@@ -2591,6 +3124,7 @@ have_misfirestone()
 			return(TRUE);
 		}
 	if (u.nastinator84) return TRUE;
+	if (sjwcheck(84)) return TRUE;
 	return(FALSE);
 }
 
@@ -2604,6 +3138,7 @@ have_wallstone()
 			return(TRUE);
 		}
 	if (u.nastinator85) return TRUE;
+	if (sjwcheck(85)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 22 && u.femauspices22 == 6) return TRUE;
 	return(FALSE);
 }
@@ -2618,6 +3153,7 @@ have_disconnectstone()
 			return(TRUE);
 		}
 	if (u.nastinator86) return TRUE;
+	if (sjwcheck(86)) return TRUE;
 	return(FALSE);
 }
 
@@ -2631,6 +3167,7 @@ have_interfacescrewstone()
 			return(TRUE);
 		}
 	if (u.nastinator87) return TRUE;
+	if (sjwcheck(87)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 30 && u.femauspices30 == 4) return TRUE;
 	return(FALSE);
 }
@@ -2645,6 +3182,7 @@ have_bossfightstone()
 			return(TRUE);
 		}
 	if (u.nastinator88) return TRUE;
+	if (sjwcheck(88)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 17 && u.femauspices17 == 3) return TRUE;
 	return(FALSE);
 }
@@ -2659,6 +3197,7 @@ have_entirelevelstone()
 			return(TRUE);
 		}
 	if (u.nastinator89) return TRUE;
+	if (sjwcheck(89)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 17 && u.femauspices17 == 4) return TRUE;
 	return(FALSE);
 }
@@ -2673,6 +3212,7 @@ have_bonestone()
 			return(TRUE);
 		}
 	if (u.nastinator90) return TRUE;
+	if (sjwcheck(90)) return TRUE;
 	return(FALSE);
 }
 
@@ -2686,6 +3226,7 @@ have_autocursestone()
 			return(TRUE);
 		}
 	if (u.nastinator91) return TRUE;
+	if (sjwcheck(91)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 28 && u.femauspices28 == 4) return TRUE;
 	return(FALSE);
 }
@@ -2700,6 +3241,7 @@ have_highlevelstone()
 			return(TRUE);
 		}
 	if (u.nastinator92) return TRUE;
+	if (sjwcheck(92)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 17 && u.femauspices17 == 5) return TRUE;
 	return(FALSE);
 }
@@ -2714,6 +3256,7 @@ have_spellforgettingstone()
 			return(TRUE);
 		}
 	if (u.nastinator93) return TRUE;
+	if (sjwcheck(93)) return TRUE;
 	return(FALSE);
 }
 
@@ -2727,6 +3270,7 @@ have_soundeffectstone()
 			return(TRUE);
 		}
 	if (u.nastinator94) return TRUE;
+	if (sjwcheck(94)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 8 && u.femauspices8 == 5) return TRUE;
 	return(FALSE);
 }
@@ -2741,6 +3285,7 @@ have_timerunstone()
 			return(TRUE);
 		}
 	if (u.nastinator95) return TRUE;
+	if (sjwcheck(95)) return TRUE;
 	return(FALSE);
 }
 
@@ -2754,6 +3299,7 @@ have_lootcutstone()
 			return(TRUE);
 		}
 	if (u.nastinator96) return TRUE;
+	if (sjwcheck(96)) return TRUE;
 	return(FALSE);
 }
 
@@ -2767,6 +3313,7 @@ have_monsterspeedstone()
 			return(TRUE);
 		}
 	if (u.nastinator97) return TRUE;
+	if (sjwcheck(97)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 15 && u.femauspices15 == 5) return TRUE;
 	return(FALSE);
 }
@@ -2781,6 +3328,7 @@ have_scalingstone()
 			return(TRUE);
 		}
 	if (u.nastinator98) return TRUE;
+	if (sjwcheck(98)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 17 && u.femauspices17 == 6) return TRUE;
 	return(FALSE);
 }
@@ -2795,6 +3343,7 @@ have_inimicalstone()
 			return(TRUE);
 		}
 	if (u.nastinator99) return TRUE;
+	if (sjwcheck(99)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 13 && u.femauspices13 == 4) return TRUE;
 	return(FALSE);
 }
@@ -2809,6 +3358,7 @@ have_whitespellstone()
 			return(TRUE);
 		}
 	if (u.nastinator100) return TRUE;
+	if (sjwcheck(100)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 11 && u.femauspices11 == 2) return TRUE;
 	return(FALSE);
 }
@@ -2823,6 +3373,7 @@ have_greyoutstone()
 			return(TRUE);
 		}
 	if (u.nastinator101) return TRUE;
+	if (sjwcheck(101)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 11 && u.femauspices11 == 3) return TRUE;
 	return(FALSE);
 }
@@ -2837,6 +3388,7 @@ have_quasarstone()
 			return(TRUE);
 		}
 	if (u.nastinator102) return TRUE;
+	if (sjwcheck(102)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 30 && u.femauspices30 == 5) return TRUE;
 	return(FALSE);
 }
@@ -2851,6 +3403,7 @@ have_mommystone()
 			return(TRUE);
 		}
 	if (u.nastinator103) return TRUE;
+	if (sjwcheck(103)) return TRUE;
 	return(FALSE);
 }
 
@@ -2864,6 +3417,7 @@ have_horrorstone()
 			return(TRUE);
 		}
 	if (u.nastinator104) return TRUE;
+	if (sjwcheck(104)) return TRUE;
 	return(FALSE);
 }
 
@@ -2877,6 +3431,7 @@ have_artificialstone()
 			return(TRUE);
 		}
 	if (u.nastinator105) return TRUE;
+	if (sjwcheck(105)) return TRUE;
 	return(FALSE);
 }
 
@@ -2890,6 +3445,7 @@ have_wereformstone()
 			return(TRUE);
 		}
 	if (u.nastinator106) return TRUE;
+	if (sjwcheck(106)) return TRUE;
 	return(FALSE);
 }
 
@@ -2903,6 +3459,7 @@ have_antiprayerstone()
 			return(TRUE);
 		}
 	if (u.nastinator107) return TRUE;
+	if (sjwcheck(107)) return TRUE;
 	return(FALSE);
 }
 
@@ -2916,6 +3473,7 @@ have_evilpatchstone()
 			return(TRUE);
 		}
 	if (u.nastinator108) return TRUE;
+	if (sjwcheck(108)) return TRUE;
 	return(FALSE);
 }
 
@@ -2929,6 +3487,7 @@ have_hardmodestone()
 			return(TRUE);
 		}
 	if (u.nastinator109) return TRUE;
+	if (sjwcheck(109)) return TRUE;
 	return(FALSE);
 }
 
@@ -2942,6 +3501,7 @@ have_secretattackstone()
 			return(TRUE);
 		}
 	if (u.nastinator110) return TRUE;
+	if (sjwcheck(110)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 28 && u.femauspices28 == 5) return TRUE;
 	return(FALSE);
 }
@@ -2956,6 +3516,7 @@ have_eaterstone()
 			return(TRUE);
 		}
 	if (u.nastinator111) return TRUE;
+	if (sjwcheck(111)) return TRUE;
 	return(FALSE);
 }
 
@@ -2969,6 +3530,7 @@ have_covetousstone()
 			return(TRUE);
 		}
 	if (u.nastinator112) return TRUE;
+	if (sjwcheck(112)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 13 && u.femauspices13 == 5) return TRUE;
 	return(FALSE);
 }
@@ -2983,6 +3545,7 @@ have_nonseeingstone()
 			return(TRUE);
 		}
 	if (u.nastinator113) return TRUE;
+	if (sjwcheck(113)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 20 && u.femauspices20 == 5) return TRUE;
 	return(FALSE);
 }
@@ -2997,6 +3560,7 @@ have_darkmodestone()
 			return(TRUE);
 		}
 	if (u.nastinator114) return TRUE;
+	if (sjwcheck(114)) return TRUE;
 	return(FALSE);
 }
 
@@ -3010,6 +3574,7 @@ have_unfindablestone()
 			return(TRUE);
 		}
 	if (u.nastinator115) return TRUE;
+	if (sjwcheck(115)) return TRUE;
 	return(FALSE);
 }
 
@@ -3023,6 +3588,7 @@ have_homicidestone()
 			return(TRUE);
 		}
 	if (u.nastinator116) return TRUE;
+	if (sjwcheck(116)) return TRUE;
 	return(FALSE);
 }
 
@@ -3036,6 +3602,7 @@ have_multitrappingstone()
 			return(TRUE);
 		}
 	if (u.nastinator117) return TRUE;
+	if (sjwcheck(117)) return TRUE;
 	return(FALSE);
 }
 
@@ -3049,6 +3616,7 @@ have_wakeupcallstone()
 			return(TRUE);
 		}
 	if (u.nastinator118) return TRUE;
+	if (sjwcheck(118)) return TRUE;
 	return(FALSE);
 }
 
@@ -3062,6 +3630,7 @@ have_grayoutstone()
 			return(TRUE);
 		}
 	if (u.nastinator119) return TRUE;
+	if (sjwcheck(119)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 25 && u.femauspices25 == 1) return TRUE;
 	return(FALSE);
 }
@@ -3076,6 +3645,7 @@ have_graycenterstone()
 			return(TRUE);
 		}
 	if (u.nastinator120) return TRUE;
+	if (sjwcheck(120)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 25 && u.femauspices25 == 2) return TRUE;
 	return(FALSE);
 }
@@ -3090,6 +3660,7 @@ have_checkerboardstone()
 			return(TRUE);
 		}
 	if (u.nastinator121) return TRUE;
+	if (sjwcheck(121)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 25 && u.femauspices25 == 3) return TRUE;
 	return(FALSE);
 }
@@ -3104,6 +3675,7 @@ have_clockwisestone()
 			return(TRUE);
 		}
 	if (u.nastinator122) return TRUE;
+	if (sjwcheck(122)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 30 && u.femauspices30 == 6) return TRUE;
 	return(FALSE);
 }
@@ -3118,6 +3690,7 @@ have_counterclockwisestone()
 			return(TRUE);
 		}
 	if (u.nastinator123) return TRUE;
+	if (sjwcheck(123)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 30 && u.femauspices30 == 7) return TRUE;
 	return(FALSE);
 }
@@ -3132,6 +3705,7 @@ have_lagstone()
 			return(TRUE);
 		}
 	if (u.nastinator124) return TRUE;
+	if (sjwcheck(124)) return TRUE;
 	return(FALSE);
 }
 
@@ -3146,6 +3720,7 @@ have_blesscursestone()
 		}
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 15 && u.femauspices15 == 6) return TRUE;
 	if (u.nastinator125) return TRUE;
+	if (sjwcheck(125)) return TRUE;
 	return(FALSE);
 }
 
@@ -3159,6 +3734,7 @@ have_delightstone()
 			return(TRUE);
 		}
 	if (u.nastinator126) return TRUE;
+	if (sjwcheck(126)) return TRUE;
 	return(FALSE);
 }
 
@@ -3172,6 +3748,7 @@ have_dischargestone()
 			return(TRUE);
 		}
 	if (u.nastinator127) return TRUE;
+	if (sjwcheck(127)) return TRUE;
 	return(FALSE);
 }
 
@@ -3185,6 +3762,7 @@ have_trashstone()
 			return(TRUE);
 		}
 	if (u.nastinator128) return TRUE;
+	if (sjwcheck(128)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 28 && u.femauspices28 == 6) return TRUE;
 	return(FALSE);
 }
@@ -3199,6 +3777,7 @@ have_filteringstone()
 			return(TRUE);
 		}
 	if (u.nastinator129) return TRUE;
+	if (sjwcheck(129)) return TRUE;
 	return(FALSE);
 }
 
@@ -3212,6 +3791,7 @@ have_deformattingstone()
 			return(TRUE);
 		}
 	if (u.nastinator130) return TRUE;
+	if (sjwcheck(130)) return TRUE;
 	return(FALSE);
 }
 
@@ -3225,6 +3805,7 @@ have_flickerstripstone()
 			return(TRUE);
 		}
 	if (u.nastinator131) return TRUE;
+	if (sjwcheck(131)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 6 && u.femauspices6 == 6) return TRUE;
 	return(FALSE);
 }
@@ -3239,6 +3820,7 @@ have_undressingstone()
 			return(TRUE);
 		}
 	if (u.nastinator132) return TRUE;
+	if (sjwcheck(132)) return TRUE;
 	return(FALSE);
 }
 
@@ -3252,6 +3834,7 @@ have_hyperbluestone()
 			return(TRUE);
 		}
 	if (u.nastinator133) return TRUE;
+	if (sjwcheck(133)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 8 && u.femauspices8 == 6) return TRUE;
 	return(FALSE);
 }
@@ -3266,6 +3849,7 @@ have_nolightstone()
 			return(TRUE);
 		}
 	if (u.nastinator134) return TRUE;
+	if (sjwcheck(134)) return TRUE;
 	return(FALSE);
 }
 
@@ -3279,6 +3863,7 @@ have_paranoiastone()
 			return(TRUE);
 		}
 	if (u.nastinator135) return TRUE;
+	if (sjwcheck(135)) return TRUE;
 	return(FALSE);
 }
 
@@ -3292,6 +3877,7 @@ have_fleecestone()
 			return(TRUE);
 		}
 	if (u.nastinator136) return TRUE;
+	if (sjwcheck(136)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 6 && u.femauspices6 == 7) return TRUE;
 	return(FALSE);
 }
@@ -3306,6 +3892,7 @@ have_interruptionstone()
 			return(TRUE);
 		}
 	if (u.nastinator137) return TRUE;
+	if (sjwcheck(137)) return TRUE;
 	return(FALSE);
 }
 
@@ -3319,6 +3906,7 @@ have_dustbinstone()
 			return(TRUE);
 		}
 	if (u.nastinator138) return TRUE;
+	if (sjwcheck(138)) return TRUE;
 	return(FALSE);
 }
 
@@ -3332,6 +3920,7 @@ have_batterystone()
 			return(TRUE);
 		}
 	if (u.nastinator139) return TRUE;
+	if (sjwcheck(139)) return TRUE;
 	return(FALSE);
 }
 
@@ -3345,6 +3934,7 @@ have_butterfingerstone()
 			return(TRUE);
 		}
 	if (u.nastinator140) return TRUE;
+	if (sjwcheck(140)) return TRUE;
 	return(FALSE);
 }
 
@@ -3358,6 +3948,7 @@ have_miscastingstone()
 			return(TRUE);
 		}
 	if (u.nastinator141) return TRUE;
+	if (sjwcheck(141)) return TRUE;
 	return(FALSE);
 }
 
@@ -3371,6 +3962,7 @@ have_messagesuppressionstone()
 			return(TRUE);
 		}
 	if (u.nastinator142) return TRUE;
+	if (sjwcheck(142)) return TRUE;
 	return(FALSE);
 }
 
@@ -3384,6 +3976,7 @@ have_stuckannouncementstone()
 			return(TRUE);
 		}
 	if (u.nastinator143) return TRUE;
+	if (sjwcheck(143)) return TRUE;
 	return(FALSE);
 }
 
@@ -3397,6 +3990,7 @@ have_stormstone()
 			return(TRUE);
 		}
 	if (u.nastinator144) return TRUE;
+	if (sjwcheck(144)) return TRUE;
 	return(FALSE);
 }
 
@@ -3410,6 +4004,7 @@ have_maximumdamagestone()
 			return(TRUE);
 		}
 	if (u.nastinator145) return TRUE;
+	if (sjwcheck(145)) return TRUE;
 	return(FALSE);
 }
 
@@ -3423,6 +4018,7 @@ have_latencystone()
 			return(TRUE);
 		}
 	if (u.nastinator146) return TRUE;
+	if (sjwcheck(146)) return TRUE;
 	return(FALSE);
 }
 
@@ -3436,6 +4032,7 @@ have_starlitskystone()
 			return(TRUE);
 		}
 	if (u.nastinator147) return TRUE;
+	if (sjwcheck(147)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 25 && u.femauspices25 == 5) return TRUE;
 	return(FALSE);
 }
@@ -3450,6 +4047,7 @@ have_trapknowledgestone()
 			return(TRUE);
 		}
 	if (u.nastinator148) return TRUE;
+	if (sjwcheck(148)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 25 && u.femauspices25 == 4) return TRUE;
 	return(FALSE);
 }
@@ -3464,6 +4062,7 @@ have_highscorestone()
 			return(TRUE);
 		}
 	if (u.nastinator149) return TRUE;
+	if (sjwcheck(149)) return TRUE;
 	return(FALSE);
 }
 
@@ -3477,6 +4076,7 @@ have_pinkspellstone()
 			return(TRUE);
 		}
 	if (u.nastinator150) return TRUE;
+	if (sjwcheck(150)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 11 && u.femauspices11 == 9) return TRUE;
 	return(FALSE);
 }
@@ -3491,6 +4091,7 @@ have_greenspellstone()
 			return(TRUE);
 		}
 	if (u.nastinator151) return TRUE;
+	if (sjwcheck(151)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 11 && u.femauspices11 == 5) return TRUE;
 	return(FALSE);
 }
@@ -3505,6 +4106,7 @@ have_evcstone()
 			return(TRUE);
 		}
 	if (u.nastinator152) return TRUE;
+	if (sjwcheck(152)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 20 && u.femauspices20 == 6) return TRUE;
 	return(FALSE);
 }
@@ -3519,6 +4121,7 @@ have_underlaidstone()
 			return(TRUE);
 		}
 	if (u.nastinator153) return TRUE;
+	if (sjwcheck(153)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 20 && u.femauspices20 == 7) return TRUE;
 	return(FALSE);
 }
@@ -3533,6 +4136,7 @@ have_damagemeterstone()
 			return(TRUE);
 		}
 	if (u.nastinator154) return TRUE;
+	if (sjwcheck(154)) return TRUE;
 	return(FALSE);
 }
 
@@ -3546,6 +4150,7 @@ have_weightstone()
 			return(TRUE);
 		}
 	if (u.nastinator155) return TRUE;
+	if (sjwcheck(155)) return TRUE;
 	return(FALSE);
 }
 
@@ -3559,6 +4164,7 @@ have_infofuckstone()
 			return(TRUE);
 		}
 	if (u.nastinator156) return TRUE;
+	if (sjwcheck(156)) return TRUE;
 	return(FALSE);
 }
 
@@ -3572,6 +4178,7 @@ have_blackspellstone()
 			return(TRUE);
 		}
 	if (u.nastinator157) return TRUE;
+	if (sjwcheck(157)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 11 && u.femauspices11 == 7) return TRUE;
 	return(FALSE);
 }
@@ -3586,6 +4193,7 @@ have_cyanspellstone()
 			return(TRUE);
 		}
 	if (u.nastinator158) return TRUE;
+	if (sjwcheck(158)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 11 && u.femauspices11 == 8) return TRUE;
 	return(FALSE);
 }
@@ -3600,6 +4208,7 @@ have_heapstone()
 			return(TRUE);
 		}
 	if (u.nastinator159) return TRUE;
+	if (sjwcheck(159)) return TRUE;
 	return(FALSE);
 }
 
@@ -3613,6 +4222,7 @@ have_bluespellstone()
 			return(TRUE);
 		}
 	if (u.nastinator160) return TRUE;
+	if (sjwcheck(160)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 11 && u.femauspices11 == 4) return TRUE;
 	return(FALSE);
 }
@@ -3627,6 +4237,7 @@ have_tronstone()
 			return(TRUE);
 		}
 	if (u.nastinator161) return TRUE;
+	if (sjwcheck(161)) return TRUE;
 	return(FALSE);
 }
 
@@ -3640,6 +4251,7 @@ have_redspellstone()
 			return(TRUE);
 		}
 	if (u.nastinator162) return TRUE;
+	if (sjwcheck(162)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 11 && u.femauspices11 == 6) return TRUE;
 	return(FALSE);
 }
@@ -3654,6 +4266,7 @@ have_tooheavystone()
 			return(TRUE);
 		}
 	if (u.nastinator163) return TRUE;
+	if (sjwcheck(163)) return TRUE;
 	return(FALSE);
 }
 
@@ -3667,6 +4280,7 @@ have_elongatedstone()
 			return(TRUE);
 		}
 	if (u.nastinator164) return TRUE;
+	if (sjwcheck(164)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 28 && u.femauspices28 == 7) return TRUE;
 	return(FALSE);
 }
@@ -3681,6 +4295,7 @@ have_wrapoverstone()
 			return(TRUE);
 		}
 	if (u.nastinator165) return TRUE;
+	if (sjwcheck(165)) return TRUE;
 	return(FALSE);
 }
 
@@ -3694,6 +4309,7 @@ have_destructionstone()
 			return(TRUE);
 		}
 	if (u.nastinator166) return TRUE;
+	if (sjwcheck(166)) return TRUE;
 	return(FALSE);
 }
 
@@ -3707,6 +4323,7 @@ have_meleeprefixstone()
 			return(TRUE);
 		}
 	if (u.nastinator167) return TRUE;
+	if (sjwcheck(167)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 30 && u.femauspices30 == 8) return TRUE;
 	return(FALSE);
 }
@@ -3721,6 +4338,7 @@ have_automorestone()
 			return(TRUE);
 		}
 	if (u.nastinator168) return TRUE;
+	if (sjwcheck(168)) return TRUE;
 	return(FALSE);
 }
 
@@ -3734,6 +4352,7 @@ have_unfairattackstone()
 			return(TRUE);
 		}
 	if (u.nastinator169) return TRUE;
+	if (sjwcheck(169)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 28 && u.femauspices28 == 8) return TRUE;
 	return(FALSE);
 }
@@ -3748,6 +4367,7 @@ have_orangespellstone()
 			return(TRUE);
 		}
 	if (u.nastinator170) return TRUE;
+	if (sjwcheck(170)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 11 && u.femauspices11 == 10) return TRUE;
 	return(FALSE);
 }
@@ -3762,6 +4382,7 @@ have_violetspellstone()
 			return(TRUE);
 		}
 	if (u.nastinator171) return TRUE;
+	if (sjwcheck(171)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 11 && u.femauspices11 == 11) return TRUE;
 	return(FALSE);
 }
@@ -3776,6 +4397,7 @@ have_longingstone()
 			return(TRUE);
 		}
 	if (u.nastinator172) return TRUE;
+	if (sjwcheck(172)) return TRUE;
 	return(FALSE);
 }
 
@@ -3789,6 +4411,7 @@ have_cursedpartstone()
 			return(TRUE);
 		}
 	if (u.nastinator173) return TRUE;
+	if (sjwcheck(173)) return TRUE;
 	return(FALSE);
 }
 
@@ -3802,6 +4425,7 @@ have_quaversalstone()
 			return(TRUE);
 		}
 	if (u.nastinator174) return TRUE;
+	if (sjwcheck(174)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 30 && u.femauspices30 == 9) return TRUE;
 	return(FALSE);
 }
@@ -3816,6 +4440,7 @@ have_appearanceshufflingstone()
 			return(TRUE);
 		}
 	if (u.nastinator175) return TRUE;
+	if (sjwcheck(175)) return TRUE;
 	return(FALSE);
 }
 
@@ -3829,6 +4454,7 @@ have_brownspellstone()
 			return(TRUE);
 		}
 	if (u.nastinator176) return TRUE;
+	if (sjwcheck(176)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 11 && u.femauspices11 == 12) return TRUE;
 	return(FALSE);
 }
@@ -3843,6 +4469,7 @@ have_choicelessstone()
 			return(TRUE);
 		}
 	if (u.nastinator177) return TRUE;
+	if (sjwcheck(177)) return TRUE;
 	return(FALSE);
 }
 
@@ -3856,6 +4483,7 @@ have_goldspellstone()
 			return(TRUE);
 		}
 	if (u.nastinator178) return TRUE;
+	if (sjwcheck(178)) return TRUE;
 	return(FALSE);
 }
 
@@ -3869,6 +4497,7 @@ have_deprovementstone()
 			return(TRUE);
 		}
 	if (u.nastinator179) return TRUE;
+	if (sjwcheck(179)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 25 && u.femauspices25 == 6) return TRUE;
 	return(FALSE);
 }
@@ -3883,6 +4512,7 @@ have_initializationstone()
 			return(TRUE);
 		}
 	if (u.nastinator180) return TRUE;
+	if (sjwcheck(180)) return TRUE;
 	return(FALSE);
 }
 
@@ -3896,6 +4526,7 @@ have_gushlushstone()
 			return(TRUE);
 		}
 	if (u.nastinator181) return TRUE;
+	if (sjwcheck(181)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 25 && u.femauspices25 == 7) return TRUE;
 	return(FALSE);
 }
@@ -3910,6 +4541,7 @@ have_soiltypestone()
 			return(TRUE);
 		}
 	if (u.nastinator182) return TRUE;
+	if (sjwcheck(182)) return TRUE;
 	return(FALSE);
 }
 
@@ -3923,6 +4555,7 @@ have_dangerousterrainstone()
 			return(TRUE);
 		}
 	if (u.nastinator183) return TRUE;
+	if (sjwcheck(183)) return TRUE;
 	return(FALSE);
 }
 
@@ -3936,6 +4569,7 @@ have_falloutstone()
 			return(TRUE);
 		}
 	if (u.nastinator184) return TRUE;
+	if (sjwcheck(184)) return TRUE;
 	return(FALSE);
 }
 
@@ -3949,6 +4583,7 @@ have_mojibakestone()
 			return(TRUE);
 		}
 	if (u.nastinator185) return TRUE;
+	if (sjwcheck(185)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 6 && u.femauspices6 == 8) return TRUE;
 	return(FALSE);
 }
@@ -3963,6 +4598,7 @@ have_gravationstone()
 			return(TRUE);
 		}
 	if (u.nastinator186) return TRUE;
+	if (sjwcheck(186)) return TRUE;
 	return(FALSE);
 }
 
@@ -3976,6 +4612,7 @@ have_uncalledstone()
 			return(TRUE);
 		}
 	if (u.nastinator187) return TRUE;
+	if (sjwcheck(187)) return TRUE;
 	return(FALSE);
 }
 
@@ -3989,6 +4626,7 @@ have_explodingdicestone()
 			return(TRUE);
 		}
 	if (u.nastinator188) return TRUE;
+	if (sjwcheck(188)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 17 && u.femauspices17 == 7) return TRUE;
 	return(FALSE);
 }
@@ -4003,6 +4641,7 @@ have_permacursestone()
 			return(TRUE);
 		}
 	if (u.nastinator189) return TRUE;
+	if (sjwcheck(189)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 4 && u.femauspices4 == 7) return TRUE;
 	return(FALSE);
 }
@@ -4017,6 +4656,7 @@ have_shroudedidentitystone()
 			return(TRUE);
 		}
 	if (u.nastinator190) return TRUE;
+	if (sjwcheck(190)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 13 && u.femauspices13 == 6) return TRUE;
 	return(FALSE);
 }
@@ -4031,6 +4671,7 @@ have_feelergaugesstone()
 			return(TRUE);
 		}
 	if (u.nastinator191) return TRUE;
+	if (sjwcheck(191)) return TRUE;
 	return(FALSE);
 }
 
@@ -4044,6 +4685,7 @@ have_longscrewupstone()
 			return(TRUE);
 		}
 	if (u.nastinator192) return TRUE;
+	if (sjwcheck(192)) return TRUE;
 	return(FALSE);
 }
 
@@ -4057,6 +4699,7 @@ have_wingyellowstone()
 			return(TRUE);
 		}
 	if (u.nastinator193) return TRUE;
+	if (sjwcheck(193)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 20 && u.femauspices20 == 8) return TRUE;
 	return(FALSE);
 }
@@ -4071,6 +4714,7 @@ have_lifesavingstone()
 			return(TRUE);
 		}
 	if (u.nastinator194) return TRUE;
+	if (sjwcheck(194)) return TRUE;
 	return(FALSE);
 }
 
@@ -4084,6 +4728,7 @@ have_curseusestone()
 			return(TRUE);
 		}
 	if (u.nastinator195) return TRUE;
+	if (sjwcheck(195)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 15 && u.femauspices15 == 7) return TRUE;
 	return(FALSE);
 }
@@ -4098,6 +4743,7 @@ have_cutnutritionstone()
 			return(TRUE);
 		}
 	if (u.nastinator196) return TRUE;
+	if (sjwcheck(196)) return TRUE;
 	return(FALSE);
 }
 
@@ -4111,6 +4757,7 @@ have_skilllossstone()
 			return(TRUE);
 		}
 	if (u.nastinator197) return TRUE;
+	if (sjwcheck(197)) return TRUE;
 	return(FALSE);
 }
 
@@ -4124,6 +4771,7 @@ have_autopilotstone()
 			return(TRUE);
 		}
 	if (u.nastinator198) return TRUE;
+	if (sjwcheck(198)) return TRUE;
 	return(FALSE);
 }
 
@@ -4137,6 +4785,7 @@ have_forcestone()
 			return(TRUE);
 		}
 	if (u.nastinator199) return TRUE;
+	if (sjwcheck(199)) return TRUE;
 	return(FALSE);
 }
 
@@ -4150,6 +4799,7 @@ have_monsterglyphstone()
 			return(TRUE);
 		}
 	if (u.nastinator200) return TRUE;
+	if (sjwcheck(200)) return TRUE;
 	return(FALSE);
 }
 
@@ -4163,6 +4813,7 @@ have_changingdirectivestone()
 			return(TRUE);
 		}
 	if (u.nastinator201) return TRUE;
+	if (sjwcheck(201)) return TRUE;
 	return(FALSE);
 }
 
@@ -4176,6 +4827,7 @@ have_containerkaboomstone()
 			return(TRUE);
 		}
 	if (u.nastinator202) return TRUE;
+	if (sjwcheck(202)) return TRUE;
 	return(FALSE);
 }
 
@@ -4189,6 +4841,7 @@ have_stealdegradestone()
 			return(TRUE);
 		}
 	if (u.nastinator203) return TRUE;
+	if (sjwcheck(203)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 15 && u.femauspices15 == 8) return TRUE;
 	return(FALSE);
 }
@@ -4203,6 +4856,7 @@ have_leftinventorystone()
 			return(TRUE);
 		}
 	if (u.nastinator204) return TRUE;
+	if (sjwcheck(204)) return TRUE;
 	return(FALSE);
 }
 
@@ -4216,6 +4870,7 @@ have_fluctuatingspeedstone()
 			return(TRUE);
 		}
 	if (u.nastinator205) return TRUE;
+	if (sjwcheck(205)) return TRUE;
 	return(FALSE);
 }
 
@@ -4229,6 +4884,7 @@ have_tarmustrokingnorastone()
 			return(TRUE);
 		}
 	if (u.nastinator206) return TRUE;
+	if (sjwcheck(206)) return TRUE;
 	return(FALSE);
 }
 
@@ -4242,6 +4898,7 @@ have_failurestone()
 			return(TRUE);
 		}
 	if (u.nastinator207) return TRUE;
+	if (sjwcheck(207)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 4 && u.femauspices4 == 8) return TRUE;
 	return(FALSE);
 }
@@ -4256,6 +4913,7 @@ have_brightcyanspellstone()
 			return(TRUE);
 		}
 	if (u.nastinator208) return TRUE;
+	if (sjwcheck(208)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 11 && u.femauspices11 == 13) return TRUE;
 	return(FALSE);
 }
@@ -4270,6 +4928,7 @@ have_frequentationspawnstone()
 			return(TRUE);
 		}
 	if (u.nastinator209) return TRUE;
+	if (sjwcheck(209)) return TRUE;
 	return(FALSE);
 }
 
@@ -4283,6 +4942,7 @@ have_petaistone()
 			return(TRUE);
 		}
 	if (u.nastinator210) return TRUE;
+	if (sjwcheck(210)) return TRUE;
 	return(FALSE);
 }
 
@@ -4296,6 +4956,7 @@ have_satanstone()
 			return(TRUE);
 		}
 	if (u.nastinator211) return TRUE;
+	if (sjwcheck(211)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 13 && u.femauspices13 == 7) return TRUE;
 	return(FALSE);
 }
@@ -4310,6 +4971,7 @@ have_rememberancestone()
 			return(TRUE);
 		}
 	if (u.nastinator212) return TRUE;
+	if (sjwcheck(212)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 22 && u.femauspices22 == 7) return TRUE;
 	return(FALSE);
 }
@@ -4324,6 +4986,7 @@ have_pokeliestone()
 			return(TRUE);
 		}
 	if (u.nastinator213) return TRUE;
+	if (sjwcheck(213)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 8 && u.femauspices8 == 7) return TRUE;
 	return(FALSE);
 }
@@ -4338,6 +5001,7 @@ have_autopickupstone()
 			return(TRUE);
 		}
 	if (u.nastinator214) return TRUE;
+	if (sjwcheck(214)) return TRUE;
 	return(FALSE);
 }
 
@@ -4351,6 +5015,7 @@ have_dywypistone()
 			return(TRUE);
 		}
 	if (u.nastinator215) return TRUE;
+	if (sjwcheck(215)) return TRUE;
 	return(FALSE);
 }
 
@@ -4364,6 +5029,7 @@ have_silverspellstone()
 			return(TRUE);
 		}
 	if (u.nastinator216) return TRUE;
+	if (sjwcheck(216)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 11 && u.femauspices11 == 14) return TRUE;
 	return(FALSE);
 }
@@ -4378,6 +5044,7 @@ have_metalspellstone()
 			return(TRUE);
 		}
 	if (u.nastinator217) return TRUE;
+	if (sjwcheck(217)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 11 && u.femauspices11 == 15) return TRUE;
 	return(FALSE);
 }
@@ -4392,6 +5059,7 @@ have_platinumspellstone()
 			return(TRUE);
 		}
 	if (u.nastinator218) return TRUE;
+	if (sjwcheck(218)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 11 && u.femauspices11 == 16) return TRUE;
 	return(FALSE);
 }
@@ -4406,6 +5074,7 @@ have_manlerstone()
 			return(TRUE);
 		}
 	if (u.nastinator219) return TRUE;
+	if (sjwcheck(219)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 25 && u.femauspices25 == 8) return TRUE;
 	return(FALSE);
 }
@@ -4420,6 +5089,7 @@ have_doorningstone()
 			return(TRUE);
 		}
 	if (u.nastinator220) return TRUE;
+	if (sjwcheck(220)) return TRUE;
 	return(FALSE);
 }
 
@@ -4433,6 +5103,7 @@ have_nownsiblestone()
 			return(TRUE);
 		}
 	if (u.nastinator221) return TRUE;
+	if (sjwcheck(221)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 22 && u.femauspices22 == 8) return TRUE;
 	return(FALSE);
 }
@@ -4447,6 +5118,7 @@ have_elmstreetstone()
 			return(TRUE);
 		}
 	if (u.nastinator222) return TRUE;
+	if (sjwcheck(222)) return TRUE;
 	return(FALSE);
 }
 
@@ -4460,6 +5132,7 @@ have_monnoisestone()
 			return(TRUE);
 		}
 	if (u.nastinator223) return TRUE;
+	if (sjwcheck(223)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 8 && u.femauspices8 == 8) return TRUE;
 	return(FALSE);
 }
@@ -4474,6 +5147,7 @@ have_rangcallstone()
 			return(TRUE);
 		}
 	if (u.nastinator224) return TRUE;
+	if (sjwcheck(224)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 28 && u.femauspices28 == 9) return TRUE;
 	return(FALSE);
 }
@@ -4488,6 +5162,7 @@ have_recurringspelllossstone()
 			return(TRUE);
 		}
 	if (u.nastinator225) return TRUE;
+	if (sjwcheck(225)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 4 && u.femauspices4 == 9) return TRUE;
 	return(FALSE);
 }
@@ -4502,6 +5177,7 @@ have_antitrainingstone()
 			return(TRUE);
 		}
 	if (u.nastinator226) return TRUE;
+	if (sjwcheck(226)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 4 && u.femauspices4 == 10) return TRUE;
 	return(FALSE);
 }
@@ -4516,6 +5192,7 @@ have_techoutstone()
 			return(TRUE);
 		}
 	if (u.nastinator227) return TRUE;
+	if (sjwcheck(227)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 4 && u.femauspices4 == 11) return TRUE;
 	return(FALSE);
 }
@@ -4530,6 +5207,7 @@ have_statdecaystone()
 			return(TRUE);
 		}
 	if (u.nastinator228) return TRUE;
+	if (sjwcheck(228)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 30 && u.femauspices30 == 10) return TRUE;
 	return(FALSE);
 }
@@ -4544,6 +5222,7 @@ have_movemorkstone()
 			return(TRUE);
 		}
 	if (u.nastinator229) return TRUE;
+	if (sjwcheck(229)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 13 && u.femauspices13 == 8) return TRUE;
 	return(FALSE);
 }
@@ -4558,6 +5237,7 @@ have_badpartstone()
 			return(TRUE);
 		}
 	if (u.nastinator230) return TRUE;
+	if (sjwcheck(230)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 13 && u.femauspices13 == 9) return TRUE;
 	return(FALSE);
 }
@@ -4572,6 +5252,7 @@ have_completelybadpartstone()
 			return(TRUE);
 		}
 	if (u.nastinator231) return TRUE;
+	if (sjwcheck(231)) return TRUE;
 	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 13 && u.femauspices13 == 10) return TRUE;
 	return(FALSE);
 }
@@ -4586,6 +5267,51 @@ have_evilvariantstone()
 			return(TRUE);
 		}
 	if (u.nastinator232) return TRUE;
+	if (sjwcheck(232)) return TRUE;
+	return(FALSE);
+}
+
+boolean
+have_sanitytreblestone()
+{
+	register struct obj *otmp;
+
+	for(otmp = invent; otmp; otmp = otmp->nobj) {
+		if(otmp->otyp == SANE_TREBLE_STONE)
+			return(TRUE);
+		}
+	if (u.nastinator233) return TRUE;
+	if (sjwcheck(233)) return TRUE;
+	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 6 && u.femauspices6 == 9) return TRUE;
+	return(FALSE);
+}
+
+boolean
+have_statdecreasestone()
+{
+	register struct obj *otmp;
+
+	for(otmp = invent; otmp; otmp = otmp->nobj) {
+		if(otmp->otyp == STATCREASE_STONE)
+			return(TRUE);
+		}
+	if (u.nastinator234) return TRUE;
+	if (sjwcheck(234)) return TRUE;
+	if (Role_if(PM_FEMINIST) && u.urmaxlvlUP >= 8 && u.femauspices8 == 9) return TRUE;
+	return(FALSE);
+}
+
+boolean
+have_simeoutstone()
+{
+	register struct obj *otmp;
+
+	for(otmp = invent; otmp; otmp = otmp->nobj) {
+		if(otmp->otyp == SIMEOUT_STONE)
+			return(TRUE);
+		}
+	if (u.nastinator235) return TRUE;
+	if (sjwcheck(235)) return TRUE;
 	return(FALSE);
 }
 
@@ -4773,6 +5499,7 @@ struct obj *otmp;
 		      otyp != DEMON_CROSSBOW &&
 		      otyp != AUTO_SHOTGUN &&
 		      otyp != ASSAULT_RIFLE &&
+		      otyp != KALASHNIKOV &&
 		      otyp != FRAG_GRENADE &&
 		      otyp != GAS_GRENADE &&
 		      otyp != STICK_OF_DYNAMITE &&
@@ -4972,6 +5699,8 @@ register const char *let,*word;
 			|| otmp->otyp == RADIOACTIVE_UNDERGARMENT
 			|| otmp->otyp == KYRT_SHIRT
 			|| otmp->otyp == WOOLEN_SHIRT
+			|| otmp->otyp == YOGA_PANTS
+			|| otmp->otyp == GREEN_GOWN
 			|| otmp->otyp == RUFFLED_SHIRT
 			|| otmp->otyp == VICTORIAN_UNDERWEAR
 		    )))
@@ -7571,59 +8300,61 @@ struct obj *obj;
 
 			switch (obj->otyp) {
 
-			case ORCISH_DAGGER: 
+			case ORCISH_DAGGER:
 				pline("A crappy dagger that doesn't do much damage. It can be thrown."); break;
-			case DAGGER: 
+			case DAGGER:
 				pline("A basic dagger that doesn't do much damage. It can be thrown."); break;
-			case DROVEN_DAGGER: 
+			case DROVEN_DAGGER:
 				pline("This dagger does a lot of damage but breaks when thrown."); break;
-			case ATHAME: 
+			case ATHAME:
 				pline("A high-quality dagger that can create hard engravings. It can be thrown."); break;
-			case MERCURIAL_ATHAME: 
+			case MERCURIAL_ATHAME:
 				pline("This silver dagger can create hard engravings. It can be thrown."); break;
-			case SILVER_DAGGER: 
+			case SILVER_DAGGER:
 				pline("A dagger that does extra damage to undead. It can be thrown."); break;
-			case ELVEN_DAGGER: 
+			case ELVEN_DAGGER:
 				pline("Elven daggers do slightly more damage than standard daggers. It can be thrown."); break;
-			case DARK_ELVEN_DAGGER: 
+			case DARK_ELVEN_DAGGER:
 				pline("A good dagger that does respectable damage. It can be thrown."); break;
-			case WOODEN_STAKE: 
+			case WOODEN_STAKE:
 				pline("A quite powerful dagger. It can be thrown."); break;
-			case GREAT_DAGGER: 
+			case GREAT_DAGGER:
 				pline("Used to be the strongest dagger in the game, but now gets surpassed by droven daggers. Still stronger than the average dagger though. It can be thrown."); break;
-			case WORM_TOOTH: 
+			case WORM_TOOTH:
 				pline("A crappy knife that can be turned into a very powerful knife if enchanted. It can be thrown."); break;
-			case KNIFE: 
+			case KNIFE:
 				pline("A totally piece of crap weapon. It can be thrown."); break;
-			case SURVIVAL_KNIFE: 
+			case TENNIS_RACKET:
+				pline("This paddle doesn't do all that much damage, but it has a large to-hit bonus versus bats and birds."); break;
+			case SURVIVAL_KNIFE:
 				pline("A knife that deals extra damage to animals. It can be thrown."); break;
-			case STILETTO: 
+			case STILETTO:
 				pline("This knife is more likely to hit than a regular knife, but it's still awfully weak. It can be thrown."); break;
-			case SCALPEL: 
+			case SCALPEL:
 				pline("Don't bother with this knife-class weapon. The surgery technique works better if you have it in your inventory, though. It can be thrown."); break;
-			case CRYSKNIFE: 
+			case CRYSKNIFE:
 				pline("A magically enchanted knife that does superb damage. It can be thrown."); break;
-			case TOOTH_OF_AN_ALGOLIAN_SUNTIGER: 
+			case TOOTH_OF_AN_ALGOLIAN_SUNTIGER:
 				pline("This razor-sharp knife cuts meat like butter. It can be thrown."); break;
-			case AXE: 
+			case AXE:
 				pline("A standard axe that does moderate damage. It can be used to chop down trees."); break;
-			case OBSIDIAN_AXE: 
+			case OBSIDIAN_AXE:
 				pline("This glass axe does good damage to large monsters. It can be used to chop down trees."); break;
-			case MOON_AXE: 
+			case MOON_AXE:
 				pline("This silver axe does more damage than a standard axe and is super-effective versus undead. It can be used to chop down trees."); break;
-			case BATTLE_AXE: 
+			case BATTLE_AXE:
 				pline("A heavy two-handed axe that does moderate damage. It can be used to chop down trees."); break;
-			case DWARVISH_BATTLE_AXE: 
+			case DWARVISH_BATTLE_AXE:
 				pline("The heavy hitter among the axes that can chop down most monsters in a few hits. It can be used to chop down trees."); break;
-			case DWARVISH_MATTOCK: 
+			case DWARVISH_MATTOCK:
 				pline("A two-handed pick-axe that can do a lot of damage. It can be used for digging."); break;
-			case ORCISH_SHORT_SWORD: 
+			case ORCISH_SHORT_SWORD:
 				pline("The weakest short sword in the game. It is inferior to other short swords in every way."); break;
-			case SHORT_SWORD: 
+			case SHORT_SWORD:
 				pline("A basic short sword that doesn't deal a lot of damage."); break;
-			case VIBROBLADE: 
+			case VIBROBLADE:
 				pline("This object looks like a penis (LOL) and is made of plastic but otherwise it's exactly the same as a bog-standard short sword."); break;
-			case DROVEN_SHORT_SWORD: 
+			case DROVEN_SHORT_SWORD:
 				pline("Ever wanted a short sword that can actually hit armored enemies? Then this is for you. Don't throw it though."); break;
 			case SILVER_SHORT_SWORD: 
 				pline("A basic short sword that doesn't deal a lot of damage. It is effective against undead."); break;
@@ -7803,31 +8534,37 @@ struct obj *obj;
 				pline("A powerful two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
 			case SPETUM: 
 				pline("A finicky two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
-			case RANSEUR: 
+			case RANSEUR:
 				pline("An unreliable two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
-			case BARDICHE: 
+			case POLE_LANTERN:
+				pline("An unwieldy two-handed polearm that can be applied to hit monsters standing three squares away (monsters at a distance of one or two squares are too close to be hit). Using it at point blank range is only useful if you're riding."); break;
+			case NASTYPOLE:
+				pline("A nasty two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
+			case BOHEMIAN_EAR_SPOON:
+				pline("A reliable two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
+			case BARDICHE:
 				pline("A heavy two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
-			case VOULGE: 
+			case VOULGE:
 				pline("A dicey two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
-			case PITCHFORK: 
+			case PITCHFORK:
 				pline("A gardening two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
-			case HALBERD: 
+			case HALBERD:
 				pline("A massive two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
-			case BLACK_HALBERD: 
+			case BLACK_HALBERD:
 				pline("An inverted two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
-			case FAUCHARD: 
+			case FAUCHARD:
 				pline("A mediocre two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
-			case GUISARME: 
+			case GUISARME:
 				pline("A challenging two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
-			case BILL_GUISARME: 
+			case BILL_GUISARME:
 				pline("A reinforced two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
-			case LUCERN_HAMMER: 
+			case LUCERN_HAMMER:
 				pline("A ferocious two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
-			case BEC_DE_CORBIN: 
+			case BEC_DE_CORBIN:
 				pline("A strong two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
-			case SICKLE: 
+			case SICKLE:
 				pline("A weak one-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
-			case ELVEN_SICKLE: 
+			case ELVEN_SICKLE:
 				pline("A useful one-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
 			case SCYTHE: 
 				pline("An extra-damaging two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
@@ -7889,6 +8626,8 @@ struct obj *obj;
 				pline("An edible broadsword."); break;
 			case ICKY_BLADE:
 				pline("This long sword has increased chance to hit."); break;
+			case FLAME_MOUNTAIN:
+				pline("If you wield this long sword while your other hand is empty (i.e. neither wearing a shield nor wielding a second weapon), it deals extra damage."); break;
 			case GRANITE_IMPALER:
 				pline("It's a rather strong longsword, comparable damage-wise with the katana."); break;
 			case ORGANOBLADE:
@@ -7921,6 +8660,8 @@ struct obj *obj;
 				pline("Made of a different material and otherwise similar to the bog-standard mace."); break;
 			case BRONZE_MACE:
 				pline("It's a mace made of copper, and it doesn't do a lot of damage."); break;
+			case ORNATE_MACE:
+				pline("It's a mace made of gold, and it does only little damage."); break;
 			case MILL_PAIL:
 				pline("A nature-friendly mace that does respectable damage."); break;
 			case BACKHAND_MACE:
@@ -7975,6 +8716,10 @@ struct obj *obj;
 				pline("A forking two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
 			case PIKE:
 				pline("A long two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
+			case DARK_BAR:
+				pline("A darkness-loving two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding. It can also hit squares that you can't actually see."); break;
+			case YITH_TENTACLE:
+				pline("A lovecraftian two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding. Its range is slightly bigger than that of a regular polearm, but wielding it for a prolonged time will increase your sanity."); break;
 			case PHYSICIAN_BAR:
 				pline("A regenerative two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding. Yes, wielding it speeds up your hit point regeneration rate."); break;
 			case HELMET_BEARD:
@@ -7987,6 +8732,8 @@ struct obj *obj;
 				pline("A super-long-range two-handed polearm that can be applied to hit monsters standing two or sometimes even more squares away (need to experiment to find out what range is allowed). Using it at point blank range is only useful if you're riding."); break;
 			case GIANT_SCYTHE:
 				pline("A gigantic two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
+			case GRAIN_SCYTHE:
+				pline("A spliced two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
 			case THRESHER:
 				pline("A humongous two-handed polearm that can be applied to hit monsters standing two squares away. Using it at point blank range is only useful if you're riding."); break;
 			case INKA_SPEAR:
@@ -8051,6 +8798,8 @@ struct obj *obj;
 				pline("Uses the shuriken skill. It is made of soft material and therefore does less damage than a real shuriken. Meant to be used for throwing."); break;
 			case TAR_STAR:
 				pline("These shuriken can be thrown at enemies."); break;
+			case WINDMILL_BLADE:
+				pline("It's a particularly damaging shuriken that's also made of noneroding material."); break;
 			case INKA_SHACKLE:
 				pline("A very lovely whip that can cause incredibly soothing pain :) Joking aside, it does relatively good damage and has increased to-hit, but whips are generally a weak type of weapon."); break;
 			case BULLETPROOF_CHAINWHIP:
@@ -8115,6 +8864,8 @@ struct obj *obj;
 				pline("This firearm is capable of shooting bullets to deal damage to enemies."); break;
 			case FLINTLOCK: 
 				pline("You can theoretically use this firearm to shoot single bullets at monsters, but I'd advise you to use an actual pistol instead."); break;
+			case BEAM_REFLECTOR_GUN: 
+				pline("It's a pistol with low range, but wielding it grants you reflection. You can shoot bullets with it."); break;
 			case BFG: 
 #ifdef PHANTOM_CRASH_BUG
 				pline("This bad boy will fire a heck of a lot of green beams (BFG ammo) per turn. If you can hit with it, you'll be capable of bringing even the strongest monsters down to their knees."); break;
@@ -8135,8 +8886,10 @@ struct obj *obj;
 				pline("The heavy machine gun requires two hands to use, but it can rip monsters a new one by firing 8 bullets per turn."); break;
 			case RIFLE: 
 				pline("A two-handed gun with a low rate of fire that shoots single bullets at enemies."); break;
-			case ASSAULT_RIFLE: 
+			case ASSAULT_RIFLE:
 				pline("Your standard-issue heavy firearm that fires 5 bullets in one turn."); break;
+			case KALASHNIKOV:
+				pline("This two-handed russian assault rifle can fire up to 7 bullets per turn."); break;
 			case SNIPER_RIFLE: 
 				pline("Very slow, two-handed, but highly accurate. It fires single bullets."); break;
 			case SHOTGUN: 
@@ -8232,6 +8985,8 @@ struct obj *obj;
 				pline("A whip that doesn't erode, but it doesn't deal any significant damage either."); break;
 			case FLAME_WHIP: 
 				pline("Utterly useless weapon. I guess if you just don't have anything else..."); break;
+			case RAZOR_WHIP: 
+				pline("Yet another random whip-type weapon that does almost no damage."); break;
 			case ROSE_WHIP: 
 				pline("The only use for this wooden weapon is if you want to train your whip skill for some reason. It deals next to no damage."); break;
 
@@ -8702,6 +9457,10 @@ struct obj *obj;
 				pline("It's an extra piece of armor that goes in the shirt slot. It can be read."); break;
 			case WOOLEN_SHIRT: 
 				pline("A shirt that provides cold resistance when worn. It can be read."); break;
+			case YOGA_PANTS: 
+				pline("It's actually a shirt. It can be read."); break;
+			case GREEN_GOWN: 
+				pline("A rather regular shirt, the only interesting thing about it is its green color which doesn't actually change anything. It can be read."); break;
 			case SWIMSUIT: 
 				pline("A plastic shirt that allows you to swim in water. It can be read."); break;
 			case BEAUTIFUL_SHIRT: 
@@ -8762,35 +9521,39 @@ struct obj *obj;
 				pline("This very lovely piece of cloth (which counts as a shirt) offers medium magic cancellation. It can be read."); break;
 			case BODYGLOVE: 
 				pline("Good thing this item is not unbalanced at all. Just a t-shirt that offers sickness resistance and maximum magic cancel-WAIT WHAT OMG I GOTTA WEAR THIS SO BAD!!! It can be read."); break;
-			case STRIPED_SHIRT: 
+			case STRIPED_SHIRT:
 				pline("A shirt that can be worn under a suit of armor. Shopkeepers who see you wearing this will not allow you to enter their shop. It can be read."); break;
-			case RUFFLED_SHIRT: 
+			case RUFFLED_SHIRT:
 				pline("A shirt that can be worn under a suit of armor. If you wear a cursed one, you have a small chance of reviving on death. It can be read."); break;
-			case VICTORIAN_UNDERWEAR: 
+			case VICTORIAN_UNDERWEAR:
 				pline("This wonderful piece of clothing can be worn under a suit of armor to grant 3 points of magic cancellation. If you wear a cursed one, you have a small chance of reviving on death. It can be read."); break;
-			case PLATE_MAIL: 
+			case PLATE_MAIL:
 				pline("A very heavy suit of armor that offers good protection."); break;
-			case FULL_PLATE_MAIL: 
+			case FULL_PLATE_MAIL:
 				pline("This suit of armor covers your whole body and offers great protection, but it's also really heavy."); break;
-			case DROVEN_PLATE_MAIL: 
+			case DROVEN_PLATE_MAIL:
 				pline("This plate mail is light, but it offers less protection than actual plate mail."); break;
-			case PLASTEEL_ARMOR: 
+			case PLASTEEL_ARMOR:
 				pline("A low-weight suit of armor with a good armor value."); break;
-			case CRYSTAL_PLATE_MAIL: 
+			case CRYSTAL_PLATE_MAIL:
 				pline("A very heavy suit of armor that offers good protection."); break;
-			case BRONZE_PLATE_MAIL: 
+			case BRONZE_PLATE_MAIL:
 				pline("This suit of armor is inferior to regular plate mail."); break;
-			case SPLINT_MAIL: 
+			case SPLINT_MAIL:
 				pline("A robust suit of armor that offers good protection."); break;
-			case OLIHARCON_SPLINT_MAIL: 
+			case OLIHARCON_SPLINT_MAIL:
 				pline("This robust suit of armor is made of a rare material whose name nobody can spell correctly (for reference: it's ORICHALCUM); it offers good protection."); break;
-			case BAMBOO_MAIL: 
+			case BAMBOO_MAIL:
 				pline("A relatively weak suit of armor."); break;
-			case SAILOR_BLOUSE: 
+			case LIZARD_SCALE_MAIL:
+				pline("This armor grants petrification resistance, but weak AC."); break;
+			case LIZARD_SCALES:
+				pline("This armor grants petrification resistance, but very weak AC."); break;
+			case SAILOR_BLOUSE:
 				pline("It's light and yet offers some protection."); break;
-			case SAFEGUARD_SUIT: 
+			case SAFEGUARD_SUIT:
 				pline("Almost no AC but it grants you the ability to swim."); break;
-			case FEATHER_ARMOR: 
+			case FEATHER_ARMOR:
 				pline("Believe it or not, this armor actually has magic cancellation in addition to its low amount of AC."); break;
 			case SCHOOL_UNIFORM: 
 				pline("A useless armor that you should wear only if you really can't find anything better."); break;
@@ -9297,6 +10060,10 @@ struct obj *obj;
 				pline("A cloak that makes you resistant to the base elements while also giving you 3 points of magic cancellation."); break;
 			case PSIONIC_CLOAK:
 				pline("Psi resistance and 3 points of magic cancellation are what you get by wearing this."); break;
+			case SECOND_SKIN:
+				pline("A cloak that gives regeneration, but only low magic cancellation."); break;
+			case CLOAK_OF_FLIGHT:
+				pline("Well there's certainly better cloaks, but at least this one gives flying. It has only low magic cancellation though."); break;
 
 			case AYANAMI_WRAPPING:
 				pline("No defense but low magic cancellation."); break;
@@ -9543,6 +10310,12 @@ struct obj *obj;
 				pline("This helm causes amnesia. It provides very good AC and 3 points of magic cancellation."); break;
 			case HELM_OF_TELEPORTATION:
 				pline("Put it on to get teleportitis. Usually generated cursed."); break;
+			case OILSKIN_COIF:
+				pline("While wearing this helm, you're almost immune to mind flayer tentacles."); break;
+			case HELM_OF_OPAQUE_THOUGHTS:
+				pline("It's a helmet that conveys psi resistance."); break;
+			case HELM_OF_ANTI_MAGIC:
+				pline("Wearing this helmet conveys magic resistance and produces an anti-magic shell."); break;
 			case HELM_OF_TELEPORT_CONTROL:
 				pline("Control your teleports by wearing this helm."); break;
 			case BIGSCRIPT_HELM:
@@ -9588,6 +10361,8 @@ struct obj *obj;
 				pline("A pair of gauntlets that allows you to swim in water."); break;
 			case GAUNTLETS_OF_PLUGSUIT:
 				pline("Wearing this pair of gloves does nothing special."); break;
+			case ROGUES_GLOVES:
+				pline("These gloves improve your searching ability by automatically searching for traps and secret doors every turn."); break;
 			case COMMANDER_GLOVES:
 				pline("They sure look good but unfortunately these gloves are actually rather plain."); break;
 			case FIELD_GLOVES:
@@ -9714,6 +10489,8 @@ struct obj *obj;
 				pline("A glass shield that reflects beams at who- or whatever shot them."); break;
 			case RAPIRAPI:
 				pline("This is a good shield made of mineral."); break;
+			case HIDE_SHIELD:
+				pline("While this leather shield has relatively bad defense, it's quite good for blocking projectiles."); break;
 			case PAPER_SHIELD:
 				pline("Someone in the chat suggested this shield (if it's you, feel free to remember me so I can give credits). It gives no armor class at all but a high chance to block projectiles."); break;
 			case ICE_SHIELD:
@@ -10076,8 +10853,16 @@ struct obj *obj;
 				pline("This cloak is not randomly generated and only appears under certain rare conditions, but it has properties anyway just in case one does generate (as seen here, since otherwise you wouldn't be reading this). Its main property is %s, but it gives armor class of %d and magic cancellation of %d as well.", enchname(objects[DUMMY_CLOAK_T].oc_oprop), objects[DUMMY_CLOAK_T].a_ac, objects[DUMMY_CLOAK_T].a_can ); break;
 			case DUMMY_CLOAK_U: 
 				pline("This cloak is not randomly generated and only appears under certain rare conditions, but it has properties anyway just in case one does generate (as seen here, since otherwise you wouldn't be reading this). Its main property is %s, but it gives armor class of %d and magic cancellation of %d as well.", enchname(objects[DUMMY_CLOAK_U].oc_oprop), objects[DUMMY_CLOAK_U].a_ac, objects[DUMMY_CLOAK_U].a_can ); break;
-			case DUMMY_CLOAK_V: 
+			case DUMMY_CLOAK_V:
 				pline("This cloak is not randomly generated and only appears under certain rare conditions, but it has properties anyway just in case one does generate (as seen here, since otherwise you wouldn't be reading this). Its main property is %s, but it gives armor class of %d and magic cancellation of %d as well.", enchname(objects[DUMMY_CLOAK_V].oc_oprop), objects[DUMMY_CLOAK_V].a_ac, objects[DUMMY_CLOAK_V].a_can ); break;
+			case DUMMY_CLOAK_W:
+				pline("This cloak is not randomly generated and only appears under certain rare conditions, but it has properties anyway just in case one does generate (as seen here, since otherwise you wouldn't be reading this). Its main property is %s, but it gives armor class of %d and magic cancellation of %d as well.", enchname(objects[DUMMY_CLOAK_W].oc_oprop), objects[DUMMY_CLOAK_W].a_ac, objects[DUMMY_CLOAK_W].a_can ); break;
+			case DUMMY_CLOAK_X:
+				pline("This cloak is not randomly generated and only appears under certain rare conditions, but it has properties anyway just in case one does generate (as seen here, since otherwise you wouldn't be reading this). Its main property is %s, but it gives armor class of %d and magic cancellation of %d as well.", enchname(objects[DUMMY_CLOAK_X].oc_oprop), objects[DUMMY_CLOAK_X].a_ac, objects[DUMMY_CLOAK_X].a_can ); break;
+			case DUMMY_CLOAK_Y:
+				pline("This cloak is not randomly generated and only appears under certain rare conditions, but it has properties anyway just in case one does generate (as seen here, since otherwise you wouldn't be reading this). Its main property is %s, but it gives armor class of %d and magic cancellation of %d as well.", enchname(objects[DUMMY_CLOAK_Y].oc_oprop), objects[DUMMY_CLOAK_Y].a_ac, objects[DUMMY_CLOAK_Y].a_can ); break;
+			case DUMMY_CLOAK_Z:
+				pline("This cloak is not randomly generated and only appears under certain rare conditions, but it has properties anyway just in case one does generate (as seen here, since otherwise you wouldn't be reading this). Its main property is %s, but it gives armor class of %d and magic cancellation of %d as well.", enchname(objects[DUMMY_CLOAK_Z].oc_oprop), objects[DUMMY_CLOAK_Z].a_ac, objects[DUMMY_CLOAK_Z].a_can ); break;
 
 			case DUMMY_HELMET_A: 
 				pline("This helmet is not randomly generated and only appears under certain rare conditions, but it has properties anyway just in case one does generate (as seen here, since otherwise you wouldn't be reading this). Its main property is %s, but it gives armor class of %d and magic cancellation of %d as well.", enchname(objects[DUMMY_HELMET_A].oc_oprop), objects[DUMMY_HELMET_A].a_ac, objects[DUMMY_HELMET_A].a_can ); break;
@@ -10245,6 +11030,10 @@ struct obj *obj;
 				pline("This ring can cause blessed items to instantly become cursed."); break;
 			case RIN_ILLITERACY:
 				pline("This ring sometimes causes scrolls to disintegrate while you're trying to pick them up."); break;
+			case RIN_STAT_DECREASE:
+				pline("This ring greatly reduces the soft caps for your stats, making them harder to increase."); break;
+			case RIN_SANITY_TIMEOUT:
+				pline("This ring causes your sanity to increase over time."); break;
 			case RIN_WIMPINESS:
 				pline("This ring makes some calculations assume that you're always experience level 1."); break;
 			case RIN_USING_HAZARD:
@@ -10338,6 +11127,10 @@ struct obj *obj;
 				pline("A very powerful ring that allows you to eat tainted corpses and be hit by sickness attacks without actually getting sick."); break;
 			case RIN_FIRE_RESISTANCE: 
 				pline("You can resist fire if you wear this ring."); break;
+			case RIN_JUMPING:
+				pline("A magical ring that allows you to jump if you wear it."); break;
+			case RIN_ILLNESS:
+				pline("Putting this ring on gives you fatal illness, but taking it off cures fatal illness, reliably. Autocurses when worn, of course."); break;
 			case RIN_FREE_ACTION: 
 				pline("This ring protects you from paralysis and similar effects."); break;
 			case RIN_DISCOUNT_ACTION:
@@ -10391,7 +11184,7 @@ struct obj *obj;
 
 		pline("%s - This is an implant. Color: %s. Material: %s. Appearance: %s. It can be worn for some magical effect and armor class, but they're hard to identify and may autocurse when worn. Also, unless your skill is high enough, you might not be able to take them off even when they're uncursed. If you don't have hands, you get extra bonus AC and intrinsics from wearing one. Wearing them while having hands gives weaker AC bonuses, and if you're additionally restricted at implants they may actually make your AC worse if you're not in a handless form!",xname(obj), obj->dknown ? c_obj_colors[objects[obj->otyp].oc_color] : "unknown", obj->dknown ? materialnm[objects[obj->otyp].oc_material] : "unknown", obj->dknown ? dn : "unknown");
 
-		if (nn && nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && (uimplant && obj == uimplant) ) pline("As long as you're in a form without hands, wearing this implant grants %s.", enchname(goodimplanteffect(uimplant)) );
+		if (nn && powerfulimplants() && (uimplant && obj == uimplant) ) pline("As long as you're in a form without hands (your current form qualifies), wearing this implant grants %s.", enchname(goodimplanteffect(uimplant)) );
 
 		if (!nn) pline("Unfortunately you don't know more about it. You will gain more information if you identify this item.");
 		else { switch (obj->otyp) {
@@ -10736,6 +11529,73 @@ struct obj *obj;
 				if (!PlayerCannotUseSkills && P_SKILL(P_IMPLANTS) >= P_GRAND_MASTER) pline("An implant that gives %d points of AC and the %s enchantment.", objects[IMPLANT_OF_FREEDOM].a_ac, enchname(objects[IMPLANT_OF_FREEDOM].oc_oprop));
 				else pline("An implant that gives %d points of AC. It also gives an enchantment, but your skill isn't high enough to recognize it.", objects[IMPLANT_OF_FREEDOM].a_ac); break;
 
+			case IMPLANT_OF_QUEEB_BUTT:
+				pline("An implant that gives %d points of AC. It can be charged.", objects[IMPLANT_OF_QUEEB_BUTT].a_ac); break;
+
+			case IMPLANT_OF_BEHOLDING:
+				pline("An implant that gives %d points of AC. It can be charged.", objects[IMPLANT_OF_BEHOLDING].a_ac); break;
+
+			case IMPLANT_OF_DA_GUSHA:
+				pline("An implant that gives %d points of AC. It can be charged.", objects[IMPLANT_OF_DA_GUSHA].a_ac); break;
+
+			case IMPLANT_OF_FINGER_POINTING:
+				pline("An implant that gives %d points of AC. It can be charged.", objects[IMPLANT_OF_FINGER_POINTING].a_ac); break;
+
+			case IMPLANT_OF_TOTAL_NONSENSE:
+				pline("An implant that gives %d points of AC and some unknown nasty trap effect. It can be charged.", objects[IMPLANT_OF_TOTAL_NONSENSE].a_ac); break;
+
+			case IMPLANT_OF_BIG_OL:
+				pline("An implant that gives %d points of AC and some unknown nasty trap effect. It can be charged.", objects[IMPLANT_OF_BIG_OL].a_ac); break;
+
+			case IMPLANT_OF_ANAL_RETENTION:
+				pline("An implant that gives %d points of AC and some unknown nasty trap effect. It can be charged.", objects[IMPLANT_OF_ANAL_RETENTION].a_ac); break;
+
+			case IMPLANT_OF_GALVANIZATION:
+				pline("An implant that gives %d points of AC and some unknown nasty trap effect. It can be charged.", objects[IMPLANT_OF_GALVANIZATION].a_ac); break;
+
+			case IMPLANT_OF_TEN_THOUSAND_THINGS:
+				pline("An implant that gives %d points of AC and the %s enchantment. It can be charged.", objects[IMPLANT_OF_TEN_THOUSAND_THINGS].a_ac, enchname(objects[IMPLANT_OF_TEN_THOUSAND_THINGS].oc_oprop)); break;
+
+			case IMPLANT_OF_TOSSING:
+				pline("An implant that gives %d points of AC and the %s enchantment. It can be charged.", objects[IMPLANT_OF_TOSSING].a_ac, enchname(objects[IMPLANT_OF_TOSSING].oc_oprop)); break;
+
+			case IMPLANT_OF_HEAVY_LUBRICATION:
+				pline("An implant that gives %d points of AC and the %s enchantment. It can be charged.", objects[IMPLANT_OF_HEAVY_LUBRICATION].a_ac, enchname(objects[IMPLANT_OF_HEAVY_LUBRICATION].oc_oprop)); break;
+
+			case IMPLANT_OF_MISANTHROPHY:
+				pline("An implant that gives %d points of AC and the %s enchantment. It can be charged.", objects[IMPLANT_OF_MISANTHROPHY].a_ac, enchname(objects[IMPLANT_OF_MISANTHROPHY].oc_oprop)); break;
+
+			case IMPLANT_OF_CRAP:
+				if (!PlayerCannotUseSkills && P_SKILL(P_IMPLANTS) >= P_GRAND_MASTER) pline("An implant that gives %d points of AC and the %s enchantment. It can be charged.", objects[IMPLANT_OF_CRAP].a_ac, enchname(objects[IMPLANT_OF_CRAP].oc_oprop));
+				else pline("An implant that gives %d points of AC. It also gives an enchantment, but your skill isn't high enough to recognize it. It can be charged.", objects[IMPLANT_OF_CRAP].a_ac); break;
+
+			case IMPLANT_OF_KING_BEEFCAKE:
+				if (!PlayerCannotUseSkills && P_SKILL(P_IMPLANTS) >= P_GRAND_MASTER) pline("An implant that gives %d points of AC and the %s enchantment. It can be charged.", objects[IMPLANT_OF_KING_BEEFCAKE].a_ac, enchname(objects[IMPLANT_OF_KING_BEEFCAKE].oc_oprop));
+				else pline("An implant that gives %d points of AC. It also gives an enchantment, but your skill isn't high enough to recognize it. It can be charged.", objects[IMPLANT_OF_KING_BEEFCAKE].a_ac); break;
+
+			case IMPLANT_OF_PUMPING:
+				if (!PlayerCannotUseSkills && P_SKILL(P_IMPLANTS) >= P_GRAND_MASTER) pline("An implant that gives %d points of AC and the %s enchantment. It can be charged.", objects[IMPLANT_OF_PUMPING].a_ac, enchname(objects[IMPLANT_OF_PUMPING].oc_oprop));
+				else pline("An implant that gives %d points of AC. It also gives an enchantment, but your skill isn't high enough to recognize it. It can be charged.", objects[IMPLANT_OF_PUMPING].a_ac); break;
+
+			case IMPLANT_OF_WANNABE:
+				if (!PlayerCannotUseSkills && P_SKILL(P_IMPLANTS) >= P_GRAND_MASTER) pline("An implant that gives %d points of AC and the %s enchantment. It can be charged.", objects[IMPLANT_OF_WANNABE].a_ac, enchname(objects[IMPLANT_OF_WANNABE].oc_oprop));
+				else pline("An implant that gives %d points of AC. It also gives an enchantment, but your skill isn't high enough to recognize it. It can be charged.", objects[IMPLANT_OF_WANNABE].a_ac); break;
+
+			case IMPLANT_OF_YOUR_MOMMA:
+				if (!PlayerCannotUseSkills && P_SKILL(P_IMPLANTS) >= P_GRAND_MASTER) pline("An implant that gives %d points of AC and the %s enchantment. It can be charged.", objects[IMPLANT_OF_YOUR_MOMMA].a_ac, enchname(objects[IMPLANT_OF_YOUR_MOMMA].oc_oprop));
+				else pline("An implant that gives %d points of AC. It also gives an enchantment, but your skill isn't high enough to recognize it. It can be charged.", objects[IMPLANT_OF_YOUR_MOMMA].a_ac); break;
+
+			case IMPLANT_OF_SWALLOWING:
+				if (!PlayerCannotUseSkills && P_SKILL(P_IMPLANTS) >= P_GRAND_MASTER) pline("An implant that gives %d points of AC and the %s enchantment. It can be charged.", objects[IMPLANT_OF_SWALLOWING].a_ac, enchname(objects[IMPLANT_OF_SWALLOWING].oc_oprop));
+				else pline("An implant that gives %d points of AC. It also gives an enchantment, but your skill isn't high enough to recognize it. It can be charged.", objects[IMPLANT_OF_SWALLOWING].a_ac); break;
+
+			case IMPLANT_OF_MENSTRATING:
+				if (!PlayerCannotUseSkills && P_SKILL(P_IMPLANTS) >= P_GRAND_MASTER) pline("An implant that gives %d points of AC and the %s enchantment. It can be charged.", objects[IMPLANT_OF_MENSTRATING].a_ac, enchname(objects[IMPLANT_OF_MENSTRATING].oc_oprop));
+				else pline("An implant that gives %d points of AC. It also gives an enchantment, but your skill isn't high enough to recognize it. It can be charged.", objects[IMPLANT_OF_MENSTRATING].a_ac); break;
+
+			case IMPLANT_OF_ENFORCING:
+				if (!PlayerCannotUseSkills && P_SKILL(P_IMPLANTS) >= P_GRAND_MASTER) pline("An implant that gives %d points of AC and the %s enchantment. It can be charged.", objects[IMPLANT_OF_ENFORCING].a_ac, enchname(objects[IMPLANT_OF_ENFORCING].oc_oprop));
+				else pline("An implant that gives %d points of AC. It also gives an enchantment, but your skill isn't high enough to recognize it. It can be charged.", objects[IMPLANT_OF_ENFORCING].a_ac); break;
 
 			default: pline("Missing item description (this is a bug). Please tell Amy about the item in question so she can add a description."); break;
 			}
@@ -10858,6 +11718,8 @@ struct obj *obj;
 				pline("This amulet makes you lose the ability to gain experience."); break;
 			case AMULET_OF_HOSTILITY:
 				pline("This amulet causes all newly generated monsters to be hostile."); break;
+			case AMULET_OF_SANITY_TREBLE:
+				pline("This amulet greatly increases the amount of incoming sanity."); break;
 			case AMULET_OF_EVIL_CRAFTING:
 				pline("This amulet can put evil artifacts into your inventory and force you to equip them."); break;
 			case AMULET_OF_EDIBILITY:
@@ -11170,6 +12032,8 @@ struct obj *obj;
 #endif
 			case FIGURINE: 
 				pline("Apply this at an empty location to transform it into a living monster. Please don't apply a figurine at a square containing a monster; doing so will just cause the figurine to break and do nothing!"); break;
+			case ENERGY_SAP: 
+				pline("If you apply this tool, you'll get effects similar to eating the corpse of the monster it's made of."); break;
 			case MAGIC_MARKER: 
 #ifdef PHANTOM_CRASH_BUG
 				pline("You can engrave with this tool, or attempt to write scrolls or spellbooks if you have blank ones. Writing items that you know is guaranteed to work."); break;
@@ -11426,6 +12290,8 @@ struct obj *obj;
 			pline("An angel may live in this potion.");
 		if (OBJ_DESCR(objects[obj->otyp]) && obj->dknown && (!strcmp(OBJ_DESCR(objects[obj->otyp]), "endbringer")))
 			pline("DANGER: This potion brings an end. Quaff at your own peril.");
+		if (OBJ_DESCR(objects[obj->otyp]) && obj->dknown && (!strcmp(OBJ_DESCR(objects[obj->otyp]), "chewable")))
+			pline("You can eat this potion if you want. This will give the effects of inhaling the potion's vapors, which may be different than the quaff effect.");
 		if (OBJ_DESCR(objects[obj->otyp]) && obj->dknown && (!strcmp(OBJ_DESCR(objects[obj->otyp]), "deadweight")))
 			pline("Occasionally, the act of quaffing this potion forces you to wear some cursed crap.");
 		if (OBJ_DESCR(objects[obj->otyp]) && obj->dknown && (!strcmp(OBJ_DESCR(objects[obj->otyp]), "present")))
@@ -11684,12 +12550,14 @@ struct obj *obj;
 #else
 				pline("This is a very dangerous scroll that will reverse your movement key's directions PERMANENTLY. The only way to reverse its effect is to read another one, so you should be glad I'm not allowing monsters to read them!"); break;
 #endif
-			case SCR_CREATE_CREATE_SCROLL: 
+			case SCR_CREATE_CREATE_SCROLL:
 				pline("Fairly useless; reading this scroll will recreate it on the ground beneath you. Makes you wonder what the devs were smoking when they invented this item."); break;
-			case SCR_ANTIMAGIC: 
+			case SCR_ANTIMAGIC:
 				pline("This scroll makes you magic resistant for a while. For the entire duration no one can cast spells."); break;
-			case SCR_RESISTANCE: 
+			case SCR_RESISTANCE:
 				pline("Grants temporary resistances to fire, cold, shock, acid and sleep."); break;
+			case SCR_SECURE_CURSE_REMOVAL:
+				pline("Stronger than the regular scroll of remove curse, it allows you to remove all curses on an item of your choice."); break;
 
 			case SCR_GAIN_MANA: 
 				pline("Reading this scroll will increase your max mana."); break;
@@ -11777,129 +12645,189 @@ struct obj *obj;
 				pline("You will summon a player ghost by reading this, which can be extremely dangerous."); break;
 			case SCR_MEGALOAD:
 				pline("A nasty scroll that puts a loadstone in your inventory if anyone reads it."); break;
+			case SCR_HYBRIDIZATION:
+				pline("This rare scroll can add or remove hybrid races."); break;
 			case SCR_BAD_EQUIPMENT:
 				pline("If anyone reads this scroll, you're forced to wear a cursed piece of equipment."); break;
-			case SCR_VILENESS: 
+			case SCR_NASTY_CURSE:
+				pline("Yet another scroll designed to screw you over, allowing this one to be read will put a nasty curse on one of your armor pieces."); break;
+			case SCR_VILENESS:
 				pline("If this is scroll is read, regardless of who is doing the reading, an evil artifact will be put into your inventory. You will then automatically equip it, and if the artifact didn't autocurse anyway, it will get cursed."); break;
-			case SCR_ENRAGE: 
+			case SCR_ENRAGE:
 				pline("Peaceful monsters become hostile, and sometimes your tame pets too, should anyone read this scroll."); break;
-			case SCR_ANTIMATTER: 
+			case SCR_ANTIMATTER:
 				pline("This scroll was put in the game by an evil developer and will damage your entire inventory."); break;
-			case SCR_SUMMON_ELM: 
+			case SCR_SUMMON_ELM:
 				pline("A scroll that can summon a divine minion. Unfortunately, the minion will attack you."); break;
-			case SCR_RELOCATION: 
+			case SCR_RELOCATION:
 				pline("Useful for no-teleport levels, this scroll teleports you to an empty location on the level regardless of things that would normally prevent teleportation."); break;
-			case SCR_IMMOBILITY: 
+			case SCR_IMMOBILITY:
 				pline("This scroll surrounds you with immobile monsters when read."); break;
-			case SCR_FLOODING: 
+			case SCR_FLOODING:
 				pline("Turns large parts of the current level into a lake of water and lava, with associated sea monsters and stuff."); break;
-			case SCR_EGOISM: 
+			case SCR_EGOISM:
 				pline("You will face a bunch of egotype monsters when reading this."); break;
-			case SCR_RUMOR: 
+			case SCR_RUMOR:
 				pline("A scroll that has a rumor written on it."); break;
 			case SCR_ARTIFACT_JACKPOT:
 				pline("This very rare scroll grants you an artifact and then randomizes the base item type of that artifact, so you might end up with something really awesome."); break;
 			case SCR_BOSS_COMPANION:
 				pline("Reading this scroll summons a boss monster. A tame one. Yes, you read that right. You'll get your personal boss monster that fights alongside you."); break;
-			case SCR_MESSAGE: 
+			case SCR_MESSAGE:
 				pline("A scroll that can trigger messages if you read it."); break;
-			case SCR_SIN: 
+			case SCR_SIN:
 				pline("Don't read it. That is, unless you want to be hit by a 'deadly sin' effect which is likely to screw your character in some way or another."); break;
-			case SCR_CHARGING: 
+			case SCR_CHARGING:
 #ifdef PHANTOM_CRASH_BUG
 				pline("You can recharge a chargeable item by reading this. Be careful, recharging an item too many times may cause it to explode."); break;
 #else
 				pline("This scroll can be read to charge an object, which must be in your main inventory and of an item type that can be charged, e.g. a wand. Be careful, recharging an item too many times may cause it to explode."); break;
 #endif
-			case SCR_RANDOM_ENCHANTMENT: 
+			case SCR_RANDOM_ENCHANTMENT:
 #ifdef PHANTOM_CRASH_BUG
 				pline("Pick an item to randomly enchant. For best results, use it on a +0 one. Line length restrictions prevent me from elaborating so just trust me on that one."); break;
 #else
 				pline("Using this scroll will allow you to pick an item that you want to have randomly enchanted. The item in question might get a positive or negative enchantment. However, if the item had a positive enchantment before it will first be set to +0 and get enchanted afterwards, so it's probably better to use it on items that are already +0 or worse."); break;
 #endif
-			case SCR_GENOCIDE: 
+			case SCR_GENOCIDE:
 				pline("A powerful magic scroll that can be read to permanently get rid of a monster type and also prevent any more of them to spawn. Not all monster types can be genocided though."); break;
-			case SCR_PUNISHMENT: 
+			case SCR_PUNISHMENT:
 				pline("If you read this scroll, you receive a heavy iron ball that is heavy and will cause you to move slower if you don't pick it up, but the ball can be wielded as a weapon."); break;
-			case SCR_STINKING_CLOUD: 
+			case SCR_STINKING_CLOUD:
 				pline("This scroll prompts you for a location to release a cloud of gas. However, you can't place the cloud in an unlit area or too far away from you."); break;
-			case SCR_TRAP_DETECTION: 
+			case SCR_TRAP_DETECTION:
 				pline("A scroll that shows traps on your current dungeon level if read."); break;
-			case SCR_ACQUIREMENT: 
+			case SCR_ACQUIREMENT:
 				pline("You may wish for an object type if you read this."); break;
-			case SCR_PROOF_ARMOR: 
+			case SCR_PROOF_ARMOR:
 				pline("A random worn armor-class item is made erosionproof if you read this."); break;
-			case SCR_PROOF_WEAPON: 
+			case SCR_PROOF_WEAPON:
 				pline("If you wield a weapon and read this scroll, that weapon will become erosionproof."); break;
-			case SCR_MASS_MURDER: 
+			case SCR_MASS_MURDER:
 				pline("A weaker version of the genocide scroll that only eliminates living monsters of the specified type."); break;
-			case SCR_UNDO_GENOCIDE: 
+			case SCR_UNDO_GENOCIDE:
 				pline("If you already genocided a monster type, you can use this scroll to re-enable it to spawn."); break;
-			case SCR_REVERSE_IDENTIFY: 
+			case SCR_REVERSE_IDENTIFY:
 				pline("A quirky special version of the identify scroll, this thing prompts you to enter the name or description of an object which is then identified."); break;
-			case SCR_WISHING: 
+			case SCR_WISHING:
 				pline("Allows you to wish for an object."); break;
-			case SCR_ASTRALCENSION: 
+			case SCR_ASTRALCENSION:
 				pline("This scroll summons an astral player monster. They can be very well-armed indeed, but if you can take them out you'll be able to take all their equipment and use it for yourself!"); break;
-			case SCR_ARTIFACT_CREATION: 
+			case SCR_ARTIFACT_CREATION:
 				pline("This scroll generates an artifact at your feet. You do want an artifact, right? Read it!"); break;
-			case SCR_CONSECRATION: 
-				pline("You must be standing in a room for this scroll to work. If you do, it will create an altar underneath you."); break;
-			case SCR_ENTHRONIZATION: 
-				pline("This scroll works only if you're in a room, which causes it to create a throne at your current location."); break;
-			case SCR_FOUNTAIN_BUILDING: 
-				pline("If you read this scroll while in a room, a fountain appears below you. Otherwise, nothing happens."); break;
-			case SCR_SINKING: 
-				pline("Doesn't work outside of a room. What it does is building a sink on your current tile."); break;
-			case SCR_WC: 
-				pline("Builds a toilet on your square, but only if that square is in a room."); break;
-			case SCR_LAVA: 
+			case SCR_MISSING_CODE:
+				pline("Reading this scroll enchants your shirt up to a maximum of +20 without risk of evaporation, or creates a new shirt at your feet if you don't have one. But since this scroll is actually supposed to be given to the devteam, which cannot be done in-game because harharhar, reading it will also anger the gods."); break;
+			case SCR_CONSECRATION:
+				pline("You must be standing in a room or corridor for this scroll to work. If you do, it will create an altar underneath you."); break;
+			case SCR_ENTHRONIZATION:
+				pline("This scroll works only if you're in a room or corridor, which causes it to create a throne at your current location."); break;
+			case SCR_MAKE_PENTAGRAM:
+				pline("Stand in a room or corridor when reading this. It will create a pentagram underneath you."); break;
+			case SCR_WELL_BUILDING:
+				pline("If you read this scroll while standing in a room or on a corridor tile, it will transform the tile into a well."); break;
+			case SCR_DRIVING:
+				pline("Creates a wagon on your tile, but only if that tile is a room or corridor."); break;
+			case SCR_TABLE_FURNITURE:
+				pline("This scroll creates a wooden table. You must be standing in a room or corridor for it to work."); break;
+			case SCR_EMBEDDING:
+				pline("Read this scroll while on a room or corridor tile, and it will create an ornately carved bed."); break;
+			case SCR_MATTRESS_SLEEPING:
+				pline("Need to create a mattress? Then read this scroll while standing in a room or corridor!"); break;
+			case SCR_FOUNTAIN_BUILDING:
+				pline("If you read this scroll while in a room or corridor, a fountain appears below you. Otherwise, nothing happens."); break;
+			case SCR_SINKING:
+				pline("Doesn't work outside of a room or corridor. What it does is building a sink on your current tile."); break;
+			case SCR_WC:
+				pline("Builds a toilet on your square, but only if that square is in a room or corridor."); break;
+			case SCR_LAVA:
 				pline("Reading this scroll turns some ordinary floor squares into lava."); break;
-			case SCR_STONING: 
+			case SCR_GRAVE:
+				pline("A scroll that erects grave walls."); break;
+			case SCR_TUNNELS:
+				pline("Normal floor tiles become tunnels if you read this."); break;
+			case SCR_FARMING:
+				pline("Read this scroll to create farmland."); break;
+			case SCR_MOUNTAINS:
+				pline("It doesn't make sense, but this scroll creates underground mountains."); break;
+			case SCR_DIVING:
+				pline("This scroll floods the dungeon with water tunnels."); break;
+			case SCR_CRYSTALLIZATION:
+				pline("Crystal water will flow through the dungeon if you read this."); break;
+			case SCR_MOORLAND:
+				pline("A scroll that creates moorland."); break;
+			case SCR_URINE:
+				pline("If you read this scroll, urine lakes will be created."); break;
+			case SCR_QUICKSAND:
+				pline("Reading this scroll creates quicksand tiles."); break;
+			case SCR_STYX:
+				pline("Read this scroll to create styx rivers."); break;
+			case SCR_SNOW:
+				pline("Normal floor tiles may become snow if you read this scroll."); break;
+			case SCR_ASH:
+				pline("This scroll turns regular floor tiles to ash."); break;
+			case SCR_SAND:
+				pline("A scroll that transforms floor to sand."); break;
+			case SCR_PAVING:
+				pline("Erects paved floor when read."); break;
+			case SCR_HIGHWAY:
+				pline("If you read this scroll, highways will be built on the current dungeon level."); break;
+			case SCR_GRASSLAND:
+				pline("Causes grass to grow."); break;
+			case SCR_NETHER:
+				pline("This scroll creates nether mist."); break;
+			case SCR_STALACTITE:
+				pline("Reading this scroll causes stalactites to shoot out of the ceiling."); break;
+			case SCR_CRYPT:
+				pline("Transforms regular floor to crypt floor."); break;
+			case SCR_BUBBLE_BOBBLE:
+				pline("Read this scroll to create bubble terrain."); break;
+			case SCR_RAIN:
+				pline("This scroll creates a bunch of rain clouds."); break;
+			case SCR_STONING:
 				pline("Read this scroll if you want to become a statue."); break;
-			case SCR_GROWTH: 
+			case SCR_GROWTH:
 				pline("You will create lots of trees if you read this scroll."); break;
-			case SCR_ICE: 
+			case SCR_ICE:
 				pline("Normal floor becomes icy in a radius around you if you read this."); break;
-			case SCR_CLOUDS: 
+			case SCR_CLOUDS:
 				pline("A scroll that can be read to create clouds around you."); break;
-			case SCR_BARRHING: 
+			case SCR_BARRHING:
 				pline("This scroll creates iron bars on empty floor squares in your vicinity."); break;
-			case SCR_LOCKOUT: 
+			case SCR_LOCKOUT:
 				pline("Corridors near you turn into solid rock walls and doors automatically repair and lock themselves if you read this scroll."); break;
-			case SCR_ROOT_PASSWORD_DETECTION: 
+			case SCR_ROOT_PASSWORD_DETECTION:
 				pline("This scroll has the computer's root password written on it, which you can read. It's likely to be useless anyway."); break;
-			case SCR_TRAP_CREATION: 
+			case SCR_TRAP_CREATION:
 				pline("A dangerous scroll that creates traps around you."); break;
-			case SCR_CREATE_TRAP: 
+			case SCR_CREATE_TRAP:
 				pline("Reading this scroll causes a trap to be created underneath you which then triggers."); break;
-			case SCR_NASTINESS: 
+			case SCR_NASTINESS:
 				pline("Don't allow this scroll to be read unless you absolutely want to be hit by nasty trap effects!"); break;
-			case SCR_DEMONOLOGY: 
+			case SCR_DEMONOLOGY:
 				pline("This scroll summons greater demons."); break;
-			case SCR_ELEMENTALISM: 
+			case SCR_ELEMENTALISM:
 				pline("Some creatures from the elemental planes will be summoned if you read this scroll."); break;
-			case SCR_GIRLINESS: 
+			case SCR_GIRLINESS:
 				pline("The dungeon will become more female if you read this scroll. :D"); break;
-			case SCR_SLEEP: 
+			case SCR_SLEEP:
 				pline("Reading this scroll puts you to sleep, leaving you open to monsters attacking you."); break;
-			case SCR_CHAOS_TERRAIN: 
+			case SCR_CHAOS_TERRAIN:
 				pline("Read this scroll to generate chaotic terrain around you."); break;
-			case SCR_WOUNDS: 
+			case SCR_WOUNDS:
 				pline("The opposite of the scroll of healing, reading this thing will damage you."); break;
-			case SCR_BULLSHIT: 
+			case SCR_BULLSHIT:
 				pline("Reading this scroll causes invisible dogs to shit all over the place."); break;
-			case SCR_REPAIR_ITEM: 
+			case SCR_REPAIR_ITEM:
 				pline("If you read this scroll, you may pick an item that will be repaired."); break;
-			case SCR_SUMMON_BOSS: 
+			case SCR_SUMMON_BOSS:
 				pline("Summons a boss monster when read."); break;
-			case SCR_ITEM_GENOCIDE: 
+			case SCR_ITEM_GENOCIDE:
 				pline("A very powerful scroll that prevents a type of item from being generated. If you use it again on another item, the previously genocided one will be able to generate again."); break;
-			case SCR_BLANK_PAPER: 
+			case SCR_BLANK_PAPER:
 				pline("A scroll that doesn't have a magic formula written on it. You may use a magic marker to turn it into another type of scroll."); break;
-			case SCR_ARMOR_SPECIALIZATION: 
+			case SCR_ARMOR_SPECIALIZATION:
 				pline("Read this scroll, then select a worn piece of armor to add an egotype to it! However, know that it won't work if the armor piece in question already has an egotype."); break;
-			case SCR_SECURE_IDENTIFY: 
+			case SCR_SECURE_IDENTIFY:
 				pline("Annoyed that regular identify scrolls fail so often? With this scroll, you can identify an object without any chance of it resisting the identification attempt!"); break;
 
  			default: pline("Missing item description (this is a bug). Please tell Amy about the item in question so she can add a description."); break;
@@ -11921,13 +12849,13 @@ struct obj *obj;
 			case SPE_FORCE_BOLT:
 				pline("A spell that fires an invisible beam. It can damage monsters, items and certain dungeon features."); break;
 			case SPE_CREATE_MONSTER:
-				pline("Casting this spell summons random monsters. Beware, it might also create a trap on the current dungeon level."); break;
+				pline("Casting this spell summons random monsters. Beware, it might also create a trap on the current dungeon level. The summoned monster has a chance of being frenzied too."); break;
 			case SPE_DRAIN_LIFE:
 				pline("This spell drains the life force out of monsters, reducing their level. It also reduces the enchantment of objects it hits."); break;
 			case SPE_COMMAND_UNDEAD:
-				pline("A spell that attempts to tame all adjacent undead monsters. They have a chance of resisting, and very rarely they may instead enter a state of frenzy, becoming immune to further taming attempts."); break;
+				pline("A spell that attempts to tame all adjacent undead monsters. They have a chance of resisting, and very rarely they may instead enter a state of frenzy, becoming immune to further taming attempts. Also, the spell may occasionally backfire."); break;
 			case SPE_SUMMON_UNDEAD:
-				pline("Summons an undead monster. Rarely, it also makes a trap on the level."); break;
+				pline("Summons an undead monster. Rarely, it also makes a trap on the level. The summoned monster has a chance of being frenzied too."); break;
 			case SPE_STONE_TO_FLESH:
 				pline("This spell can be cast at items, dungeon features and monsters that are made of stone, turning them into meat."); break;
 			case SPE_HEALING:
@@ -12192,7 +13120,7 @@ struct obj *obj;
 			case SPE_GAIN_LEVEL:
 				pline("An absurdly powerful spell that may increase your character level. However, it often fails."); break;
 			case SPE_MAP_LEVEL:
-				pline("This spell fails most of the time, but if it doesn't, it will reveal the map of the entire level and show most objects as well as traps."); break;
+				pline("This spell fails most of the time, but if it doesn't, it will reveal the map of the entire level (with a few gaps) and show quite some objects as well as traps."); break;
 			case SPE_INFERNO:
 				pline("Fire spell that severely burns enemies, afflicting them with blindness and damaging them in a way that cannot be easily healed."); break;
 			case SPE_ICE_BEAM:
@@ -12270,7 +13198,7 @@ struct obj *obj;
 			case SPE_NEXUS_FIELD:
 				pline("Tries to teleport all monsters adjacent to you away, although they have a chance to resist. It will occasionally backlash by reducing one of your attributes, permanently."); break;
 			case SPE_COMMAND_DEMON:
-				pline("Use this spell if you're surrounded by demons, and they have a chance of becoming peaceful or even tame!"); break;
+				pline("Use this spell if you're surrounded by demons, and they have a chance of becoming peaceful or even tame! Casting this spell may occaisonally backfire though, and occasionally the demons become frenzied instead."); break;
 			case SPE_FIRE_GOLEM:
 				pline("This spell requires you to have a torch to create the golem from, which will be used up. The fire golem will then fight alongside you, and you get experience and credit for its kills, but beware: usually it will turn hostile after a while!"); break;
 			case SPE_DISRUPTION_SHIELD:
@@ -12299,6 +13227,48 @@ struct obj *obj;
 				pline("Generates some ice tiles in your proximity, and reduces your maximum mana by up to 2 points."); break;
 			case SPE_GROW_TREES:
 				pline("It's a powerful spell that lets trees grow near you, but it also reduces your maximum mana by up to 4 points."); break;
+			case SPE_GRAVE:
+				pline("This spell erects grave walls, but also reduces your maximum mana by up to 7 points."); break;
+			case SPE_TUNNELS:
+				pline("A spell that creates tunnels. It may reduce your maximum mana by up to 4 points."); break;
+			case SPE_FARMING:
+				pline("Casting this spell generates farmland, and sometimes reduces your maximum mana by up to 3 points."); break;
+			case SPE_MOUNTAINS:
+				pline("If you cast this spell, mountains will appear. But it might also reduce your maximum mana by up to 7 points."); break;
+			case SPE_DIVING:
+				pline("Creates some water tunnels around you, and reduces your maximum mana by up to 3 points."); break;
+			case SPE_CRYSTALLIZATION:
+				pline("Spawns crystal water tiles, and may reduce your maximum mana by up to 2 points."); break;
+			case SPE_MOORLAND:
+				pline("Transforms some tiles into moorland, and occasionally reduces your maximum mana by up to 2 points."); break;
+			case SPE_URINE:
+				pline("If you somehow want to transform floor tiles into urine, cast this. Rarely it can also reduce your maximum mana by up to 2 points."); break;
+			case SPE_QUICKSAND:
+				pline("Creates shifting sand tiles, and sometimes reduces your maximum mana by up to 3 points."); break;
+			case SPE_STYX:
+				pline("This spell can create styx rivers, and sometimes reduces your maximum mana by up to 2 points."); break;
+			case SPE_SNOW:
+				pline("Creates snow terrain, and has a low chance of reducing your maximum mana by up to 2 points."); break;
+			case SPE_ASH:
+				pline("Transforms regular floor into ash, and may reduce maximum mana by up to 3 points."); break;
+			case SPE_SAND:
+				pline("Creates sand terrain. It may reduce your maximum mana by up to 2 points."); break;
+			case SPE_PAVING:
+				pline("This spell will transform some floor tiles into paved floors, and very occasionally it can also reduce your maximum mana by up to 2 points."); break;
+			case SPE_HIGHWAY:
+				pline("Creates highway terrains, but also reduces your maximum mana by up to 6 points."); break;
+			case SPE_GRASSLAND:
+				pline("An elemental spell that turns regular floor to grassland, with the drawback that every once in a while it can reduce your maximum mana by up to 2 points."); break;
+			case SPE_NETHER_MIST:
+				pline("Creates nether mist terrain, and occasionally reduces your maximum mana by up to 2 points."); break;
+			case SPE_STALACTITE:
+				pline("You can cast this spell to create stalactite terrain, and sometimes it reduces your maximum mana by up to 2 points."); break;
+			case SPE_CRYPT:
+				pline("This spell can transform regular floor to crypt floor. On rare occasions it also reduces your maximum mana by up to 2 points."); break;
+			case SPE_BUBBLE_BOBBLE:
+				pline("A spell that creates floating bubbles as terrain, but it can also reduce your maximum mana by up to 2 points."); break;
+			case SPE_RAIN:
+				pline("Creates rain clouds, if for some odd reason you want to have them on the current dungeon level. Sometimes it also reduces your maximum mana by up to 2 points."); break;
 			case SPE_DRIPPING_TREAD:
 				pline("You can drip the elements for a while if you cast this, although it also costs up to 3 maximum HP. Walking around while the effect is active will generate water, lava, ice or cloud terrain underneath you; at higher skill levels you will be able to control the type of terrain created."); break;
 			case SPE_GEOLYSIS:
@@ -12394,6 +13364,14 @@ struct obj *obj;
 				pline("Cures all nasty trap effects, but then also causes various bad effects and gives you intrinsic nastiness, meaning the nasty trap effects will come back to haunt you some more after a while!"); break;
 			case SPE_THRONE_GAMBLE:
 				pline("Replicates the effects of sitting on a throne, although it cannot give a wish of course. This spell can occasionally backfire."); break;
+			case SPE_ATTUNE_MAGIC:
+				pline("Replicates the effects of invoking a pentagram. This spell can occasionally backfire."); break;
+			case SPE_GAIN_SPACT:
+				pline("Casting this spell reduces your maximum health by a random amount up to 100, and teaches you a new technique. If it rolls a technique you already know, well, tough luck!"); break;
+			case SPE_METAL_GUARD:
+				pline("Prevents the next instance of HP loss."); break;
+			case SPE_MAGIC_WHISTLING:
+				pline("Can't seem to find a magic whistle? This spell replicates its effect, by teleporting your pets next to you!"); break;
 			case SPE_BACKFIRE:
 				pline("Well, you probably should not cast this."); break;
 			case SPE_DEMEMORIZE:
@@ -12671,6 +13649,16 @@ struct obj *obj;
 				pline("Every zap of this wand reduces your luck by one point, regardless of who zapped it."); break;
 			case WAN_REMOVE_RESISTANCE:
 				pline("Zapping this wand will remove random intrinsics."); break;
+			case WAN_DISENCHANTMENT:
+				pline("If anyone zaps this wand, your items get disenchanted."); break;
+			case WAN_CHAOS_TERRAIN:
+				pline("With every zap of this wand, the terrain on the current dungeon level becomes more chaotic."); break;
+			case WAN_FLEECY_TERRAIN:
+				pline("Every zap of this wand creates terrain of a specific (but randomized per zap) type!"); break;
+			case WAN_CONTAMINATION:
+				pline("Every zap of this wand increases your contamination."); break;
+			case WAN_TREMBLING:
+				pline("You'll tremble if someone zaps this wand."); break;
 			case WAN_CORROSION:
 				pline("A wand that corrodes some of your inventory if you zap it, and also if someone else zaps it."); break;
 			case WAN_FUMBLING:
@@ -13248,6 +14236,12 @@ struct obj *obj;
 			    pline("A stone that curses itself and causes your stats to decay over time."); break;
 			case MOVEMORK_STONE:
 			    pline("A stone that curses itself and causes monsters to be generated with movement energy."); break;
+			case SANE_TREBLE_STONE:
+			    pline("A stone that curses itself and causes your sanity to increase much faster."); break;
+			case STATCREASE_STONE:
+			    pline("A stone that curses itself and causes you to have a hard time increasing your stats."); break;
+			case SIMEOUT_STONE:
+			    pline("A stone that curses itself and causes your sanity to increase over time."); break;
 
 			case GRAYOUT_STONE:
 				pline("A stone that curses itself and causes grayout."); break;
@@ -15451,7 +16445,7 @@ struct obj *obj;
 				case ART_HEAVEN_S_CALL_TO_ARMS:
 					pline("Artifact specs: Has no special effect beyond its base item."); break;
 				case ART_BIMMEL_BIMMEL:
-					pline("Artifact specs: applying it tries to tame all 'x' adjacent to you, but they get a resistance roll."); break;
+					pline("Artifact specs: applying it tries to tame all 'x' adjacent to you, but they get a resistance roll and may also be frenzied instead."); break;
 				case ART_SCRABBLE_BABBLE:
 					pline("Artifact specs: engraving with it will only consume charges 1 out of 10 turns."); break;
 				case ART_I_THE_SAGE:
@@ -16861,6 +17855,45 @@ struct obj *obj;
 					pline("Artifact specs: regeneration and sickness resistance when worn, neutral. In K2's Evilhack variant, this is the barbarian quest artifact; the fact that its base item type is superfluous for a barbarian is probably intentional because their original quest artifact was also rather useless."); break;
 				case ART_REALLY_COOL_SHIRT:
 					pline("Artifact specs: warning and acts as a luckstone when worn. Congratulations, you returned all three scrolls of missing code to the devteam... just kidding :D"); break;
+
+				case ART_HELIOKOPIS_S_KEYBOARD_CURS:
+					pline("Artifact specs: magic resistance and suppresses --More-- prompts when worn."); break;
+				case ART_SATAN_S_FINAL_TRICK:
+					pline("Artifact specs: nastiness when worn."); break;
+				case ART_ARABELLA_S_DICINATOR:
+					pline("Artifact specs: oh my god it grants teleport control, disintegration resistance, very fast speed, invisibility and see invisible when worn, plus keen memory to top it off! Who cares about other effects? Those are all the ones you ever need!"); break;
+				case ART_KING_OF_PORN:
+					pline("Artifact specs: discount action when worn, and prevents you from resisting seduction attacks."); break;
+				case ART_UNICORN_DRILL:
+					pline("Artifact specs: polymorph control and drain resistance when wielded, chaotic."); break;
+				case ART_AUTOMATICALLY_METAL:
+					pline("Artifact specs: while you wear it, all metallic items are immune to erosion and all non-metallic items are susceptible to every form of erosion. This amulet automatically becomes metallic if it isn't already when you put it on."); break;
+				case ART_YVONNE_S_MODEL_AMBITION:
+					pline("Artifact specs: stealth, cold and shock resistance as well as +2 charisma when worn."); break;
+				case ART_VERSION_CONTROL:
+					pline("Artifact specs: autocurses when worn, but every time you put it on you can freely add or remove the evilvariant and soviet hybrid races."); break;
+				case ART_AEGIS:
+					pline("Artifact specs: petrification resistance when worn, provides partial resistance from gaze attacks."); break;
+				case ART_EGRID_BUG:
+					pline("Artifact specs: +5 to-hit and +2 damage; drain resistance, black spells, de-light and cursed parts when wielded, displays all x-class monsters and prevents them from moving diagonally. Chaotic."); break;
+				case ART_TRIDENT_OF_POSEIDON:
+					pline("Artifact specs: +5 to-hit and +10 damage to swimming monsters, magical breathing and swimming when wielded and protects your items from getting wet. Chaotic."); break;
+				case ART_PEDIATRIC_GAWKING_GANGS:
+					pline("Artifact specs: psi resistance, discount action and telepathy when worn, lawful, cellar child quest artifact."); break;
+				case ART_MESSAGE_MEGAPHONE:
+					pline("Artifact specs: magic resistance when carried, makes monsters flee when used at the cost of 5 alignment and 1 max alignment, chaotic, demagogue quest artifact."); break;
+				case ART_TEAM_FORTRESS_GL:
+					pline("Artifact specs: lots of multishot bonus, magic resistanec when wielded, stealth when carried, lawful, grenadonin quest artifact."); break;
+				case ART_MARKER_OF_SAFE_SPEECH:
+					pline("Artifact specs: half spell damage when carried, can potentially be recharged more than once, chaotic, social justice warrior quest artifact."); break;
+				case ART_STAHNGNIR_S_GIANT_CRUSHER:
+					pline("Artifact specs: +5 to-hit and double damage, petrification resistance when wielded, telepathy when carried, neutral, walscholar quest artifact."); break;
+				case ART_WEAKITE_THRUST:
+					pline("Artifact specs: can be applied through walls, weak sight, de-light and nolite effects when wielded."); break;
+				case ART_DIZZY_METAL_STORM:
+					pline("Artifact specs: jumping, silver spells and manler effect when wielded, allows the player to displace monsters by walking into them (use the F command if you want to attack them in melee)."); break;
+				case ART_PAYBACK_TIME:
+					pline("Artifact specs: can be applied to hit monsters standing 3 squares away, or even 4 if the distance isn't too big."); break;
 
 				default:
 					pline("Missing artifact description (this is a bug). Tell Amy about it, including the name of the artifact in question, so she can add it!"); break;

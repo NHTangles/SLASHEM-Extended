@@ -781,7 +781,7 @@ tele()
 	    You_feel("disoriented for a moment.");
 	    return;
 	}
-	if ((Teleport_control && !Stunned && rn2(StrongTeleport_control ? 20 : 4)) /* low chance for tele control to fail --Amy */
+	if ((Teleport_control && !Stunned && (!level.flags.has_insideroom || !rn2(5)) && rn2(StrongTeleport_control ? 20 : 4)) /* low chance for tele control to fail --Amy */
 #ifdef WIZARD
 			    || (wizard && yn_function("Invoke wizard-mode teleport control?", ynchars, 'y') == 'y')
 #endif
@@ -798,7 +798,11 @@ tele()
 			return;	/* abort */
 		    /* possible extensions: introduce a small error if
 		       magic power is low; allow transfer to solid rock */
-		    if (teleok(cc.x, cc.y, FALSE)) {
+
+		    /* Amy edit: teleporting on a trap will trigger it, instead of being invalid. I've specifically made it
+		     * so that weird-looking rooms make teleport control likely to fail, but if you spam-spam-spam Ctrl-T to
+		     * skip past that and teleport on the pentagram anyway, and there's a trap on it, well... :P */
+		    if (teleok(cc.x, cc.y, TRUE)) {
 			teleds(cc.x, cc.y, FALSE);
 			return;
 		    }
@@ -918,7 +922,7 @@ dotele()
 	    }
 
 	    energy = objects[SPE_TELEPORT_AWAY].oc_level * 5;
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_KATRIN_S_SUDDEN_APPEARANCE) energy /= 2;
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_KATRIN_S_SUDDEN_APPEARANCE) energy /= 2;
 		if (uarmh && uarmh->oartifact == ART_TRIP_TERRAIN) energy /= 3;
 	    if (u.uen < energy) {
 #ifdef WIZARD
@@ -997,7 +1001,7 @@ level_tele()
 	    return;
 	}
 	/* Skipping the quest via teleport control is lame. --Amy */
-	if ((Teleport_control && !(In_quest(&u.uz)) && !Stunned && rn2(StrongTeleport_control ? 10 : 3)) /* Teleport control might not always work. --Amy */
+	if ((Teleport_control && !(In_quest(&u.uz)) && !Stunned && (!level.flags.has_insideroom || !rn2(5)) && rn2(StrongTeleport_control ? 10 : 3)) /* Teleport control might not always work. --Amy */
 #ifdef WIZARD
 	   || (wizard && yn_function("Invoke wizard-mode teleport control?", ynchars, 'y') == 'y')
 #endif
@@ -1374,7 +1378,7 @@ struct trap *trap;
 	    You("are momentarily disoriented.");
 	deltrap(trap);
 	newsym(u.ux,u.uy);	/* get rid of trap symbol */
-      if (!flags.lostsoul && !flags.uberlostsoul && !(flags.wonderland && !(u.wonderlandescape)) && !(u.uprops[STORM_HELM].extrinsic) && !(In_bellcaves(&u.uz)) && !(In_subquest(&u.uz)) && !(In_voiddungeon(&u.uz)) && !(In_netherrealm(&u.uz))) level_tele();
+      if (!flags.lostsoul && !flags.uberlostsoul && !(flags.wonderland && !(u.wonderlandescape)) && !(flags.zapem && !(u.zapemescape)) && !(u.uprops[STORM_HELM].extrinsic) && !(In_bellcaves(&u.uz)) && !(In_subquest(&u.uz)) && !(In_voiddungeon(&u.uz)) && !(In_netherrealm(&u.uz))) level_tele();
 	else pline("The trap doesn't seem to have any effect on you.");
 }
 
@@ -1397,7 +1401,7 @@ struct trap *trap;
 	    You("are momentarily disoriented.");
 	deltrap(trap);
 	newsym(u.ux,u.uy);	/* get rid of trap symbol */
-      if (!flags.lostsoul && !flags.uberlostsoul && !(flags.wonderland && !(u.wonderlandescape)) && !(u.uprops[STORM_HELM].extrinsic) && !(In_bellcaves(&u.uz)) && !(In_subquest(&u.uz)) && !(In_voiddungeon(&u.uz)) && !(In_netherrealm(&u.uz))) level_tele();
+      if (!flags.lostsoul && !flags.uberlostsoul && !(flags.wonderland && !(u.wonderlandescape)) && !(flags.zapem && !(u.zapemescape)) && !(u.uprops[STORM_HELM].extrinsic) && !(In_bellcaves(&u.uz)) && !(In_subquest(&u.uz)) && !(In_voiddungeon(&u.uz)) && !(In_netherrealm(&u.uz))) level_tele();
 	else pline("The trap doesn't seem to have any effect on you.");
 }
 

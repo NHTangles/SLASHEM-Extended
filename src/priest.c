@@ -388,6 +388,7 @@ register int roomno;
 		    if(priest->mpeaceful) {	/* never the case in this game --Amy */
 			msg1 = "Infidel, you have entered Moloch's Sanctum!";
 			if (Role_if(PM_GANG_SCHOLAR)) msg1 = "Infidel, you have entered Anna's Sanctum!";
+			if (Role_if(PM_WALSCHOLAR)) msg1 = "Infidel, you have entered Anna's Sanctum!";
 			msg2 = "Be gone!";
 			priest->mpeaceful = 0;
 			set_malign(priest);
@@ -396,6 +397,7 @@ register int roomno;
 			else {
 			msg1 = "Infidel, you have entered Moloch's Sanctum!";
 			if (Role_if(PM_GANG_SCHOLAR)) msg1 = "Infidel, you have entered Anna's Sanctum!";
+			if (Role_if(PM_WALSCHOLAR)) msg1 = "Infidel, you have entered Anna's Sanctum!";
 			msg2 = "Be gone!";
 			}
 			}
@@ -453,6 +455,10 @@ register struct monst *priest;
 
 	/* KMH, conduct */
 	u.uconduct.gnostic++;
+	if (Race_if(PM_MAGYAR)) {
+		You_feel("bad about breaking the atheist conduct.");
+		badeffect();
+	}
 
 	if(priest->mflee || (!priest->ispriest && coaligned && strayed)) {
 	    pline("%s doesn't want anything to do with you!",
@@ -563,8 +569,11 @@ register struct monst *priest;
 		}
 		if (!(HProtection & INTRINSIC))  {
 			HProtection |= FROMOUTSIDE;
-			if (!u.ublessed)  u.ublessed = rno(4);
-		} else u.ublessed++;
+			if (!u.ublessed)  u.ublessed = rno(Race_if(PM_MAYMES) ? 8 : 4);
+		} else {
+			u.ublessed++;
+			if (Race_if(PM_MAYMES) && u.ublessed < 20) u.ublessed++;
+		}
 	    } else {
 		verbalize("Thy selfless generosity is deeply appreciated.");
 		if (Role_if(PM_PRIEST) || Role_if(PM_NECROMANCER) || Role_if(PM_CHEVALIER) || Race_if(PM_VEELA)) {

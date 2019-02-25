@@ -217,7 +217,7 @@ boolean ghostly, frozen;
 		 * to new player's clock.  Assumption: new player arrived
 		 * immediately after old player died.
 		 */
-		if (ghostly && !frozen && !age_is_relative(otmp))
+		if (ghostly && !frozen && !age_is_relative(otmp) && !is_lightsaber(otmp))
 		    otmp->age = monstermoves - omoves + otmp->age;
 
 		/* get contents of a container or statue */
@@ -1507,7 +1507,8 @@ unsigned int *stuckid, *steedid;	/* STEED */
 	   applied or wielded it, so be conservative and assume the former */
 	otmp = uwep;	/* `uwep' usually init'd by setworn() in loop above */
 	uwep = 0;	/* clear it and have setuwep() reinit */
-	setuwep(otmp,FALSE);	/* (don't need any null check here) */
+	setuwep(otmp,FALSE,FALSE);	/* (don't need any null check here) */
+	/* Amy edit: autocursing shit shouldn't autocurse here! */
 	/* KMH, balance patch -- added fishing pole */
 	if (!uwep || uwep->otyp == PICK_AXE || uwep->otyp == CONGLOMERATE_PICK || uwep->otyp == BRONZE_PICK || uwep->otyp == GRAPPLING_HOOK ||
 		     uwep->otyp == FISHING_POLE)
@@ -2046,7 +2047,21 @@ boolean ghostly;
 	relink_light_sources(ghostly);
 	reset_oattached_mids(ghostly);
 #ifdef DUNGEON_GROWTH
-	if (!ghostly) catchup_dgn_growths((monstermoves - omoves) / 5);
+	if (!ghostly) {
+
+		/* Amy addition: a hacky variable that should be used to avoid goddamn savegame errors. Some things,
+		 * e.g. checking for the randomized appearance of your worn cloak, seem to have a chance of segfaulting
+		 * if we call them in this state, probably because the pertinent structures have already been discarded
+		 * during the saving routine, so checking for "uarmc" or its OBJ_DESCR leads to a garbage pointer which
+		 * then crashes the game. And the savegame error is NO fun, so we can now use this variable in all checks
+		 * that get called during saving to disable stuff that should not run during saving. mkobj.c in particular
+		 * is dangerous, because the tree fruit seeding is called during saving, but also doorlock stuff in lock.c
+		 * and various other functions. Too bad we can't just defer it until you return to the level in question! */
+		u.dungeongrowthhack = TRUE;
+		catchup_dgn_growths((monstermoves - omoves) / 5);
+		u.dungeongrowthhack = FALSE;
+
+	}
 #endif
 	if (ghostly)
 	    clear_id_mapping();

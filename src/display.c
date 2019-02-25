@@ -406,7 +406,25 @@ unmap_object(x, y)
     register struct obj   *obj;						\
     register struct trap  *trap;					\
 									\
-	if ((ManlerEffect || u.uprops[MANLER_EFFECT].extrinsic || have_manlerstone()) && x == u.manlerx && y == u.manlery) {	\
+									\
+    if (level.flags.hero_memory) {					\
+	if ((obj = vobj_at(x, y)) && !covers_objects(x, y))		\
+	    map_object(obj, FALSE);					\
+	else								\
+	    levl[x][y].mem_corpse = levl[x][y].mem_obj = 0;		\
+	if ((trap = t_at(x, y)) && trap->tseen && !covers_traps(x, y))	\
+	    map_trap(trap, FALSE);					\
+	else								\
+	    levl[x][y].mem_trap = 0;					\
+	map_background(x, y, FALSE);					\
+	if (show) show_glyph(x, y, memory_glyph(x, y));			\
+    } else if ((obj = vobj_at(x,y)) && !covers_objects(x,y))		\
+	map_object(obj,show);						\
+    else if ((trap = t_at(x,y)) && trap->tseen && !covers_traps(x,y))	\
+	map_trap(trap,show);						\
+    else								\
+	map_background(x,y,show);					\
+	if (ManlerIsChasing && x == u.manlerx && y == u.manlery) {	\
 	show_glyph(x, y, (GLYPH_MON_OFF + rn2(NUMMONS)));	\
 	return;	\
 	}	\
@@ -458,24 +476,6 @@ unmap_object(x, y)
 	show_glyph(x, y, cmap_to_glyph(S_pile_of_shit));			\
 	return;								\
 	}								\
-									\
-    if (level.flags.hero_memory) {					\
-	if ((obj = vobj_at(x, y)) && !covers_objects(x, y))		\
-	    map_object(obj, FALSE);					\
-	else								\
-	    levl[x][y].mem_corpse = levl[x][y].mem_obj = 0;		\
-	if ((trap = t_at(x, y)) && trap->tseen && !covers_traps(x, y))	\
-	    map_trap(trap, FALSE);					\
-	else								\
-	    levl[x][y].mem_trap = 0;					\
-	map_background(x, y, FALSE);					\
-	if (show) show_glyph(x, y, memory_glyph(x, y));			\
-    } else if ((obj = vobj_at(x,y)) && !covers_objects(x,y))		\
-	map_object(obj,show);						\
-    else if ((trap = t_at(x,y)) && trap->tseen && !covers_traps(x,y))	\
-	map_trap(trap,show);						\
-    else								\
-	map_background(x,y,show);					\
 }
 #else	/* DISPLAY_LAYERS */
 #define _map_location(x,y,show)						\
@@ -504,7 +504,7 @@ int memory_glyph(x, y)
 {
 #ifdef DISPLAY_LAYERS
 
-	if ((ManlerEffect || u.uprops[MANLER_EFFECT].extrinsic || have_manlerstone()) && x == u.manlerx && y == u.manlery) {
+	if (ManlerIsChasing && x == u.manlerx && y == u.manlery) {
 	return (GLYPH_MON_OFF + rn2(NUMMONS));
 	}
 
@@ -1038,7 +1038,7 @@ newsym(x,y)
 
     if (in_mklev) return;
 
-	if ((ManlerEffect || u.uprops[MANLER_EFFECT].extrinsic || have_manlerstone()) && x == u.manlerx && y == u.manlery) {
+	if (ManlerIsChasing && x == u.manlerx && y == u.manlery) {
 	show_glyph(x, y, GLYPH_MON_OFF + rn2(NUMMONS));
 	return;
 	}
@@ -1189,6 +1189,7 @@ newsym(x,y)
 		(ublindf && ublindf->oartifact == ART_BREATHER_SHOW && attacktype(mon->data, AT_BREA)) ||
 		(uarmc && uarmc->oartifact == ART_POKEWALKER && is_pokemon(mon->data) ) ||
 		(uarmc && uarmc->oartifact == ART_BUGNOSE && (mon->data->mlet == S_ANT || mon->data->mlet == S_XAN) ) ||
+		(uwep && uwep->oartifact == ART_EGRID_BUG && mon->data->mlet == S_XAN) ||
 		(uarmf && uarmf->oartifact == ART_BOOTS_OF_THE_MACHINE && (mon->data->mlet == S_GOLEM || nonliving(mon->data) ) ) ||
 		(uarmf && uarmf->oartifact == ART_FD_DETH && (mon->data->mlet == S_DOG || mon->data->mlet == S_FELINE) ) ||
 		(uarmg && uarmg->oartifact == ART_WHAT_S_UP_BITCHES && (mon->data->mlet == S_NYMPH) ) ||
@@ -1276,6 +1277,7 @@ newsym(x,y)
 		(ublindf && ublindf->oartifact == ART_BREATHER_SHOW && attacktype(mon->data, AT_BREA)) ||
 		(uarmc && uarmc->oartifact == ART_POKEWALKER && is_pokemon(mon->data) ) ||
 		(uarmc && uarmc->oartifact == ART_BUGNOSE && (mon->data->mlet == S_ANT || mon->data->mlet == S_XAN) ) ||
+		(uwep && uwep->oartifact == ART_EGRID_BUG && mon->data->mlet == S_XAN) ||
 		(uarmf && uarmf->oartifact == ART_BOOTS_OF_THE_MACHINE && (mon->data->mlet == S_GOLEM || nonliving(mon->data) ) ) ||
 		(uarmf && uarmf->oartifact == ART_FD_DETH && (mon->data->mlet == S_DOG || mon->data->mlet == S_FELINE) ) ||
 		(uarmg && uarmg->oartifact == ART_WHAT_S_UP_BITCHES && (mon->data->mlet == S_NYMPH) ) ||
@@ -1365,7 +1367,7 @@ newsymX(x,y)
 
     if (in_mklev) return;
 
-	if ((ManlerEffect || u.uprops[MANLER_EFFECT].extrinsic || have_manlerstone()) && x == u.manlerx && y == u.manlery) {
+	if (ManlerIsChasing && x == u.manlerx && y == u.manlery) {
 	show_glyph(x, y, GLYPH_MON_OFF + rn2(NUMMONS));
 	return;
 	}
@@ -1516,6 +1518,7 @@ newsymX(x,y)
 		(ublindf && ublindf->oartifact == ART_BREATHER_SHOW && attacktype(mon->data, AT_BREA)) ||
 		(uarmc && uarmc->oartifact == ART_POKEWALKER && is_pokemon(mon->data) ) ||
 		(uarmc && uarmc->oartifact == ART_BUGNOSE && (mon->data->mlet == S_ANT || mon->data->mlet == S_XAN) ) ||
+		(uwep && uwep->oartifact == ART_EGRID_BUG && mon->data->mlet == S_XAN) ||
 		(uarmf && uarmf->oartifact == ART_BOOTS_OF_THE_MACHINE && (mon->data->mlet == S_GOLEM || nonliving(mon->data) ) ) ||
 		(uarmf && uarmf->oartifact == ART_FD_DETH && (mon->data->mlet == S_DOG || mon->data->mlet == S_FELINE) ) ||
 		(uarmg && uarmg->oartifact == ART_WHAT_S_UP_BITCHES && (mon->data->mlet == S_NYMPH) ) ||
@@ -1603,6 +1606,7 @@ newsymX(x,y)
 		(ublindf && ublindf->oartifact == ART_BREATHER_SHOW && attacktype(mon->data, AT_BREA)) ||
 		(uarmc && uarmc->oartifact == ART_POKEWALKER && is_pokemon(mon->data) ) ||
 		(uarmc && uarmc->oartifact == ART_BUGNOSE && (mon->data->mlet == S_ANT || mon->data->mlet == S_XAN) ) ||
+		(uwep && uwep->oartifact == ART_EGRID_BUG && mon->data->mlet == S_XAN) ||
 		(uarmf && uarmf->oartifact == ART_BOOTS_OF_THE_MACHINE && (mon->data->mlet == S_GOLEM || nonliving(mon->data) ) ) ||
 		(uarmf && uarmf->oartifact == ART_FD_DETH && (mon->data->mlet == S_DOG || mon->data->mlet == S_FELINE) ) ||
 		(uarmg && uarmg->oartifact == ART_WHAT_S_UP_BITCHES && (mon->data->mlet == S_NYMPH) ) ||

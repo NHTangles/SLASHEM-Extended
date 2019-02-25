@@ -115,6 +115,7 @@ const char *name;	/* if null, then format `obj' */
 			break;
 		case CRYSTAL_SHIELD:
 		case RAPIRAPI:
+		case HIDE_SHIELD:
 			shieldblockrate = 35;
 			break;
 		case SHIELD_OF_REFLECTION:
@@ -346,13 +347,19 @@ const char *name;	/* if null, then format `obj' */
 
 		return(0);
 
-	} else if (nohands(youmonst.data) && (!rn2(extrachance) || !rn2(extrachance) || !rn2(extrachance)) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_GYMNASTIC_LOVE && !rn2(3)) {
+	} else if (powerfulimplants() && (!rn2(extrachance) || !rn2(extrachance) || !rn2(extrachance)) && uimplant && uimplant->oartifact == ART_GYMNASTIC_LOVE && !rn2(3)) {
 
 			if(Blind || !flags.verbose) You("skillfully evade a projectile.");
 			else You("skillfully evade %s.", onm);
 			return(0);
 
 	} else if (tech_inuse(T_FORCE_FIELD) && rn2(4)) {
+
+			if(Blind || !flags.verbose) pline("Your force field causes a projectile to miss you.");
+			else pline("Your force field causes %s to miss you.", onm);
+			return(0);
+
+	} else if (Race_if(PM_PLAYER_ATLANTEAN) && rn2(2)) {
 
 			if(Blind || !flags.verbose) pline("Your force field causes a projectile to miss you.");
 			else pline("Your force field causes %s to miss you.", onm);
@@ -368,6 +375,13 @@ const char *name;	/* if null, then format `obj' */
 	} else {
 		if(Blind || !flags.verbose) You("are hit!");
 		else You("are hit by %s%s", onm, exclam(dam));
+
+		if (obj && obj->otyp == YITH_TENTACLE) {
+			increasesanity(rnz(monster_difficulty() + 1));
+		}
+		if (obj && obj->otyp == NASTYPOLE && !rn2(10)) {
+			badeffect();
+		}
 
 		if (obj && objects[obj->otyp].oc_material == SILVER && hates_silver(youmonst.data)) {
 			dam += rnd(20);
@@ -1015,6 +1029,12 @@ m_throw(mon, x, y, dx, dy, range, obj)
 				pline("Collusion!");
 				litroomlite(FALSE);
 		    }
+		    if (hitu && singleobj->otyp == YITH_TENTACLE) {
+				increasesanity(rnz(monster_difficulty() + 1));
+		    }
+		    if (hitu && singleobj->otyp == NASTYPOLE && !rn2(10)) {
+				badeffect();
+		    }
 
 		    if (hitu && singleobj->otyp == EGG) {
 			if ((!Stone_resistance || (!IntStone_resistance && !rn2(20)) ) && !(poly_when_stoned(youmonst.data) && polymon(PM_STONE_GOLEM))) {
@@ -1124,6 +1144,9 @@ struct monst *mtmp;
 	    int dam, hitv;
 
 		if (otmp->otyp == NOOB_POLLAX || otmp->otyp == GREAT_POLLAX) polelimit += 5;
+		if (otmp->otyp == YITH_TENTACLE) polelimit += 2;
+		if (otmp->otyp == POLE_LANTERN) polelimit += 10;
+		if (otmp->otyp == NASTYPOLE) polelimit += 8;
 		if (otmp->oartifact == ART_ETHER_PENETRATOR) polelimit += 5;
 		if (otmp->oartifact == ART_FUURKER) polelimit += 6;
 		if (otmp->otyp == WOODEN_BAR) polelimit += 7;
@@ -1168,18 +1191,18 @@ struct monst *mtmp;
 	skill = objects[otmp->otyp].oc_skill;
 	mwep = MON_WEP(mtmp);		/* wielded weapon */
 
-	if (!(ElongationBug || u.uprops[ELONGATION_BUG].extrinsic || have_elongatedstone()) && ammo_and_launcher(otmp, mwep) && objects[mwep->otyp].oc_range &&
+	if (!(ElongationBug || u.uprops[ELONGATION_BUG].extrinsic || have_elongatedstone()) && mwep && ammo_and_launcher(otmp, mwep) && objects[mwep->otyp].oc_range &&
 		dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) >
 		objects[mwep->otyp].oc_range * objects[mwep->otyp].oc_range) 
 		return; /* Out of range */
 
 	/* monsters were throwing darts way across the map, that is, distances of 70+ squares.
 	 * This was obviously not intended; they should just be able to fire sniper rifles at their actual range. --Amy */
-	else if (!(ElongationBug || u.uprops[ELONGATION_BUG].extrinsic || have_elongatedstone()) && !(ammo_and_launcher(otmp, mwep) && objects[mwep->otyp].oc_range) && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) > ((BOLT_LIM + strongmonst(mtmp->data) ) * (BOLT_LIM + strongmonst(mtmp->data) )) ) return;
+	else if (!(ElongationBug || u.uprops[ELONGATION_BUG].extrinsic || have_elongatedstone()) && !(mwep && ammo_and_launcher(otmp, mwep) && objects[mwep->otyp].oc_range) && dist2(mtmp->mx, mtmp->my, mtmp->mux, mtmp->muy) > ((BOLT_LIM + strongmonst(mtmp->data) ) * (BOLT_LIM + strongmonst(mtmp->data) )) ) return;
 
 	/* Multishot calculations */
 	multishot = 1;
-	if ((ammo_and_launcher(otmp, mwep) || skill == P_DAGGER || skill == P_KNIFE || skill == P_BOOMERANG || skill == -P_BOOMERANG ||
+	if (((mwep && ammo_and_launcher(otmp, mwep)) || skill == P_DAGGER || skill == P_KNIFE || skill == P_BOOMERANG || skill == -P_BOOMERANG ||
 		skill == -P_DART || skill == -P_SHURIKEN || skill == P_SPEAR || skill == P_JAVELIN) && !mtmp->mconf) {
 	    /* Assumes lords are skilled, princes are expert */
 	    if (is_prince(mtmp->data)) multishot += 2;
@@ -1228,6 +1251,9 @@ struct monst *mtmp;
 		multishot += objects[mwep->otyp].oc_rof;
 
 	    switch (monsndx(mtmp->data)) {
+	    case PM_SPARD:
+		    multishot += 3;
+		    break;
 	    case PM_RANGER:
 	    case PM_ROCKER:
 	    case PM_GATLING_ARCHER:
@@ -1237,6 +1263,7 @@ struct monst *mtmp;
 	    case PM_ECM_ARCHER:
 	    case PM_SHOTGUN_HORROR:
 	    case PM_SHOTGUN_TERROR:
+	    case PM_KOBOLD_PEPPERMASTER:
 		    multishot++;
 		    multishot++;
 		    break;
@@ -1283,7 +1310,7 @@ struct monst *mtmp;
 		onm = singular(otmp, xname);
 		onm = obj_is_pname(otmp) ? the(onm) : an(onm);
 	    }
-	    m_shot.s = ammo_and_launcher(otmp,mwep) ? TRUE : FALSE;
+	    m_shot.s = (mwep && ammo_and_launcher(otmp,mwep)) ? TRUE : FALSE;
 	    pline("%s %s %s!", Monnam(mtmp),
 		  m_shot.s ? is_bullet(otmp) ? "fires" : "shoots" : "throws",
 		  onm);

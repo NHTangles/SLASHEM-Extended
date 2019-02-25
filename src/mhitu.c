@@ -8,6 +8,8 @@
 #include "edog.h"
 
 STATIC_VAR NEARDATA struct obj *otmp;
+STATIC_PTR int katicleaning(void);
+static NEARDATA schar delay;            /* moves left for kati cleaning */
 
 STATIC_DCL void urustm(struct monst *, struct obj *);
 # ifdef OVL1
@@ -189,6 +191,24 @@ on the first floor, especially when you're playing as something with drain resis
 				pline("%s uses her cute little boots to scrape a bit of skin off your %s!", Monnam(mtmp), body_part(LEG));
 				u.legscratching++;
 				losehp(rno(u.legscratching + 1), "being scratched by Jeanetta's little boots", KILLED_BY);
+			}
+
+			if (FemaleTrapKati && humanoid(mtmp->data) && is_female(mtmp->data)) {
+				pline("%s painfully kicks you in the %s with her sexy Kati shoes!", Monnam(mtmp), makeplural(body_part(LEG)));
+				monsterlev = ((mtmp->m_lev) + 1);
+				if (monsterlev <= 0) monsterlev = 1;
+				losehp((monsterlev), "being kicked by Kati shoes", KILLED_BY);
+
+				if (!rn2(20) && !mtmp->mfrenzied) {
+					pline("She asks you to clean the dog shit from her soles. This will take a long time, but if you can do it, she'll no longer hurt you.");
+					if (yn("Do you want to clean the sexy Kati shoes?") == 'y') {
+						delay = -200;
+						u.katitrapocc = TRUE;
+						set_occupation(katicleaning, "cleaning the sexy Kati shoes", 0);
+						mtmp->mpeaceful = TRUE;
+						pline("You start cleaning the shit from the profiled girl boots...");
+					}
+				}
 			}
 
 			if (uarmf && !rn2(3) && OBJ_DESCR(objects[uarmf->otyp]) && (!strcmp(OBJ_DESCR(objects[uarmf->otyp]), "plof heels") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "ploskiye kabluki") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "buzilgan yurish ovozi to'piqlari")) ) {
@@ -1360,15 +1380,17 @@ register struct attack *mattk;
 
 	    if (MON_WEP(mtmp)) {
 		struct obj *obj = MON_WEP(mtmp);
-		obj->owornmask &= ~W_WEP;
-		if ((rnd(100) < (obj->oeroded * 5 / 2)) && !stack_too_big(obj)) {
-		    if (obj->spe > -5) {    
-			obj->spe--;
-			pline("%s %s is damaged further!",
-				s_suffix(Monnam(mtmp)), xname(obj));
-		    } else
-			pline("%s %s is badly battered!", 
-				s_suffix(Monnam(mtmp)), xname(obj));
+		if (obj) {
+			obj->owornmask &= ~W_WEP;
+			if ((rnd(100) < (obj->oeroded * 5 / 2)) && !stack_too_big(obj)) {
+			    if (obj->spe > -5) {    
+				obj->spe--;
+				pline("%s %s is damaged further!",
+					s_suffix(Monnam(mtmp)), xname(obj));
+			    } else
+				pline("%s %s is badly battered!", 
+					s_suffix(Monnam(mtmp)), xname(obj));
+			}
 		}
 	    }
 	}
@@ -2340,8 +2362,8 @@ elena30:
 					    }
 					}
 					/* adjattrib gives dunce cap message when appropriate */
-					if (!rn2(10)) (void) adjattrib(A_INT, -rnd(2), FALSE);
-					else if (!rn2(2)) (void) adjattrib(A_INT, -1, FALSE);
+					if (!rn2(10)) (void) adjattrib(A_INT, -rnd(2), FALSE, TRUE);
+					else if (!rn2(2)) (void) adjattrib(A_INT, -1, FALSE, TRUE);
 					if (!rn2(issoviet ? 2 : 3)) forget_levels(rnd(issoviet ? 25 : 10));	/* lose memory of 25% of levels */
 					if (!rn2(issoviet ? 3 : 5)) forget_objects(rnd(issoviet ? 25 : 10));	/* lose memory of 25% of objects */
 					exercise(A_WIS, FALSE);
@@ -4665,7 +4687,7 @@ elena37:
 				} //else
 				You_feel("the tentacles bore into your skull!");
 				i = d(1,6);
-				(void) adjattrib(A_INT, -i, 1);
+				(void) adjattrib(A_INT, -i, 1, TRUE);
 				while(i-- > 0){
 					if (!rn2(2)) losexp("brain damage",FALSE,TRUE);
 					forget(10);	/* lose 10% of memory per point lost*/
@@ -4733,10 +4755,10 @@ elena37:
 						exercise(A_WIS, FALSE);
 						exercise(A_WIS, FALSE);
 					}
-					(void) adjattrib(A_CON, -4, 1);
+					(void) adjattrib(A_CON, -4, 1, TRUE);
 					You_feel("violated and very fragile. Your soul seems a thin and tattered thing.");
 				} else {
-					(void) adjattrib(A_CON, -2, 1);
+					(void) adjattrib(A_CON, -2, 1, TRUE);
 					You_feel("a bit fragile, but strangly whole.");
 				}
 				losehp(StrongHalf_physical_damage ? dmg/8+1 : Half_physical_damage ? dmg/4+1 : dmg/2+1, "drilling tentacles", KILLED_BY);
@@ -4769,8 +4791,8 @@ elena37:
 				} //else
 				You_feel("the tentacles spear into your unarmored body!");
 				losehp(StrongHalf_physical_damage ? dmg/2+1 : Half_physical_damage ? dmg : 4*dmg, "impaled by tentacles", NO_KILLER_PREFIX);
-				(void) adjattrib(A_STR, -6, 1);
-				(void) adjattrib(A_CON, -3, 1);
+				(void) adjattrib(A_STR, -6, 1, TRUE);
+				(void) adjattrib(A_CON, -3, 1, TRUE);
 				You_feel("weak and helpless in their grip!");
 			break;
 			case 10:
@@ -5073,10 +5095,11 @@ struct monst *mon;
 	    armpro = objects[armor->otyp].a_can;
 	if (MCReduction && mon == &youmonst) armpro -= (1 + (MCReduction / 5000));
 	if (u.magicshield) armpro += 1;
+	if (Race_if(PM_GERTEUT)) armpro++;
 	if (uarm && uarm->oartifact == ART_MITHRAL_CANCELLATION) armpro++;
 	if (uarm && uarm->oartifact == ART_IMPRACTICAL_COMBAT_WEAR) armpro++;
 	if (uarmc && uarmc->oartifact == ART_RESISTANT_PUNCHING_BAG) armpro++;
-	if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_HENRIETTA_S_TENACIOUSNESS) armpro++;
+	if (powerfulimplants() && uimplant && uimplant->oartifact == ART_HENRIETTA_S_TENACIOUSNESS) armpro++;
 	if (Race_if(PM_INKA)) armpro++;
 	if (ACURR(A_CHA) >= 18) armpro++;
 	if (armpro < 0) armpro = 0;
@@ -5171,7 +5194,7 @@ hitmu(mtmp, mattk)
 			dmg *= 2;
 	}
 
-	if (mtmp->mfrenzied) dmg *= 2;
+	if (mtmp->mfrenzied && !rn2(2)) dmg += rnd(dmg);
 /*	Next a cancellation factor	*/
 
 /*	Use uncancelled when the cancellation factor takes into account certain
@@ -5336,6 +5359,18 @@ hitmu(mtmp, mattk)
 
 			}
 
+			if (otmp && otmp->otyp == YITH_TENTACLE) {
+
+				increasesanity(rnz(monster_difficulty() + 1));
+
+			}
+
+			if (otmp && otmp->otyp == NASTYPOLE && !rn2(10)) {
+
+				badeffect();
+
+			}
+
 			if (objects[otmp->otyp].oc_material == SILVER &&
 				hates_silver(youmonst.data)) {
 			    pline("The silver sears your flesh!");
@@ -5432,7 +5467,7 @@ hitmu(mtmp, mattk)
 			if (!dmg) break;
 			if (u.mh > 1 && u.mh > ((u.uac>0) ? dmg : dmg+u.uac) &&
 				   objects[otmp->otyp].oc_material == IRON &&
-					(u.umonnum==PM_BLACK_PUDDING || u.umonnum==PM_DRUDDING || u.umonnum==PM_BLACK_DRUDDING || u.umonnum==PM_BLACKSTEEL_PUDDING || u.umonnum==PM_BLOOD_PUDDING
+					(u.umonnum==PM_SHOCK_PUDDING || u.umonnum==PM_VOLT_PUDDING || u.umonnum==PM_BLACK_PUDDING || u.umonnum==PM_DRUDDING || u.umonnum==PM_BLACK_DRUDDING || u.umonnum==PM_BLACKSTEEL_PUDDING || u.umonnum==PM_BLOOD_PUDDING
 					|| u.umonnum==PM_BROWN_PUDDING || u.umonnum==PM_BLACK_PIERCER)) {
 			    /* This redundancy necessary because you have to
 			     * take the damage _before_ being cloned.
@@ -5517,7 +5552,7 @@ hitmu(mtmp, mattk)
 		
 			while( ABASE(A_WIS) > ATTRMIN(A_WIS) && wdmg > 0){
 				wdmg--;
-				(void) adjattrib(A_WIS, -1, TRUE);
+				(void) adjattrib(A_WIS, -1, TRUE, TRUE);
 				forget_levels(1);	/* lose memory of 1% of levels per point lost*/
 				forget_objects(1);	/* lose memory of 1% of objects per point lost*/
 				exercise(A_WIS, FALSE);
@@ -5898,12 +5933,12 @@ hitmu(mtmp, mattk)
 		hitmsg(mtmp, mattk);
 
 		if (!Poison_resistance) pline("You're badly poisoned!");
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_STR, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_DEX, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CON, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_INT, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_WIS, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CHA, -rnd(2), FALSE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_STR, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_DEX, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CON, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_INT, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_WIS, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CHA, -rnd(2), FALSE, TRUE);
 		ptmp = rn2(A_MAX);
 
 		if (isevilvariant || !rn2(issoviet ? 2 : 20)) (void)destroy_item(POTION_CLASS, AD_VENO);
@@ -5970,6 +6005,10 @@ dopois:
 		    break;
 		}
 		if (u_slip_free(mtmp,mattk)) break;
+		if (uarmh && uarmh->otyp == OILSKIN_COIF && rn2(10)) {
+			Your("helmet blocks the attack to your head.");
+			break;
+		}
 
 		if (uarmh && !(uarmh && OBJ_DESCR(objects[uarmh->otyp]) && ( !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "strip bandana") || !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "polosa bandanu") || !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "bir ip yengil bosh kiyim") )) && rn2(evilfriday ? 3 : 8)) {
 		    /* not body_part(HEAD) */
@@ -6024,8 +6063,8 @@ dopois:
 		    }
 		}
 		/* adjattrib gives dunce cap message when appropriate */
-		if (!rn2(10)) (void) adjattrib(A_INT, -rnd(2), FALSE);
-		else if (!rn2(2)) (void) adjattrib(A_INT, -1, FALSE);
+		if (!rn2(10)) (void) adjattrib(A_INT, -rnd(2), FALSE, TRUE);
+		else if (!rn2(2)) (void) adjattrib(A_INT, -1, FALSE, TRUE);
 		if (!rn2(issoviet ? 2 : 3)) forget_levels(rnd(issoviet ? 25 : 10));	/* lose memory of 25% of levels */
 		if (!rn2(issoviet ? 3 : 5)) forget_objects(rnd(issoviet ? 25 : 10));	/* lose memory of 25% of objects */
 		exercise(A_WIS, FALSE);
@@ -6988,7 +7027,7 @@ dopois:
 		hitmsg(mtmp, mattk);
 		if (statsavingthrow) break;
 		/* if vampire biting (and also a pet) */
-		if (!rn2(3) && !u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
+		if (!rn2(3) && !u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
 			make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
 
 			if (!u.levelporting) {
@@ -7007,7 +7046,7 @@ dopois:
 		if (statsavingthrow) break;
 		if (!rn2(3)) {
 			if (u.uevent.udemigod || u.uhave.amulet || CannotTeleport || (u.usteed && mon_has_amulet(u.usteed)) ) { pline("You shudder for a moment."); (void) safe_teleds(FALSE); break;}
-			if (flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) {
+			if (flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) {
 			 pline("For some reason you resist the banishment!"); break;}
 
 			make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
@@ -7130,7 +7169,7 @@ dopois:
 			reset_rndmonst(NON_PM);
 			while (aggroamount) {
 
-				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY);
+				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY|MM_FRENZIED);
 				aggroamount--;
 				if (aggroamount < 0) aggroamount = 0;
 			}
@@ -7175,7 +7214,7 @@ dopois:
 		{
 			register int midentity = mtmp->m_id;
 			if (midentity < 0) midentity *= -1;
-			while (midentity > 232) midentity -= 232;
+			while (midentity > 235) midentity -= 235;
 
 			register int nastyduration = ((dmg + 2) * rnd(10));
 			if (LongScrewup || u.uprops[LONG_SCREWUP].extrinsic || have_longscrewupstone()) nastyduration *= 20;
@@ -7442,6 +7481,9 @@ dopois:
 				case 230: BadPartBug += rnz(nastyduration); break;
 				case 231: CompletelyBadPartBug += rnz(nastyduration); break;
 				case 232: EvilVariantActive += rnz(nastyduration); break;
+				case 233: SanityTrebleEffect += rnz(nastyduration); break;
+				case 234: StatDecreaseBug += rnz(nastyduration); break;
+				case 235: SimeoutBug += rnz(nastyduration); break;
 
 				default: impossible("AD_MINA called with invalid value %d", midentity); break;
 			}
@@ -7722,6 +7764,9 @@ dopois:
 				case 230: BadPartBug += rnz(nastyduration); break;
 				case 231: CompletelyBadPartBug += rnz(nastyduration); break;
 				case 232: EvilVariantActive += rnz(nastyduration); break;
+				case 233: SanityTrebleEffect += rnz(nastyduration); break;
+				case 234: StatDecreaseBug += rnz(nastyduration); break;
+				case 235: SimeoutBug += rnz(nastyduration); break;
 
 				default: impossible("AD_RUNS called with invalid value %d", u.adrunsattack); break;
 			}
@@ -7922,7 +7967,7 @@ dopois:
 				break;
 			case 6:
 
-				if (!u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
+				if (!u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
 					make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
 
 					if (!u.levelporting) {
@@ -8020,7 +8065,7 @@ dopois:
 		hitmsg(mtmp, mattk);
 		if (statsavingthrow) break;
 		if (mtmp->mcan) break;
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_TIMEAGE_OF_REALMS) break;
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_TIMEAGE_OF_REALMS) break;
 		switch (rnd(10)) {
 
 			case 1:
@@ -8368,8 +8413,8 @@ dopois:
 				losexp("psionic drain", FALSE, TRUE);
 			}
 			if (!rn2(200)) {
-				adjattrib(A_INT, -1, 1);
-				adjattrib(A_WIS, -1, 1);
+				adjattrib(A_INT, -1, 1, TRUE);
+				adjattrib(A_WIS, -1, 1, TRUE);
 			}
 			if (!rn2(200)) {
 				pline("You scream in pain!");
@@ -8473,7 +8518,7 @@ dopois:
 			    break;
 		    case 6: make_burned(HBurned + dmg, TRUE);
 			    break;
-		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE);
+		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE, TRUE);
 			    break;
 		    case 8: (void) make_hallucinated(HHallucination + dmg, TRUE, 0L);
 			    break;
@@ -8633,7 +8678,7 @@ dopois:
 			else You("pause momentarily.");
 			break;
 		    case 4: /* drain Dex */
-			adjattrib(A_DEX, -rn1(1,1), 0);
+			adjattrib(A_DEX, -rn1(1,1), 0, TRUE);
 			break;
 		    case 5: /* steal teleportitis */
 			if(HTeleportation & INTRINSIC) {
@@ -8690,7 +8735,7 @@ dopois:
 				    break;
 			    case 6: make_burned(HBurned + dmg, TRUE);
 				    break;
-			    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE);
+			    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE, TRUE);
 				    break;
 			    case 8: (void) make_hallucinated(HHallucination + dmg, TRUE, 0L);
 				    break;
@@ -8738,7 +8783,7 @@ dopois:
 			    break;
 		    case 6: make_burned(HBurned + dmg, TRUE);
 			    break;
-		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE);
+		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE, TRUE);
 			    break;
 		    case 8: (void) make_hallucinated(HHallucination + dmg, TRUE, 0L);
 			    break;
@@ -8979,7 +9024,7 @@ dopois:
 
 			if (u.mh > 1 && u.mh > ((u.uac>0) ? dmg : dmg+u.uac) &&
 				   objects[otmp->otyp].oc_material == IRON &&
-					(u.umonnum==PM_BLACK_PUDDING || u.umonnum==PM_DRUDDING || u.umonnum==PM_BLACK_DRUDDING || u.umonnum==PM_BLACKSTEEL_PUDDING || u.umonnum==PM_BLOOD_PUDDING
+					(u.umonnum==PM_SHOCK_PUDDING || u.umonnum==PM_VOLT_PUDDING || u.umonnum==PM_BLACK_PUDDING || u.umonnum==PM_DRUDDING || u.umonnum==PM_BLACK_DRUDDING || u.umonnum==PM_BLACKSTEEL_PUDDING || u.umonnum==PM_BLOOD_PUDDING
 					|| u.umonnum==PM_BROWN_PUDDING || u.umonnum==PM_BLACK_PIERCER)) {
 			    /* This redundancy necessary because you have to
 			     * take the damage _before_ being cloned.
@@ -9028,6 +9073,7 @@ dopois:
 
 		if (uarmf && uarmf->oartifact == ART_INDIAN_SMOKE_SYMBOL) tempval *= 2;
 		if (Conflict) tempval /= 2; /* conflict is so powerful that it requires a bunch of nerfs --Amy */
+		if (Race_if(PM_SPARD)) tempval /= 2;
 		if (StrongConflict) tempval /= 2; /* conflict is so powerful that it requires a bunch of nerfs --Amy */
 
 		/* Amy edit: high AC is just far too strong, especially against already weak monsters! */
@@ -9361,8 +9407,8 @@ gulpmu(mtmp, mattk)	/* monster swallows you, or damage if u.uswallow */
 				losexp("psionic drain", FALSE, TRUE);
 			}
 			if (!rn2(200)) {
-				adjattrib(A_INT, -1, 1);
-				adjattrib(A_WIS, -1, 1);
+				adjattrib(A_INT, -1, 1, TRUE);
+				adjattrib(A_WIS, -1, 1, TRUE);
 			}
 			if (!rn2(200)) {
 				pline("You scream in pain!");
@@ -9566,12 +9612,12 @@ gulpmu(mtmp, mattk)	/* monster swallows you, or damage if u.uswallow */
 				pline("You are covered with toxic venom!");
 
 			if (!Poison_resistance) pline("You're badly poisoned!");
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_STR, -rnd(2), FALSE);
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_DEX, -rnd(2), FALSE);
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CON, -rnd(2), FALSE);
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_INT, -rnd(2), FALSE);
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_WIS, -rnd(2), FALSE);
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CHA, -rnd(2), FALSE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_STR, -rnd(2), FALSE, TRUE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_DEX, -rnd(2), FALSE, TRUE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CON, -rnd(2), FALSE, TRUE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_INT, -rnd(2), FALSE, TRUE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_WIS, -rnd(2), FALSE, TRUE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CHA, -rnd(2), FALSE, TRUE);
 
 			if (!rn2(2)) {
 			    poisoned("The attack", rn2(A_MAX), "extremely poisonous interior", 30);
@@ -9634,7 +9680,7 @@ gulpmu(mtmp, mattk)	/* monster swallows you, or damage if u.uswallow */
 				reset_rndmonst(NON_PM);
 				while (aggroamount) {
 
-					makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY);
+					makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY|MM_FRENZIED);
 					aggroamount--;
 					if (aggroamount < 0) aggroamount = 0;
 				}
@@ -9667,7 +9713,7 @@ gulpmu(mtmp, mattk)	/* monster swallows you, or damage if u.uswallow */
 		{
 			register int midentity = mtmp->m_id;
 			if (midentity < 0) midentity *= -1;
-			while (midentity > 232) midentity -= 232;
+			while (midentity > 235) midentity -= 235;
 
 			register int nastyduration = ((tmp + 2) * rnd(10));
 			if (LongScrewup || u.uprops[LONG_SCREWUP].extrinsic || have_longscrewupstone()) nastyduration *= 20;
@@ -9934,6 +9980,9 @@ gulpmu(mtmp, mattk)	/* monster swallows you, or damage if u.uswallow */
 				case 230: BadPartBug += rnz(nastyduration); break;
 				case 231: CompletelyBadPartBug += rnz(nastyduration); break;
 				case 232: EvilVariantActive += rnz(nastyduration); break;
+				case 233: SanityTrebleEffect += rnz(nastyduration); break;
+				case 234: StatDecreaseBug += rnz(nastyduration); break;
+				case 235: SimeoutBug += rnz(nastyduration); break;
 
 				default: impossible("AD_MINA called with invalid value %d", midentity); break;
 			}
@@ -10210,6 +10259,9 @@ gulpmu(mtmp, mattk)	/* monster swallows you, or damage if u.uswallow */
 				case 230: BadPartBug += rnz(nastyduration); break;
 				case 231: CompletelyBadPartBug += rnz(nastyduration); break;
 				case 232: EvilVariantActive += rnz(nastyduration); break;
+				case 233: SanityTrebleEffect += rnz(nastyduration); break;
+				case 234: StatDecreaseBug += rnz(nastyduration); break;
+				case 235: SimeoutBug += rnz(nastyduration); break;
 
 				default: impossible("AD_RUNS called with invalid value %d", u.adrunsattack); break;
 			}
@@ -10518,7 +10570,7 @@ gulpmu(mtmp, mattk)	/* monster swallows you, or damage if u.uswallow */
 			else You("pause momentarily.");
 			break;
 		    case 4: /* drain Dex */
-			adjattrib(A_DEX, -rn1(1,1), 0);
+			adjattrib(A_DEX, -rn1(1,1), 0, TRUE);
 			break;
 		    case 5: /* steal teleportitis */
 			if(HTeleportation & INTRINSIC) {
@@ -10829,7 +10881,7 @@ do_stone2:
 		
 			while( ABASE(A_WIS) > ATTRMIN(A_WIS) && wdmg > 0){
 				wdmg--;
-				(void) adjattrib(A_WIS, -1, TRUE);
+				(void) adjattrib(A_WIS, -1, TRUE, TRUE);
 				forget_levels(1);	/* lose memory of 1% of levels per point lost*/
 				forget_objects(1);	/* lose memory of 1% of objects per point lost*/
 				exercise(A_WIS, FALSE);
@@ -10917,7 +10969,7 @@ do_stone2:
 				break;
 			case 6:
 
-				if (!u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
+				if (!u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
 					make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
 					if (!u.levelporting) {
 						u.levelporting = 1;
@@ -11002,7 +11054,7 @@ do_stone2:
 
 	    case AD_TIME:
 		if (mtmp->mcan) break;
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_TIMEAGE_OF_REALMS) break;
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_TIMEAGE_OF_REALMS) break;
 		switch (rnd(10)) {
 
 			case 1:
@@ -11227,7 +11279,7 @@ do_stone2:
 	    case AD_BANI:
 		if (!rn2(10)) {
 			if (u.uevent.udemigod || u.uhave.amulet || CannotTeleport || (u.usteed && mon_has_amulet(u.usteed))) { pline("You shudder for a moment."); (void) safe_teleds(FALSE); break;}
-			if (flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) {
+			if (flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) {
 			 pline("For some reason you resist the banishment!"); break;}
 
 			make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
@@ -11242,7 +11294,7 @@ do_stone2:
 	    case AD_WEEP:
 		if (flags.soundok) You_hear("weeping sounds!");
 		if (rn2(10)) break;
-		if (!rn2(3) && !u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
+		if (!rn2(3) && !u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
 			make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
 			if (!u.levelporting) {
 				u.levelporting = 1;
@@ -11398,7 +11450,7 @@ do_stone2:
 				    break;
 			    case 6: make_burned(HBurned + tmp, TRUE);
 				    break;
-			    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE);
+			    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE, TRUE);
 				    break;
 			    case 8: (void) make_hallucinated(HHallucination + tmp, TRUE, 0L);
 				    break;
@@ -11482,7 +11534,7 @@ do_stone2:
 			    break;
 		    case 6: make_burned(HBurned + tmp, TRUE);
 			    break;
-		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE);
+		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE, TRUE);
 			    break;
 		    case 8: (void) make_hallucinated(HHallucination + tmp, TRUE, 0L);
 			    break;
@@ -11578,7 +11630,7 @@ do_stone2:
 			    break;
 		    case 6: make_burned(HBurned + tmp, TRUE);
 			    break;
-		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE);
+		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE, TRUE);
 			    break;
 		    case 8: (void) make_hallucinated(HHallucination + tmp, TRUE, 0L);
 			    break;
@@ -11754,8 +11806,8 @@ do_stone2:
 			}
 		    }
 
-			if (!rn2(10)) (void) adjattrib(A_INT, -rnd(2), FALSE);
-			else if (!rn2(2)) (void) adjattrib(A_INT, -1, FALSE);
+			if (!rn2(10)) (void) adjattrib(A_INT, -rnd(2), FALSE, TRUE);
+			else if (!rn2(2)) (void) adjattrib(A_INT, -1, FALSE, TRUE);
 			if (!rn2(issoviet ? 2 : 3)) forget_levels(rnd(issoviet ? 25 : 10));	/* lose memory of 25% of levels */
 			if (!rn2(issoviet ? 3 : 5)) forget_objects(rnd(issoviet ? 25 : 10));	/* lose memory of 25% of objects */
 			exercise(A_WIS, FALSE);
@@ -12144,7 +12196,7 @@ common:
 			reset_rndmonst(NON_PM);
 			while (aggroamount) {
 
-				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY);
+				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY|MM_FRENZIED);
 				aggroamount--;
 				if (aggroamount < 0) aggroamount = 0;
 			}
@@ -12180,7 +12232,7 @@ common:
 		{
 			register int midentity = mtmp->m_id;
 			if (midentity < 0) midentity *= -1;
-			while (midentity > 232) midentity -= 232;
+			while (midentity > 235) midentity -= 235;
 
 			register int nastyduration = ((tmp + 2) * rnd(10));
 			if (LongScrewup || u.uprops[LONG_SCREWUP].extrinsic || have_longscrewupstone()) nastyduration *= 20;
@@ -12447,6 +12499,9 @@ common:
 				case 230: BadPartBug += rnz(nastyduration); break;
 				case 231: CompletelyBadPartBug += rnz(nastyduration); break;
 				case 232: EvilVariantActive += rnz(nastyduration); break;
+				case 233: SanityTrebleEffect += rnz(nastyduration); break;
+				case 234: StatDecreaseBug += rnz(nastyduration); break;
+				case 235: SimeoutBug += rnz(nastyduration); break;
 
 				default: impossible("AD_MINA called with invalid value %d", midentity); break;
 			}
@@ -12723,6 +12778,9 @@ common:
 				case 230: BadPartBug += rnz(nastyduration); break;
 				case 231: CompletelyBadPartBug += rnz(nastyduration); break;
 				case 232: EvilVariantActive += rnz(nastyduration); break;
+				case 233: SanityTrebleEffect += rnz(nastyduration); break;
+				case 234: StatDecreaseBug += rnz(nastyduration); break;
+				case 235: SimeoutBug += rnz(nastyduration); break;
 
 				default: impossible("AD_RUNS called with invalid value %d", u.adrunsattack); break;
 			}
@@ -12889,7 +12947,7 @@ common:
 
 	    case AD_WEEP:
 
-		if (!u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
+		if (!u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
 			make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
 
 			if (!u.levelporting) {
@@ -12906,7 +12964,7 @@ common:
 
 	    case AD_BANI:
 		if (u.uevent.udemigod || u.uhave.amulet || CannotTeleport || (u.usteed && mon_has_amulet(u.usteed)) ) { pline("You shudder for a moment."); (void) safe_teleds(FALSE); break;}
-		if (flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) {
+		if (flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) {
 			pline("For some reason you resist the banishment!"); break;}
 
 		make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
@@ -13121,7 +13179,7 @@ common:
 			    break;
 		    case 6: make_burned(HBurned + tmp, TRUE);
 			    break;
-		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE);
+		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE, TRUE);
 			    break;
 		    case 8: (void) make_hallucinated(HHallucination + tmp, TRUE, 0L);
 			    break;
@@ -13153,7 +13211,7 @@ common:
 				    break;
 			    case 6: make_burned(HBurned + tmp, TRUE);
 				    break;
-			    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE);
+			    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE, TRUE);
 				    break;
 			    case 8: (void) make_hallucinated(HHallucination + tmp, TRUE, 0L);
 				    break;
@@ -13423,7 +13481,7 @@ common:
 
 	    case AD_TIME: /* timebomb */
 
-		if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_TIMEAGE_OF_REALMS) break;
+		if (powerfulimplants() && uimplant && uimplant->oartifact == ART_TIMEAGE_OF_REALMS) break;
 		switch (rnd(10)) {
 
 			case 1:
@@ -13711,7 +13769,7 @@ common:
 				break;
 			case 6:
 
-				if (!u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
+				if (!u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
 					make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
 
 					if (!u.levelporting) {
@@ -13934,7 +13992,7 @@ common:
 			else You("pause momentarily.");
 			break;
 		    case 4: /* drain Dex */
-			adjattrib(A_DEX, -rn1(1,1), 0);
+			adjattrib(A_DEX, -rn1(1,1), 0, TRUE);
 			break;
 		    case 5: /* steal teleportitis */
 			if(HTeleportation & INTRINSIC) {
@@ -14023,7 +14081,7 @@ common:
 			    break;
 		    case 6: make_burned(HBurned + tmp, TRUE);
 			    break;
-		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE);
+		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE, TRUE);
 			    break;
 		    case 8: (void) make_hallucinated(HHallucination + tmp, TRUE, 0L);
 			    break;
@@ -14085,12 +14143,12 @@ common:
 		poisoned("blast", rn2(A_MAX), "venom explosion", 5);
 		}
 		if (!Poison_resistance) pline("You're badly poisoned!");
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_STR, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_DEX, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CON, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_INT, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_WIS, -rnd(2), FALSE);
-		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CHA, -rnd(2), FALSE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_STR, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_DEX, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CON, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_INT, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_WIS, -rnd(2), FALSE, TRUE);
+		if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CHA, -rnd(2), FALSE, TRUE);
 
 		if (isevilvariant || !rn2(issoviet ? 2 : 20)) (void)destroy_item(POTION_CLASS, AD_VENO);
 		if (isevilvariant || !rn2(issoviet ? 2 : 20)) (void)destroy_item(FOOD_CLASS, AD_VENO);
@@ -14178,8 +14236,8 @@ common:
 		    }
 		}
 		/* adjattrib gives dunce cap message when appropriate */
-		if (!rn2(10)) (void) adjattrib(A_INT, -rnd(2), FALSE);
-		else if (!rn2(2)) (void) adjattrib(A_INT, -1, FALSE);
+		if (!rn2(10)) (void) adjattrib(A_INT, -rnd(2), FALSE, TRUE);
+		else if (!rn2(2)) (void) adjattrib(A_INT, -1, FALSE, TRUE);
 		if (!rn2(issoviet ? 2 : 3)) forget_levels(rnd(issoviet ? 25 : 10));	/* lose memory of 25% of levels */
 		if (!rn2(issoviet ? 3 : 5)) forget_objects(rnd(issoviet ? 25 : 10));	/* lose memory of 25% of objects */
 		exercise(A_WIS, FALSE);
@@ -14232,8 +14290,8 @@ common:
 				losexp("psionic drain", FALSE, TRUE);
 			}
 			if (!rn2(200)) {
-				adjattrib(A_INT, -1, 1);
-				adjattrib(A_WIS, -1, 1);
+				adjattrib(A_INT, -1, 1, TRUE);
+				adjattrib(A_WIS, -1, 1, TRUE);
 			}
 			if (!rn2(200)) {
 				pline("You scream in pain!");
@@ -14328,7 +14386,7 @@ common:
 		
 			while( ABASE(A_WIS) > ATTRMIN(A_WIS) && wdmg > 0){
 				wdmg--;
-				(void) adjattrib(A_WIS, -1, TRUE);
+				(void) adjattrib(A_WIS, -1, TRUE, TRUE);
 				forget_levels(1);	/* lose memory of 1% of levels per point lost*/
 				forget_objects(1);	/* lose memory of 1% of objects per point lost*/
 				exercise(A_WIS, FALSE);
@@ -14526,6 +14584,11 @@ gazemu(mtmp, mattk)	/* monster gazes at you */
 
 	if ((uarmh && OBJ_DESCR(objects[uarmh->otyp]) && ( !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "netradiation helmet") || !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "obluchonnyy shlem") || !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "sof radiatsiya dubulg'a") ) ) && !rn2(2) && !mtmp->mcan && canseemon(mtmp) && mtmp->mcansee ) {
 		if (!rn2(10)) pline("%s gazes at you, but your netradiation helmet protects you from the effects!", Monnam(mtmp));
+		return 0;
+	}
+
+	if (uarms && uarms->oartifact == ART_AEGIS && !rn2(2) && !mtmp->mcan && canseemon(mtmp) && mtmp->mcansee) {
+		if (!rn2(10)) pline("%s gazes at you, but Aegis you from the effects!", Monnam(mtmp));
 		return 0;
 	}
 
@@ -14934,8 +14997,8 @@ gazemu(mtmp, mattk)	/* monster gazes at you */
 				losexp("psionic drain", FALSE, TRUE);
 			}
 			if (!rn2(200)) {
-				adjattrib(A_INT, -1, 1);
-				adjattrib(A_WIS, -1, 1);
+				adjattrib(A_INT, -1, 1, TRUE);
+				adjattrib(A_WIS, -1, 1, TRUE);
 			}
 			if (!rn2(200)) {
 				pline("You scream in pain!");
@@ -15426,7 +15489,7 @@ gazemu(mtmp, mattk)	/* monster gazes at you */
 			    break;
 		    case 6: make_burned(HBurned + dmgplus, TRUE);
 			    break;
-		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE);
+		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE, TRUE);
 			    break;
 		    case 8: (void) make_hallucinated(HHallucination + dmgplus, TRUE, 0L);
 			    break;
@@ -15668,7 +15731,7 @@ gazemu(mtmp, mattk)	/* monster gazes at you */
 			else You("pause momentarily.");
 			break;
 		    case 4: /* drain Dex */
-			adjattrib(A_DEX, -rn1(1,1), 0);
+			adjattrib(A_DEX, -rn1(1,1), 0, TRUE);
 			break;
 		    case 5: /* steal teleportitis */
 			if(HTeleportation & INTRINSIC) {
@@ -15954,7 +16017,7 @@ gazemu(mtmp, mattk)	/* monster gazes at you */
 	      if(!mtmp->mcan && canseemon(mtmp) && mtmp->mcansee && (issoviet || !rn2(100))) 		{
 		if (!rn2(3)) {
 			if (u.uevent.udemigod || u.uhave.amulet || CannotTeleport || (u.usteed && mon_has_amulet(u.usteed))) { pline("You shudder for a moment."); (void) safe_teleds(FALSE); break;}
-			if (flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) {
+			if (flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) {
 			 pline("For some reason you resist the banishment!"); break;}
 
 			make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
@@ -15970,7 +16033,7 @@ gazemu(mtmp, mattk)	/* monster gazes at you */
 	    case AD_WEEP:
 	      if(!mtmp->mcan && canseemon(mtmp) && mtmp->mcansee && (issoviet || !rn2(40))) 		{
 		/* if vampire biting (and also a pet) */
-		if (!rn2(3) && !u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
+		if (!rn2(3) && !u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
 			make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
 			if (!u.levelporting) {
 				u.levelporting = 1;
@@ -16217,7 +16280,7 @@ gazemu(mtmp, mattk)	/* monster gazes at you */
 				break;
 			case 6:
 
-				if (!u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
+				if (!u.uevent.udemigod && !(flags.lostsoul || flags.uberlostsoul || (flags.wonderland && !(u.wonderlandescape)) || (flags.zapem && !(u.zapemescape)) || u.uprops[STORM_HELM].extrinsic || In_bellcaves(&u.uz) || In_subquest(&u.uz) || In_voiddungeon(&u.uz) || In_netherrealm(&u.uz)) ) {
 					make_stunned(HStun + 2, FALSE); /* to suppress teleport control that you might have */
 					if (!u.levelporting) {
 						u.levelporting = 1;
@@ -16322,7 +16385,7 @@ gazemu(mtmp, mattk)	/* monster gazes at you */
 
 	    case AD_TIME:
 		if (!mtmp->mcan && canseemon(mtmp) &&
-			couldsee(mtmp->mx, mtmp->my) && !(nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_TIMEAGE_OF_REALMS) &&
+			couldsee(mtmp->mx, mtmp->my) && !(powerfulimplants() && uimplant && uimplant->oartifact == ART_TIMEAGE_OF_REALMS) &&
 			mtmp->mcansee && !mtmp->mspec_used && (issoviet || !rn2(50))) {
 		    pline("%s gazes at you, and sucks the essence of life out of you...", Monnam(mtmp));
 		    stop_occupation();
@@ -16623,7 +16686,7 @@ gazemu(mtmp, mattk)	/* monster gazes at you */
 		
 			while( ABASE(A_WIS) > ATTRMIN(A_WIS) && wdmg > 0){
 				wdmg--;
-				(void) adjattrib(A_WIS, -1, TRUE);
+				(void) adjattrib(A_WIS, -1, TRUE, TRUE);
 				forget_levels(1);	/* lose memory of 1% of levels per point lost*/
 				forget_objects(1);	/* lose memory of 1% of objects per point lost*/
 				exercise(A_WIS, FALSE);
@@ -16667,7 +16730,7 @@ gazemu(mtmp, mattk)	/* monster gazes at you */
        }
          if (ABASE(A_INT) > ATTRMIN(A_INT) && !rn2(10)) {
            /* adjattrib gives dunce cap message when appropriate */
-           (void) adjattrib(A_INT, -1, FALSE);
+           (void) adjattrib(A_INT, -1, FALSE, TRUE);
            losespells();
            forget_map(0);
            docrt();
@@ -16847,7 +16910,7 @@ gazemu(mtmp, mattk)	/* monster gazes at you */
 				reset_rndmonst(NON_PM);
 				while (aggroamount) {
 
-					makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY);
+					makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY|MM_FRENZIED);
 					aggroamount--;
 					if (aggroamount < 0) aggroamount = 0;
 				}
@@ -16896,7 +16959,7 @@ gazemu(mtmp, mattk)	/* monster gazes at you */
 
 			register int midentity = mtmp->m_id;
 			if (midentity < 0) midentity *= -1;
-			while (midentity > 232) midentity -= 232;
+			while (midentity > 235) midentity -= 235;
 
 			register int nastyduration = ((dmgplus + 2) * rnd(10));
 			if (LongScrewup || u.uprops[LONG_SCREWUP].extrinsic || have_longscrewupstone()) nastyduration *= 20;
@@ -17163,6 +17226,9 @@ gazemu(mtmp, mattk)	/* monster gazes at you */
 				case 230: BadPartBug += rnz(nastyduration); break;
 				case 231: CompletelyBadPartBug += rnz(nastyduration); break;
 				case 232: EvilVariantActive += rnz(nastyduration); break;
+				case 233: SanityTrebleEffect += rnz(nastyduration); break;
+				case 234: StatDecreaseBug += rnz(nastyduration); break;
+				case 235: SimeoutBug += rnz(nastyduration); break;
 
 				default: impossible("AD_MINA called with invalid value %d", midentity); break;
 			}
@@ -17442,6 +17508,9 @@ gazemu(mtmp, mattk)	/* monster gazes at you */
 				case 230: BadPartBug += rnz(nastyduration); break;
 				case 231: CompletelyBadPartBug += rnz(nastyduration); break;
 				case 232: EvilVariantActive += rnz(nastyduration); break;
+				case 233: SanityTrebleEffect += rnz(nastyduration); break;
+				case 234: StatDecreaseBug += rnz(nastyduration); break;
+				case 235: SimeoutBug += rnz(nastyduration); break;
 
 				default: impossible("AD_RUNS called with invalid value %d", u.adrunsattack); break;
 			}
@@ -17757,12 +17826,12 @@ gazemu(mtmp, mattk)	/* monster gazes at you */
 	                pline("%s stares into your eyes...", Monnam(mtmp));
 
 			if (!Poison_resistance) pline("You're badly poisoned!");
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_STR, -rnd(2), FALSE);
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_DEX, -rnd(2), FALSE);
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CON, -rnd(2), FALSE);
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_INT, -rnd(2), FALSE);
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_WIS, -rnd(2), FALSE);
-			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CHA, -rnd(2), FALSE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_STR, -rnd(2), FALSE, TRUE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_DEX, -rnd(2), FALSE, TRUE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CON, -rnd(2), FALSE, TRUE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_INT, -rnd(2), FALSE, TRUE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_WIS, -rnd(2), FALSE, TRUE);
+			if (!rn2( (Poison_resistance && rn2(StrongPoison_resistance ? 20 : 5) ) ? 20 : 4 )) (void) adjattrib(A_CHA, -rnd(2), FALSE, TRUE);
 	                poisoned("The gaze", rn2(A_MAX), mtmp->data->mname, 30);
 			if (isevilvariant || !rn2(issoviet ? 2 : 20)) (void)destroy_item(POTION_CLASS, AD_VENO);
 			if (isevilvariant || !rn2(issoviet ? 2 : 20)) (void)destroy_item(FOOD_CLASS, AD_VENO);
@@ -17827,7 +17896,7 @@ gazemu(mtmp, mattk)	/* monster gazes at you */
 			    break;
 		    case 6: make_burned(HBurned + dmgplus, TRUE);
 			    break;
-		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE);
+		    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE, TRUE);
 			    break;
 		    case 8: (void) make_hallucinated(HHallucination + dmgplus, TRUE, 0L);
 			    break;
@@ -17864,7 +17933,7 @@ gazemu(mtmp, mattk)	/* monster gazes at you */
 				    break;
 			    case 6: make_burned(HBurned + dmgplus, TRUE);
 				    break;
-			    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE);
+			    case 7: (void) adjattrib(rn2(A_MAX), -1, FALSE, TRUE);
 				    break;
 			    case 8: (void) make_hallucinated(HHallucination + dmgplus, TRUE, 0L);
 				    break;
@@ -17972,11 +18041,11 @@ register int n;
 
 	/* sometimes you take less damage. The game is deadly enough already. High constitution helps. --Amy */
 	if (!issoviet && rn2(ABASE(A_CON))) {
-	if (!rn2(3) && n >= 1) {n = n / 2; if (n < 1) n = 1;}
-	if (!rn2(10) && rn2(ABASE(A_CON)) && n >= 1 && GushLevel >= 10) {n = n / 3; if (n < 1) n = 1;}
-	if (!rn2(15) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && n >= 1 && GushLevel >= 14) {n = n / 4; if (n < 1) n = 1;}
-	if (!rn2(20) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && n >= 1 && GushLevel >= 20) {n = n / 5; if (n < 1) n = 1;}
-	if (!rn2(50) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && n >= 1 && GushLevel >= 30) {n = n / 10; if (n < 1) n = 1;}
+	if (!rn2(3) && n >= 1) {n++; n = n / 2; if (n < 1) n = 1;}
+	if (!rn2(10) && rn2(ABASE(A_CON)) && n >= 1 && GushLevel >= 10) {n++; n = n / 3; if (n < 1) n = 1;}
+	if (!rn2(15) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && n >= 1 && GushLevel >= 14) {n++; n = n / 4; if (n < 1) n = 1;}
+	if (!rn2(20) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && n >= 1 && GushLevel >= 20) {n++; n = n / 5; if (n < 1) n = 1;}
+	if (!rn2(50) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && n >= 1 && GushLevel >= 30) {n++; n = n / 10; if (n < 1) n = 1;}
 	}
 
 	if (PlayerInConeHeels && n > 0) {
@@ -17989,18 +18058,64 @@ register int n;
 			case P_GRAND_MASTER: dmgreductor = 80; break;
 			case P_SUPREME_MASTER: dmgreductor = 77; break;
 		}
+		n++;
 		n *= dmgreductor;
 		n /= 100;
 		if (n < 1) n = 1;
 	}
 
 	if (n > 0 && StrongDetect_monsters) {
+		n++;
 		n *= 9;
 		n /= 10;
 		if (n < 1) n = 1;
 	}
 
+	if (Race_if(PM_ITAQUE) && n > 0) {
+		n++;
+		n *= (100 - u.ulevel);
+		n /= 100;
+		if (n < 1) n = 1;
+	}
+
+	if (is_sand(u.ux,u.uy) && n > 0) {
+		n++;
+		n *= 4;
+		n /= 5;
+		if (n < 1) n = 1;
+	}
+
+	if (Race_if(PM_VIKING) && n > 0) {
+		n *= 5;
+		n /= 4;
+	}
+
+	if (Race_if(PM_JAVA) && n > 0) {
+		n *= 5;
+		n /= 4;
+	}
+
+	if (Race_if(PM_SPARD) && n > 0) {
+		n *= 5;
+		n /= 4;
+	}
+
+	if (Race_if(PM_MAYMES) && uwep && weapon_type(uwep) == P_FIREARM && n > 0) {
+		n++;
+		n *= 4;
+		n /= 5;
+		if (n < 1) n = 1;
+	}
+
+	if (Race_if(PM_GERTEUT) && n > 0) {
+		n++;
+		n *= 4;
+		n /= 5;
+		if (n < 1) n = 1;
+	}
+
 	if (n > 0 && uarmf && OBJ_DESCR(objects[uarmf->otyp]) && (!strcmp(OBJ_DESCR(objects[uarmf->otyp]), "marji shoes") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "obuv' marzhi") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "oz maryam poyafzallari")) ) {
+		n++;
 		n *= 9;
 		n /= 10;
 		if (n < 1) n = 1;
@@ -18015,13 +18130,23 @@ register int n;
 	if (n && Race_if(PM_YUKI_PLAYA)) n += rnd(5);
 	if (Role_if(PM_BLEEDER)) n = n * 2; /* bleeders are harder than hard mode */
 	if (have_cursedmagicresstone()) n = n * 2;
+	if (Race_if(PM_METAL)) n *= rnd(10);
 	if (HardModeEffect || u.uprops[HARD_MODE_EFFECT].extrinsic || have_hardmodestone()) n = n * 2;
 	if (uamul && uamul->otyp == AMULET_OF_VULNERABILITY) n *= rnd(4);
 	if (RngeFrailness) n = n * 2;
 
+	if (Race_if(PM_SHELL) && !Upolyd && n > 1) n /= 2;
+
 	if (isfriday && !rn2(50)) n += rnd(n);
 
 	if (Invulnerable || (Stoned_chiller && Stoned)) n=0;
+
+	if (u.metalguard) {
+		u.metalguard = 0;
+		n = 0;
+		Your("metal guard prevents the damage!");
+	}
+
 	if (n == 0) {
 		pline("You are unharmed.");
 		return;
@@ -18277,6 +18402,7 @@ register struct monst *mon;
 	if (uarmc && OBJ_DESCR(objects[uarmc->otyp]) && (!strcmp(OBJ_DESCR(objects[uarmc->otyp]), "birthcloth") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "rozhdeniye tkan'") || !strcmp(OBJ_DESCR(objects[uarmc->otyp]), "tug'ilgan mato") )) birthing = 1;
 	else if (RngeChildbirth) birthing = 1;
 	else if (uarmf && uarmf->oartifact == ART_ALISEH_S_RED_COLOR) birthing = 1;
+	else if (Role_if(PM_GRENADONIN) && mon->data->mcolor == CLR_BLACK) birthing = 1;
 	else birthing = 0;
 
 	if (uarmc && uarmc->oartifact == ART_CATHERINE_S_SEXUALITY) complications = 1;
@@ -18311,7 +18437,7 @@ register struct monst *mon;
 			Blind ? "She" : Monnam(mon), xname(ring));
 		makeknown(RIN_ADORNMENT);
 		if (ring==uleft || ring==uright) Ring_gone(ring);
-		if (ring==uwep) setuwep((struct obj *)0, FALSE);
+		if (ring==uwep) setuwep((struct obj *)0, FALSE, TRUE);
 		if (ring==uswapwep) setuswapwep((struct obj *)0, FALSE);
 		if (ring==uquiver) setuqwep((struct obj *)0);
 		freeinv(ring);
@@ -18445,6 +18571,12 @@ skiptreason:
 	/* Well,  IT happened ... */
 	u.uconduct.celibacy++;
 
+	if (Role_if(PM_GRENADONIN) && mon->data->mcolor == CLR_BLACK) {
+		u.ualign.sins++;
+		u.alignlim--;
+		adjalign(-50);
+	}
+
 	if (mon->data == &mons[PM_FEMME]) pline("The beautiful femme showers your body with kisses while your %s are busy stroking her very sexy butt cheeks.", makeplural(body_part(HAND)));
 
 	if (u.homosexual == 2 && (flags.female && mon->female) && rn2(3)) goto enjoyable;
@@ -18465,12 +18597,12 @@ skiptreason:
 				if (u.uenmax < 0) u.uenmax = 0;
 				break;
 			case 1: You("are down in the dumps.");
-				(void) adjattrib(A_CON, -1, TRUE);
+				(void) adjattrib(A_CON, -1, TRUE, TRUE);
 			        exercise(A_CON, FALSE);
 				flags.botl = 1;
 				break;
 			case 2: Your("senses are dulled.");
-				(void) adjattrib(A_WIS, -1, TRUE);
+				(void) adjattrib(A_WIS, -1, TRUE, TRUE);
 			        exercise(A_WIS, FALSE);
 				flags.botl = 1;
 				break;
@@ -18508,12 +18640,12 @@ enjoyable:
 			u.uen = (u.uenmax += rnd(5));
 			break;
 		case 1: You_feel("good enough to do it again.");
-			(void) adjattrib(A_CON, 1, TRUE);
+			(void) adjattrib(A_CON, 1, TRUE, TRUE);
 			exercise(A_CON, TRUE);
 			flags.botl = 1;
 			break;
 		case 2: You("will always remember %s...", noit_mon_nam(mon));
-			(void) adjattrib(A_WIS, 1, TRUE);
+			(void) adjattrib(A_WIS, 1, TRUE, TRUE);
 			exercise(A_WIS, TRUE);
 			flags.botl = 1;
 			break;
@@ -18592,6 +18724,13 @@ enjoyable:
 #endif
 	}
 
+	if (HardcoreAlienMode) {
+
+		u.ugangr++;
+		pline("Oh no - you had sex before your marriage. The gods are certainly angry now.");
+
+	}
+
 	/* "Disable Pregnancy via foocubus/seducing encounters - Let's not do this, shall we?" In Soviet Russia, people aren't being conceived by sexual intercourse. Rather, they just spawn because God decided to create them from thin air. They're also inexplicably prude, which probably is the reason why they don't want pregnancy in their video games either. I guess they won't touch Elona with a ten-foot pole... --Amy */
 
 	if (!rn2(birthing ? 3 : 50) && !issoviet) {
@@ -18619,6 +18758,16 @@ enjoyable:
 			attach_egg_hatch_timeout(uegg);
 			(void) start_timer(1, TIMER_OBJECT, HATCH_EGG, (void *)uegg);
 			pickup_object(uegg, 1, FALSE, TRUE);
+		}
+
+		if (HardcoreAlienMode) {
+
+			u.ugangr += 3;
+			pline("Becoming pregnant before you're married is a grave sin, and the gods are really angry.");
+			adjalign(-250);
+			change_luck(-5);
+			prayer_done();
+
 		}
 
 		if ((uarmc && uarmc->oartifact == ART_CATHERINE_S_SEXUALITY) || complications) {
@@ -19137,6 +19286,18 @@ enjoyable:
             }
 
             slextest(10000, 50000) {
+		stdmsg("apocalyptic madness");
+                u.uprops[SIMEOUT_BUG].intrinsic |= FROMOUTSIDE;
+		increasesanity(rnz((monster_difficulty() * 5) + 1));
+            }
+
+            slextest(10000, 50000) {
+		stdmsg("borderline disorder");
+                u.uprops[SANITY_TREBLE_EFFECT].intrinsic |= FROMOUTSIDE;
+		increasesanity(rnz((monster_difficulty() * 5) + 1));
+            }
+
+            slextest(10000, 50000) {
 		stdmsg("bomber disease");
                 u.uprops[AUTOPILOT_EFFECT].intrinsic |= FROMOUTSIDE;
 		increasesanity(rnz((monster_difficulty() * 5) + 1));
@@ -19323,7 +19484,7 @@ const char *str;
 
 	if (!obj || !obj->owornmask) return;
 
-	if ((rn2(120) < ACURR(A_CHA)) || (uarmf && uarmf->oartifact == ART_RARE_ASIAN_LADY)) { /*much lower chance for the player to resist --Amy*/
+	if (((rn2(120) < ACURR(A_CHA)) || (uarmf && uarmf->oartifact == ART_RARE_ASIAN_LADY)) && !(uarmc && uarmc->oartifact == ART_KING_OF_PORN) ) { /*much lower chance for the player to resist --Amy*/
 
 		sprintf(qbuf,"\"Shall I remove your %s, %s?\" [yes/no]",
 			str, (!rn2(2) ? "lover" : !rn2(2) ? "dear" : "sweetheart"));
@@ -19699,7 +19860,7 @@ register struct attack *mattk;
 			reset_rndmonst(NON_PM);
 			while (aggroamount) {
 
-				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY);
+				makemon((struct permonst *)0, u.ux, u.uy, MM_ANGRY|MM_FRENZIED);
 				aggroamount--;
 				if (aggroamount < 0) aggroamount = 0;
 			}
@@ -19981,6 +20142,18 @@ cloneu()
 	flags.botl = 1;
 	}
 	return(mon);
+}
+
+STATIC_PTR int
+katicleaning()
+{
+	if (delay) {
+		delay++;
+		return(1);
+	} else {
+		pline("Finally, you cleaned all the dog shit from the sexy Kati shoes!");
+		return(0);
+	}
 }
 
 #endif /* OVLB */

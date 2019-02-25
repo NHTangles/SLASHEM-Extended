@@ -717,7 +717,7 @@ moverock()
 		 if (Blind) feel_location(sx,sy);
 	cannot_push:
 	    if (throws_rocks(youmonst.data)) {
-		if (u.usteed && !(nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) && (PlayerCannotUseSkills || P_SKILL(P_RIDING) < P_BASIC) ) {
+		if (u.usteed && !(powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) && (PlayerCannotUseSkills || P_SKILL(P_RIDING) < P_BASIC) ) {
 		    You("aren't skilled enough to %s %s from %s.",
 			(flags.pickup && !In_sokoban(&u.uz))
 			    ? "pick up" : "push aside",
@@ -1046,7 +1046,7 @@ int mode;
     if (IS_ROCK(tmpr->typ) || tmpr->typ == IRONBARS || (SpellColorPlatinum && (glyph_to_cmap(glyph_at(x,y)) == S_bars) ) || tmpr->typ == WOODENTABLE || tmpr->typ == WATERTUNNEL) {
 	if (Blind && mode == DO_MOVE) feel_location(x,y);
 	if (tmpr->typ == IRONBARS || (SpellColorPlatinum && (glyph_to_cmap(glyph_at(x,y)) == S_bars) ) ) {
-	    if (!(Passes_walls || passes_bars(youmonst.data) || (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant && uimplant->oartifact == ART_SIGNIFICANT_RNG_JITTER) )) {
+	    if (!(Passes_walls || passes_bars(youmonst.data) || (powerfulimplants() && uimplant && uimplant && uimplant->oartifact == ART_SIGNIFICANT_RNG_JITTER) )) {
 		if (mode == DO_MOVE) {
 			if (Hyperbluewalls || u.uprops[HYPERBLUEWALL_BUG].extrinsic || have_hyperbluestone() || (uarms && uarms->oartifact == ART_DOLORES__VIRGINITY) ) {
 				You("crash into a set of iron bars! Ouch!");
@@ -1054,7 +1054,7 @@ int mode;
 				losehp(rnd(10), "walking into iron bars", KILLED_BY);
 				if (!rn2(10)) {
 					if (rn2(50)) {
-						adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE);
+						adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE, TRUE);
 					} else {
 						You_feel("dizzy!");
 						forget(1 + rn2(5));
@@ -1087,7 +1087,7 @@ int mode;
 
 	} else if (tmpr->typ == MOUNTAIN) {
 		if (mode != DO_MOVE) return FALSE;
-		if (mode == DO_MOVE && !Passes_walls && !(nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant && uimplant->oartifact == ART_SIGNIFICANT_RNG_JITTER)) {
+		if (mode == DO_MOVE && !Passes_walls && !(powerfulimplants() && uimplant && uimplant && uimplant->oartifact == ART_SIGNIFICANT_RNG_JITTER)) {
 			if (!(u.usteed) && rn2(100)) {
 				TimerunBug += 1; /* ugly hack --Amy */
 				Norep("You try to scale the mountain. This may take many attempts to succeed.");
@@ -1105,7 +1105,7 @@ int mode;
 	} else if (tmpr->typ == FARMLAND) {
 		if (mode != DO_MOVE && !Levitation && !Flying && !(u.usteed && u.usteed->data->mlet == S_QUADRUPED) && !(Upolyd && youmonst.data->mlet == S_QUADRUPED)) return FALSE;
 
-		if (mode == DO_MOVE && !Levitation && !Flying && !(u.usteed && u.usteed->data->mlet == S_QUADRUPED) && !(Upolyd && youmonst.data->mlet == S_QUADRUPED) && !(nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant && uimplant->oartifact == ART_SIGNIFICANT_RNG_JITTER) ) {
+		if (mode == DO_MOVE && !Levitation && !Flying && !(u.usteed && u.usteed->data->mlet == S_QUADRUPED) && !(Upolyd && youmonst.data->mlet == S_QUADRUPED) && !(powerfulimplants() && uimplant && uimplant && uimplant->oartifact == ART_SIGNIFICANT_RNG_JITTER) ) {
 
 			if (Hyperbluewalls || u.uprops[HYPERBLUEWALL_BUG].extrinsic || have_hyperbluestone() || (uarms && uarms->oartifact == ART_DOLORES__VIRGINITY)) {
 				You("crash into a farmland! Ouch!");
@@ -1113,7 +1113,7 @@ int mode;
 				losehp(rnd(10), "walking into a farmland", KILLED_BY);
 				if (!rn2(10)) {
 					if (rn2(50)) {
-						adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE);
+						adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE, TRUE);
 					} else {
 						You_feel("dizzy!");
 						forget(1 + rn2(5));
@@ -1138,7 +1138,7 @@ int mode;
 				losehp(rnd(10), "walking into a tunnel", KILLED_BY);
 				if (!rn2(10)) {
 					if (rn2(50)) {
-						adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE);
+						adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE, TRUE);
 					} else {
 						You_feel("dizzy!");
 						forget(1 + rn2(5));
@@ -1155,7 +1155,13 @@ int mode;
 
 	} else if (tmpr->typ == GRAVEWALL) {
 		/* Once again, passwall intentionally does not help --Amy */
+
+		if (u.walscholarpass) goto walscholardone; /* can pass through */
+
 		if (mode != DO_MOVE) return FALSE;
+
+		if (Role_if(PM_WALSCHOLAR) && (yn("Do you really want to dig into the grave wall? Doing so would be sinful for a Walscholar.") != 'y') ) return FALSE;
+
 		if (rn2(5) && !(uwep && uwep->oartifact == ART_CERULEAN_SMASH) ) {
 			Norep("You dig into the grave wall.");
 			TimerunBug += 1; /* ugly hack --Amy */
@@ -1163,6 +1169,15 @@ int mode;
 		} else {
 			You("dig out the grave wall.");
 			if (flags.moreforced && !MessagesSuppressed) display_nhwindow(WIN_MESSAGE, TRUE);    /* --More-- */
+
+			if (Role_if(PM_WALSCHOLAR)) {
+				You_feel("like a miserably hussy.");
+				if (Hallucination) pline("Maybe you should buy a bottle of drum stint reluctance perfume.");
+				u.ualign.sins++;
+				u.alignlim--;
+				adjalign(-10);
+			}
+
 			tmpr->typ = CORR;
 			if (!rn2(20) && isok(ux+dx, uy+dy)) {
 				maketrap(ux+dx, uy+dy, randomtrap(), 100 );
@@ -1172,6 +1187,10 @@ int mode;
 				return FALSE;
 			}
 		}
+
+walscholardone:
+		;
+
 	} else if (tmpr->typ == WATERTUNNEL) {
 		if (mode != DO_MOVE) return FALSE;
 
@@ -1189,7 +1208,7 @@ int mode;
 				losehp(rnd(10), "walking into a water tunnel", KILLED_BY);
 				if (!rn2(10)) {
 					if (rn2(50)) {
-						adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE);
+						adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE, TRUE);
 					} else {
 						You_feel("dizzy!");
 						forget(1 + rn2(5));
@@ -1229,7 +1248,7 @@ int mode;
 					losehp(rnd(10), "walking into a tree", KILLED_BY);
 					if (!rn2(10)) {
 						if (rn2(50)) {
-							adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE);
+							adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE, TRUE);
 						} else {
 							You_feel("dizzy!");
 							forget(1 + rn2(5));
@@ -1245,7 +1264,7 @@ int mode;
 					losehp(rnd(10), "walking into a wall", KILLED_BY);
 					if (!rn2(10)) {
 						if (rn2(50)) {
-							adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE);
+							adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE, TRUE);
 						} else {
 							You_feel("dizzy!");
 							forget(1 + rn2(5));
@@ -1299,7 +1318,7 @@ int mode;
 				losehp(rnd(10), "walking into a door", KILLED_BY);
 				if (!rn2(10)) {
 					if (rn2(50)) {
-						adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE);
+						adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE, TRUE);
 					} else {
 						You_feel("dizzy!");
 						forget(1 + rn2(5));
@@ -1331,7 +1350,7 @@ int mode;
 					losehp(rnd(10), "walking into a door", KILLED_BY);
 					if (!rn2(10)) {
 						if (rn2(50)) {
-							adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE);
+							adjattrib(rn2(2) ? A_INT : A_WIS, -rnd(5), FALSE, TRUE);
 						} else {
 							You_feel("dizzy!");
 							forget(1 + rn2(5));
@@ -1844,6 +1863,7 @@ domove()
 	boolean cause_delay = FALSE;	/* dragging ball will skip a move */
 	const char *predicament;
 	boolean displacer = FALSE;	/* defender attempts to displace you */
+	boolean peacedisplacer = FALSE;
 
 	u_wipe_engr(rnd(5));
 
@@ -1913,7 +1933,7 @@ domove()
 		    static int skates4 = 0;
 		    if (!skates4) skates4 = find_skates4();
 		    if ((uarmf && uarmf->otyp == skates)
-			    || (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_WHITE_WHALE_HATH_COME)
+			    || (powerfulimplants() && uimplant && uimplant->oartifact == ART_WHITE_WHALE_HATH_COME)
 			    || (uarmf && uarmf->otyp == skates2)
 			    || (uarmf && uarmf->otyp == skates3)
 			    || (uarmf && uarmf->otyp == skates4)
@@ -2101,15 +2121,19 @@ domove()
 		/* Good joke, huh? */
 		if ( (mtmp->data == &mons[PM_DISPLACER_BEAST] || mtmp->data == &mons[PM_WUXTINA] || mtmp->data == &mons[PM_IVEL_WUXTINA] || mtmp->data == &mons[PM_FLUTTERBUG] || mtmp->data == &mons[PM_ORTHOS] || mtmp->data == &mons[PM_SHIMMERING_DRACONIAN] || mtmp->data == &mons[PM_JUMPING_CHAMPION] || mtmp->data->mlet == S_GRUE || mtmp->data == &mons[PM_QUANTUM_MOLD] || mtmp->data == &mons[PM_QUANTUM_GROWTH] || mtmp->data == &mons[PM_QUANTUM_FUNGUS] || mtmp->data == &mons[PM_QUANTUM_PATCH] || mtmp->data == &mons[PM_QUANTUM_STALK] || mtmp->data == &mons[PM_QUANTUM_MUSHROOM] || mtmp->data == &mons[PM_QUANTUM_SPORE] || mtmp->data == &mons[PM_QUANTUM_COLONY] || mtmp->data == &mons[PM_QUANTUM_FORCE_FUNGUS] || mtmp->data == &mons[PM_QUANTUM_WORT] || mtmp->data == &mons[PM_QUANTUM_FORCE_PATCH] || mtmp->data == &mons[PM_QUANTUM_WARP_FUNGUS] || mtmp->data == &mons[PM_QUANTUM_WARP_PATCH] || mtmp->egotype_displacer) && !rn2(2))
 		    displacer = TRUE; /* grues can also displace the player to make them more annoying --Amy */
-		else if (tech_inuse(T_EDDY_WIND)) displacer = TRUE;
+		else if (tech_inuse(T_EDDY_WIND)) peacedisplacer = TRUE;
+		else if (uwep && uwep->oartifact == ART_DIZZY_METAL_STORM) peacedisplacer = TRUE;
 		/* Displacement allows the player to displace peaceful things --Amy */
-		else if (Displaced && !mtmp->isshk && !mtmp->ispriest && mtmp->mpeaceful) displacer = TRUE;
+		else if (Displaced && !mtmp->isshk && !mtmp->ispriest && mtmp->mpeaceful) peacedisplacer = TRUE;
 		else
 		/* try to attack; note that it might evade */
 		/* also, we don't attack tame when _safepet_ */
 		if(attack(mtmp)) return;
 
 		if (tech_inuse(T_EDDY_WIND) && flags.forcefight) {
+			if(attack(mtmp)) return;
+		}
+		if (uwep && uwep->oartifact == ART_DIZZY_METAL_STORM && flags.forcefight) {
 			if(attack(mtmp)) return;
 		}
 	    }
@@ -2141,7 +2165,9 @@ domove()
 	    newsym(x, y);
 	}
 	/* not attacking an animal, so we try to move */
-	if (!displacer || tech_inuse(T_EDDY_WIND)) {
+	if (!displacer) {
+
+	if (peacedisplacer) goto peacedisplace;
 
 	if (u.usteed && !u.usteed->mcanmove && (u.dx || u.dy)) {
 		pline("%s won't move!", upstart(y_monnam(u.usteed)));
@@ -2411,6 +2437,8 @@ domove()
 
 	}
 
+peacedisplace:
+
 	/* warn player before walking into known traps */
 	if (ask_about_trap(x, y)) {
 		char qbuf[BUFSZ];
@@ -2642,7 +2670,7 @@ domove()
 	    use_skill(P_SEXY_FLATS, 1);
 	}
 
-	if (displacer) {
+	if (displacer || peacedisplacer) {
 	    char pnambuf[BUFSZ];
 
 	    u.utrap = 0;			/* A lucky escape */
@@ -3032,9 +3060,14 @@ stillinwater:;
 				x_monnam(mtmp, ARTICLE_A, "falling", 0, TRUE));
 			else {
 			    int dmg;
+			    int molev;
 			    You("are hit by %s!",
 				x_monnam(mtmp, ARTICLE_A, "falling", 0, TRUE));
-			    dmg = d(4,6);
+			    /* Amy edit: make it depend on the monster's level */
+			    molev = mtmp->data->mlevel;
+			    if (molev > 5) molev -= ((molev - 4) * 2 / 3);
+			    if (molev < 1) molev = 1;
+			    dmg = d(molev,6);
 			    if(Half_physical_damage && rn2(2) ) dmg = (dmg+1) / 2;
 			    if(StrongHalf_physical_damage && rn2(2) ) dmg = (dmg+1) / 2;
 			    mdamageu(mtmp, dmg);
@@ -3904,7 +3937,7 @@ dopickup()
 			|| (Flying && !StrongFlying && !Breathless)) {
 		You_cant("reach the bottom to pick things up.");
 		return(0);
-	    } else if (!likes_lava(youmonst.data) && !(uarmf && OBJ_DESCR(objects[uarmf->otyp]) && ( !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "hot boots") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "goryachiye botinki") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "issiq chizilmasin") ) ) && !(uwep && uwep->oartifact == ART_EVERYTHING_MUST_BURN) && !(uamul && uamul->otyp == AMULET_OF_D_TYPE_EQUIPMENT) && !Race_if(PM_PLAYER_SALAMANDER) && !(uwep && uwep->oartifact == ART_MANUELA_S_PRACTICANT_TERRO) && !(nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_RUBBER_SHOALS) && !(uarm && uarm->oartifact == ART_LAURA_CROFT_S_BATTLEWEAR) && !(uarm && uarm->oartifact == ART_D_TYPE_EQUIPMENT) ) {
+	    } else if (!likes_lava(youmonst.data) && !(uarmf && OBJ_DESCR(objects[uarmf->otyp]) && ( !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "hot boots") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "goryachiye botinki") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "issiq chizilmasin") ) ) && !(uwep && uwep->oartifact == ART_EVERYTHING_MUST_BURN) && !(uamul && uamul->otyp == AMULET_OF_D_TYPE_EQUIPMENT) && !Race_if(PM_PLAYER_SALAMANDER) && !(uwep && uwep->oartifact == ART_MANUELA_S_PRACTICANT_TERRO) && !(powerfulimplants() && uimplant && uimplant->oartifact == ART_RUBBER_SHOALS) && !(uarm && uarm->oartifact == ART_LAURA_CROFT_S_BATTLEWEAR) && !(uarm && uarm->oartifact == ART_D_TYPE_EQUIPMENT) ) {
 		You("would burn to a crisp trying to pick things up.");
 		return(0);
 	    }
@@ -3914,7 +3947,7 @@ dopickup()
 		return(0);
 	}
 	if (!can_reach_floor()) {
-		if (u.usteed && !(nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) && (PlayerCannotUseSkills || P_SKILL(P_RIDING) < P_BASIC) )
+		if (u.usteed && !(powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) && (PlayerCannotUseSkills || P_SKILL(P_RIDING) < P_BASIC) )
 		    You("aren't skilled enough to reach from %s.",
 			y_monnam(u.usteed));
 		else
@@ -4138,6 +4171,25 @@ nomul(nval, txt, discountpossible)
 	if (uarmc && uarmc->oartifact == ART_LIGHTSPEED_TRAVEL && nval == 0) return;
 
 	if (uarmf && nval == 0 && OBJ_DESCR(objects[uarmf->otyp]) && ( !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "turbo boots") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "turbo sapogi") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "qidiruvi va turbo chizilmasin") ) ) return;
+
+	if (u.katitrapocc && nval == 0) {
+		pline("Something tries to interrupt your attempt to clean the Kati shoes! If you stop now, the sexy girl will hate you!");
+		if (yn("Really stop cleaning them?") == 'y') {
+		      register struct monst *mtmp2;
+
+			for (mtmp2 = fmon; mtmp2; mtmp2 = mtmp2->nmon) {
+
+				if (!mtmp2->mtame) {
+					mtmp2->mpeaceful = 0;
+					mtmp2->mfrenzied = 1;
+					mtmp2->mhp = mtmp2->mhpmax;
+				}
+			}
+			pline("The beautiful girl in the sexy Kati shoes is very sad that you didn't finish cleaning her lovely boots, and urges everyone in her vicinity to bludgeon you.");
+
+		} else return;
+
+	}
 
 	if(multi < nval) return;	/* This is a bug fix by ab@unido */
 	u.uinvulnerable = FALSE;	/* Kludge to avoid ctrl-C bug -dlc */
@@ -4419,11 +4471,11 @@ int k_format; /* WAC k_format is an int */
 
 	/* let's allow the player to deflect some damage if he's lucky (higher chance with good constitution). --Amy */
 	if (rn2(ABASE(A_CON))) {
-	if (!rn2(3) && n >= 1) {n = n / 2; if (n < 1) n = 1;}
-	if (!rn2(10) && rn2(ABASE(A_CON)) && n >= 1 && GushLevel >= 10) {n = n / 3; if (n < 1) n = 1;}
-	if (!rn2(15) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && n >= 1 && GushLevel >= 14) {n = n / 4; if (n < 1) n = 1;}
-	if (!rn2(20) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && n >= 1 && GushLevel >= 20) {n = n / 5; if (n < 1) n = 1;}
-	if (!rn2(50) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && n >= 1 && GushLevel >= 30) {n = n / 10; if (n < 1) n = 1;}
+	if (!rn2(3) && n >= 1) {n++; n = n / 2; if (n < 1) n = 1;}
+	if (!rn2(10) && rn2(ABASE(A_CON)) && n >= 1 && GushLevel >= 10) {n++; n = n / 3; if (n < 1) n = 1;}
+	if (!rn2(15) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && n >= 1 && GushLevel >= 14) {n++; n = n / 4; if (n < 1) n = 1;}
+	if (!rn2(20) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && n >= 1 && GushLevel >= 20) {n++; n = n / 5; if (n < 1) n = 1;}
+	if (!rn2(50) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && rn2(ABASE(A_CON)) && n >= 1 && GushLevel >= 30) {n++; n = n / 10; if (n < 1) n = 1;}
 	}
 
 	if (PlayerInConeHeels && n > 0) {
@@ -4436,18 +4488,52 @@ int k_format; /* WAC k_format is an int */
 			case P_GRAND_MASTER: dmgreductor = 80; break;
 			case P_SUPREME_MASTER: dmgreductor = 77; break;
 		}
+		n++;
 		n *= dmgreductor;
 		n /= 100;
 		if (n < 1) n = 1;
 	}
 
 	if (n > 0 && StrongDetect_monsters) {
+		n++;
 		n *= 9;
 		n /= 10;
 		if (n < 1) n = 1;
 	}
 
+	if (Race_if(PM_ITAQUE) && n > 0) {
+		n++;
+		n *= (100 - u.ulevel);
+		n /= 100;
+		if (n < 1) n = 1;
+	}
+
+	if (is_sand(u.ux,u.uy) && n > 0) {
+		n++;
+		n *= 4;
+		n /= 5;
+		if (n < 1) n = 1;
+	}
+
+	if (Race_if(PM_VIKING) && n > 0) {
+		n *= 5;
+		n /= 4;
+	}
+
+	if (Race_if(PM_SPARD) && n > 0) {
+		n *= 5;
+		n /= 4;
+	}
+
+	if (Race_if(PM_MAYMES) && uwep && weapon_type(uwep) == P_FIREARM && n > 0) {
+		n++;
+		n *= 4;
+		n /= 5;
+		if (n < 1) n = 1;
+	}
+
 	if (n > 0 && uarmf && OBJ_DESCR(objects[uarmf->otyp]) && (!strcmp(OBJ_DESCR(objects[uarmf->otyp]), "marji shoes") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "obuv' marzhi") || !strcmp(OBJ_DESCR(objects[uarmf->otyp]), "oz maryam poyafzallari")) ) {
+		n++;
 		n *= 9;
 		n /= 10;
 		if (n < 1) n = 1;
@@ -4462,9 +4548,12 @@ int k_format; /* WAC k_format is an int */
 	if (n && Race_if(PM_YUKI_PLAYA)) n += rnd(5);
 	if (Role_if(PM_BLEEDER)) n = n * 2; /* bleeders are harder than hard mode */
 	if (have_cursedmagicresstone()) n = n * 2;
+	if (Race_if(PM_METAL)) n *= rnd(10);
 	if (HardModeEffect || u.uprops[HARD_MODE_EFFECT].extrinsic || have_hardmodestone()) n = n * 2;
 	if (uamul && uamul->otyp == AMULET_OF_VULNERABILITY) n *= rnd(4);
 	if (RngeFrailness) n = n * 2;
+
+	if (Race_if(PM_SHELL) && !Upolyd && n > 1) n /= 2;
 
 	if (isfriday && !rn2(50)) n += rnd(n);
 
@@ -4476,8 +4565,11 @@ int k_format; /* WAC k_format is an int */
 		 * via u.uhp < 1
 		 */
 	}        
-
-
+	else if (u.metalguard) {
+		    u.metalguard = 0;
+		    n = 0;
+		    Your("metal guard prevents the damage!");
+	}
 
 	if (u.disruptionshield && u.uen >= n) {
 		u.uen -= n;

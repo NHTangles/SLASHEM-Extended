@@ -651,13 +651,13 @@ vision_recalc(control)
 	    }
 	}
 
-	if (has_night_vision && !(u.uprops[WEAKSIGHT].extrinsic || (uarmh && uarmh->oartifact == ART_WOLF_KING) || WeakSight || (uleft && uleft->oartifact == ART_BLIND_PILOT) || (uright && uright->oartifact == ART_BLIND_PILOT) || have_weaksightstone() ) && !(uarmh && uarmh->oartifact == ART_FIRE_CHIEF_HELMET) && u.xray_range < (u.nv_range + Sight_bonus + StrongSight_bonus) ) {
+	if (has_night_vision && !(u.uprops[WEAKSIGHT].extrinsic || (uarmh && uarmh->oartifact == ART_WOLF_KING) || WeakSight || (uleft && uleft->oartifact == ART_BLIND_PILOT) || (uright && uright->oartifact == ART_BLIND_PILOT) || have_weaksightstone() ) && !(uwep && uwep->oartifact == ART_WEAKITE_THRUST) && !(u.twoweap && uswapwep && uswapwep->oartifact == ART_WEAKITE_THRUST) && !(uarmh && uarmh->oartifact == ART_FIRE_CHIEF_HELMET) && u.xray_range < (u.nv_range + Sight_bonus + StrongSight_bonus) ) {
 	    if (!(u.nv_range + Sight_bonus + StrongSight_bonus) ) {	/* range is 0 */
 		next_array[u.uy][u.ux] |= IN_SIGHT;
 		levl[u.ux][u.uy].seenv = SVALL;
 		next_rmin[u.uy] = min(u.ux, next_rmin[u.uy]);
 		next_rmax[u.uy] = max(u.ux, next_rmax[u.uy]);
-	    } else if (( (u.nv_range + Sight_bonus + StrongSight_bonus) > 0) && !(u.uprops[WEAKSIGHT].extrinsic || (uarmh && uarmh->oartifact == ART_WOLF_KING) || WeakSight || (uleft && uleft->oartifact == ART_BLIND_PILOT) || (uright && uright->oartifact == ART_BLIND_PILOT) || have_weaksightstone() ) && !(uarmh && uarmh->oartifact == ART_FIRE_CHIEF_HELMET) ) {
+	    } else if (( (u.nv_range + Sight_bonus + StrongSight_bonus) > 0) && !(u.uprops[WEAKSIGHT].extrinsic || (uarmh && uarmh->oartifact == ART_WOLF_KING) || WeakSight || (uleft && uleft->oartifact == ART_BLIND_PILOT) || (uright && uright->oartifact == ART_BLIND_PILOT) || have_weaksightstone() || (uwep && uwep->oartifact == ART_WEAKITE_THRUST) || (u.twoweap && uswapwep && uswapwep->oartifact == ART_WEAKITE_THRUST) ) && !(uarmh && uarmh->oartifact == ART_FIRE_CHIEF_HELMET) ) {
 		ranges = circle_ptr(u.nv_range + Sight_bonus + StrongSight_bonus);
 
 		for (row = u.uy-(u.nv_range + Sight_bonus + StrongSight_bonus); row <= u.uy+(u.nv_range + Sight_bonus + StrongSight_bonus); row++) {
@@ -730,7 +730,7 @@ vision_recalc(control)
 	    }
 
 	    else if ((next_row[col] & COULD_SEE)
-				&& ( (lev->lit && !(DarkModeBug || u.uprops[DARK_MODE_BUG].extrinsic || have_darkmodestone())) || (next_row[col] & TEMP_LIT))) {
+				&& ( (lev->lit && !(HardcoreAlienMode || DarkModeBug || u.uprops[DARK_MODE_BUG].extrinsic || have_darkmodestone())) || (next_row[col] & TEMP_LIT))) {
 		/*
 		 * We see this position because it is lit.
 		 */
@@ -744,7 +744,7 @@ vision_recalc(control)
 		     */
 		    dx = u.ux - col;	dx = sign(dx);
 		    flev = &(levl[col+dx][row+dy]);
-		    if ( (flev->lit && !(DarkModeBug || u.uprops[DARK_MODE_BUG].extrinsic || have_darkmodestone())) || next_array[row+dy][col+dx] & TEMP_LIT) {
+		    if ( (flev->lit && !(HardcoreAlienMode || DarkModeBug || u.uprops[DARK_MODE_BUG].extrinsic || have_darkmodestone())) || next_array[row+dy][col+dx] & TEMP_LIT) {
 			next_row[col] |= IN_SIGHT;	/* we see it */
 
 			oldseenv = lev->seenv;

@@ -1492,10 +1492,11 @@ struct mkroom *sroom;
 
 /* make a swarm of undead around mm */
 void
-mkundead(mm, revive_corpses, mm_flags)
+mkundead(mm, revive_corpses, mm_flags, hostility)
 coord *mm;
 boolean revive_corpses;
 int mm_flags;
+boolean hostility;
 {
 	int cnt = 1;
 	if (!rn2(2)) cnt = (level_difficulty() + 1)/10;
@@ -1504,6 +1505,8 @@ int mm_flags;
 	struct permonst *mdat;
 	struct obj *otmp;
 	coord cc;
+
+	register struct monst *mtmp;
 
 	if (Aggravate_monster) {
 		u.aggravation = 1;
@@ -1516,7 +1519,11 @@ int mm_flags;
 		    (!revive_corpses ||
 		     !(otmp = sobj_at(CORPSE, cc.x, cc.y)) ||
 		     !revive(otmp)))
-		(void) makemon(mdat, cc.x, cc.y, mm_flags);
+		mtmp = makemon(mdat, cc.x, cc.y, mm_flags);
+		if (mtmp && hostility) {
+			mtmp->mpeaceful = 0;
+			mtmp->mfrenzied = 1;
+		}
 	}
 
 	u.aggravation = 0;
@@ -2143,20 +2150,21 @@ douglas_adams_mon()
 struct permonst *
 beehivemon()
 {
-	int     i = rn2(81);
+	int     i = rn2(82);
 
-	if (i > 79) return((level_difficulty() > 40) ? &mons[PM_NEUROBEE] : &mons[PM_KILLER_BEE]);
-	else if (i > 78) return((level_difficulty() > 15) ? &mons[PM_VORACIOUS_FORCE_BEE] : &mons[PM_KILLER_BEE]);
-	else if (i > 76) return((level_difficulty() > 15) ? &mons[PM_VORACIOUS_BEE] : &mons[PM_KILLER_BEE]);
-	else if (i > 75) return((level_difficulty() > 6) ? (rn2(5) ? &mons[PM_ZOMBEE] : &mons[PM_SPIKE_ZOMBEE]) : &mons[PM_KILLER_BEE]);
-	else if (i > 74) return((level_difficulty() > 6) ? &mons[PM_FUMBLEBEE] : &mons[PM_KILLER_BEE]);
-	else if (i > 66) return((level_difficulty() > 6) ? &mons[PM_WING_BEE] : &mons[PM_KILLER_BEE]);
-	else if (i > 58) return((level_difficulty() > 6) ? &mons[PM_TWIN_BEE] : &mons[PM_KILLER_BEE]);
-	else if (i > 57) return((level_difficulty() > 6) ? &mons[PM_WEREKILLERBEE] : &mons[PM_KILLER_BEE]);
-	else if (i > 56) return((level_difficulty() > 5) ? &mons[PM_GIANT_JELLY_BEE] : &mons[PM_KILLER_BEE]);
-	else if (i > 46) return((level_difficulty() > 5) ? &mons[PM_GIANT_KILLER_BEE] : &mons[PM_KILLER_BEE]);
-	else if (i > 45) return((level_difficulty() > 3) ? &mons[PM_STUNNING_BEE] : &mons[PM_KILLER_BEE]);
-	else if (i > 35) return(&mons[PM_THORN_BEE]);
+	if (i > 80) return((level_difficulty() > 40) ? &mons[PM_NEUROBEE] : &mons[PM_KILLER_BEE]);
+	else if (i > 79) return((level_difficulty() > 15) ? &mons[PM_VORACIOUS_FORCE_BEE] : &mons[PM_KILLER_BEE]);
+	else if (i > 77) return((level_difficulty() > 15) ? &mons[PM_VORACIOUS_BEE] : &mons[PM_KILLER_BEE]);
+	else if (i > 76) return((level_difficulty() > 6) ? (rn2(5) ? &mons[PM_ZOMBEE] : &mons[PM_SPIKE_ZOMBEE]) : &mons[PM_KILLER_BEE]);
+	else if (i > 75) return((level_difficulty() > 6) ? &mons[PM_FUMBLEBEE] : &mons[PM_KILLER_BEE]);
+	else if (i > 67) return((level_difficulty() > 6) ? &mons[PM_WING_BEE] : &mons[PM_KILLER_BEE]);
+	else if (i > 59) return((level_difficulty() > 6) ? &mons[PM_TWIN_BEE] : &mons[PM_KILLER_BEE]);
+	else if (i > 58) return((level_difficulty() > 6) ? &mons[PM_WEREKILLERBEE] : &mons[PM_KILLER_BEE]);
+	else if (i > 57) return((level_difficulty() > 5) ? &mons[PM_GIANT_JELLY_BEE] : &mons[PM_KILLER_BEE]);
+	else if (i > 47) return((level_difficulty() > 5) ? &mons[PM_GIANT_KILLER_BEE] : &mons[PM_KILLER_BEE]);
+	else if (i > 46) return((level_difficulty() > 3) ? &mons[PM_STUNNING_BEE] : &mons[PM_KILLER_BEE]);
+	else if (i > 36) return(&mons[PM_THORN_BEE]);
+	else if (i > 35) return(&mons[PM_BOTULISM_BEE]);
 	else if (i > 34) return(&mons[PM_HUNTER_BEE]);
 	else if (i > 33) return(&mons[PM_WEREBEE]);
 	else if (i > 32) return(&mons[PM_HONEY_BEE]);

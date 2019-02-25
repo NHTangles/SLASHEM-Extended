@@ -232,13 +232,19 @@ boolean digest_meal;
 		if (mon->mhp > mon->mhpmax) mon->mhp = mon->mhpmax;
 	}
 
+	/* super regene */
+	if (mon->data == &mons[PM_MESHERA_ALPHA_DEFORMED_ANGEL] || mon->data == &mons[PM_TESTER] || mon->data == &mons[PM_RENAI_OVER_MESHERA]) {
+		mon->mhp += 20;
+		if (mon->mhp > mon->mhpmax) mon->mhp = mon->mhpmax;
+	}
+
 	if (mon->m_en < mon->m_enmax && 
 	    (!rn2(regenrate) || (rn2(mon->m_lev + 5) > 15))) {
 	    	mon->m_en += rn1((mon->m_lev % 10 + 1),1);
 	    	if (mon->m_en > mon->m_enmax) mon->m_en = mon->m_enmax;
 	}
 
-	if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE && u.usteed && (mon == u.usteed)) {
+	if (powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE && u.usteed && (mon == u.usteed)) {
 		if (mon->mhp + 1 >= mon->mhpmax)
 		      mon->mhp = mon->mhpmax;
 		else mon->mhp++;
@@ -259,7 +265,7 @@ boolean digest_meal;
 	if (!(PlayerCannotUseSkills)) {
 
 		if (P_SKILL(P_RIDING) == P_BASIC && u.usteed && (mon == u.usteed) && !rn2(10) ) {
-			if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
+			if (powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
 				if (mon->mhp + 1 >= mon->mhpmax)
 				      mon->mhp = mon->mhpmax;
 				else mon->mhp++;
@@ -270,7 +276,7 @@ boolean digest_meal;
 			if (mon->mhp + 1 >= mon->mhpmax)
 			      mon->mhp = mon->mhpmax;
 			else mon->mhp++;
-			if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
+			if (powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
 				if (mon->mhp + 2 >= mon->mhpmax)
 				      mon->mhp = mon->mhpmax;
 				else mon->mhp++;
@@ -281,7 +287,7 @@ boolean digest_meal;
 			if (mon->mhp + 1 >= mon->mhpmax)
 			      mon->mhp = mon->mhpmax;
 			else mon->mhp++;
-			if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
+			if (powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
 				if (mon->mhp + 3 >= mon->mhpmax)
 				      mon->mhp = mon->mhpmax;
 				else mon->mhp++;
@@ -291,7 +297,7 @@ boolean digest_meal;
 			if (mon->mhp + 1 >= mon->mhpmax)
 			      mon->mhp = mon->mhpmax;
 			else mon->mhp++;
-			if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
+			if (powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
 				if (mon->mhp + 4 >= mon->mhpmax)
 				      mon->mhp = mon->mhpmax;
 				else mon->mhp++;
@@ -301,7 +307,7 @@ boolean digest_meal;
 			if (mon->mhp + 1 >= mon->mhpmax)
 			      mon->mhp = mon->mhpmax;
 			else mon->mhp++;
-			if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
+			if (powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
 				if (mon->mhp + 5 >= mon->mhpmax)
 				      mon->mhp = mon->mhpmax;
 				else mon->mhp++;
@@ -311,7 +317,7 @@ boolean digest_meal;
 			if (mon->mhp + 1 >= mon->mhpmax)
 			      mon->mhp = mon->mhpmax;
 			else mon->mhp++;
-			if (nohands(youmonst.data) && !Race_if(PM_TRANSFORMER) && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
+			if (powerfulimplants() && uimplant && uimplant->oartifact == ART_READY_FOR_A_RIDE) {
 				if (mon->mhp + 6 >= mon->mhpmax)
 				      mon->mhp = mon->mhpmax;
 				else mon->mhp++;
@@ -676,6 +682,8 @@ register struct monst *mtmp;
 	}
 	if (mdat->msound == MS_SHRIEK && !um_dist(mtmp->mx, mtmp->my, 1))
 	    m_respond(mtmp);
+
+	if (mtmp->fartbonus > 9) mtmp->fartbonus = 9; /* fail save, gaaaaaah */
 
 	if (FemaleTrapMeltem && mtmp->female && humanoid(mdat) && !rn2(10 + mtmp->butthurt - mtmp->fartbonus) && !um_dist(mtmp->mx, mtmp->my, fartdistance) && !mtmp->mpeaceful) {
 		pline("%s produces %s farting noises with %s %s butt.", Monnam(mtmp), rn2(2) ? "beautiful" : "squeaky", mhis(mtmp), mtmp->female ? "sexy" : "ugly" );
@@ -1068,7 +1076,7 @@ register struct monst *mtmp;
 		}
 	}
 
-	if ((mdat->msound == MS_CONVERT || mtmp->egotype_converter) && !mtmp->mpeaceful && (distu(mtmp->mx, mtmp->my) <= BOLT_LIM * BOLT_LIM) && !rn2(10)) {
+	if ((mdat->msound == MS_CONVERT || mtmp->egotype_converter) && !Race_if(PM_TURMENE) && !Race_if(PM_HC_ALIEN) && !mtmp->mpeaceful && (distu(mtmp->mx, mtmp->my) <= BOLT_LIM * BOLT_LIM) && !rn2(10)) {
 
 		static const char *conversion_msgs[] = {
 			"Kafir! Yuece Tanri sizi sevmez, ve sonra doenuestuermek yoksa cezalandirilacaktir!",
@@ -1241,7 +1249,7 @@ register struct monst *mtmp;
 					adjalign(-25);
 					godvoice(mtmp->data->maligntyp, "Suffer, infidel!");
 					change_luck(-5);
-					(void) adjattrib(A_WIS, -2, TRUE);
+					(void) adjattrib(A_WIS, -2, TRUE, TRUE);
 					angrygods(mtmp->data->maligntyp);
 
 				}
@@ -1254,7 +1262,7 @@ register struct monst *mtmp;
 
 convertdone:
 
-	if ((mdat->msound == MS_HCALIEN || mtmp->egotype_wouwouer) && !mtmp->mpeaceful && (distu(mtmp->mx, mtmp->my) <= BOLT_LIM * BOLT_LIM) && !rn2(15)) {
+	if ((mdat->msound == MS_HCALIEN || mtmp->egotype_wouwouer) && !Race_if(PM_TURMENE) && !Race_if(PM_HC_ALIEN) && !mtmp->mpeaceful && (distu(mtmp->mx, mtmp->my) <= BOLT_LIM * BOLT_LIM) && !rn2(15)) {
 
 		static const char *hcalien_msgs[] = {
 			"Wouwou.",
@@ -1441,8 +1449,8 @@ convertdone:
 					pline("You're confused!");
 				}
 				if (!rn2(100)) {
-					adjattrib(A_INT, -1, 1);
-					adjattrib(A_WIS, -1, 1);
+					adjattrib(A_INT, -1, 1, TRUE);
+					adjattrib(A_WIS, -1, 1, TRUE);
 				}
 				if (!rn2(100)) {
 					(void) make_hallucinated(HHallucination + rnd(10) + rnd(monster_difficulty() + 1), TRUE, 0L);
@@ -1660,7 +1668,7 @@ toofar:
 	    if(inrange && mtmp->data->msound == MS_BOSS && !mtmp->mpeaceful && !rn2(10))
 	    pline("%s %s", Monnam(mtmp), bosstaunt());
 
-	    if(inrange && (mtmp->data->msound == MS_FART_QUIET || mtmp->data->msound == MS_FART_NORMAL || mtmp->data->msound == MS_FART_LOUD) && (mtmp->data->geno & G_UNIQ) && !mtmp->mpeaceful && !rn2(10))
+	    if(inrange && (mtmp->data->msound == MS_STENCH || mtmp->data->msound == MS_WHORE || mtmp->data->msound == MS_SUPERMAN || mtmp->data->msound == MS_HCALIEN || mtmp->data->msound == MS_CONVERT || mtmp->data->msound == MS_FART_QUIET || mtmp->data->msound == MS_FART_NORMAL || mtmp->data->msound == MS_FART_LOUD) && (mtmp->data->geno & G_UNIQ) && !mtmp->mpeaceful && !rn2(10))
 	    pline("%s %s", Monnam(mtmp), bosstaunt());
 
 	    if(inrange && mtmp->data->msound == MS_CUSS && !mtmp->mpeaceful &&
@@ -1994,7 +2002,7 @@ register int after;
 #endif
 
 	/* teleport if that lies in our nature */
-	if( (ptr == &mons[PM_TENGU] || ptr == &mons[PM_TELEPORTER] || ptr == &mons[PM_EASTERN_TENGU] || ptr == &mons[PM_PHASING_TENGU] || ptr == &mons[PM_CHEERFUL_LEPRECHAUN] || ptr == &mons[PM_BLINK] || ptr == &mons[PM_VORPAL_BUNNY] || ptr == &mons[PM_KING_OF_PORN] || ptr == &mons[PM_PEARDUCK] || ptr == &mons[PM_INDIVIDUAL_WILL_O_THE_WISP] || ptr == &mons[PM_TELEHOBBIT] || ptr == &mons[PM_SPOOPY_GHOST] || ptr == &mons[PM_ANNOYING_SLEX_GHOST] || ptr == &mons[PM_SPRING_WOLF] || ptr == &mons[PM_DIMENSIONAL_SHAMBLER] || ptr == &mons[PM_MAGNET_ELEMENTAL] || ptr == &mons[PM_PHASE_KNIGHT] || ptr == &mons[PM_TELEPORTING_DEMON] || ptr == &mons[PM_BEAMING_UFO_PART] || ptr == &mons[PM_BEAMER] || mtmp->egotype_teleportself) && !rn2(25) && !mtmp->mcan &&
+	if( (ptr == &mons[PM_TENGU] || ptr == &mons[PM_TELEPORTER] || ptr == &mons[PM_EASTERN_TENGU] || ptr == &mons[PM_PHASING_TENGU] || ptr == &mons[PM_CHEERFUL_LEPRECHAUN] || ptr == &mons[PM_BLINK] || ptr == &mons[PM_VORPAL_BUNNY] || ptr == &mons[PM_KING_OF_PORN] || ptr == &mons[PM_PEARDUCK] || ptr == &mons[PM_SPACEWARP_JELLY] || ptr == &mons[PM_NIGHTMARE_SHEEP] || ptr == &mons[PM_HELL_SHEEP] || ptr == &mons[PM_LOVECRAFT_SHEEP] || ptr == &mons[PM_INDIVIDUAL_WILL_O_THE_WISP] || ptr == &mons[PM_TELEHOBBIT] || ptr == &mons[PM_SPOOPY_GHOST] || ptr == &mons[PM_ANNOYING_SLEX_GHOST] || ptr == &mons[PM_SPRING_WOLF] || ptr == &mons[PM_DIMENSIONAL_SHAMBLER] || ptr == &mons[PM_MAGNET_ELEMENTAL] || ptr == &mons[PM_PHASE_KNIGHT] || ptr == &mons[PM_TELEPORTING_DEMON] || ptr == &mons[PM_BEAMING_UFO_PART] || ptr == &mons[PM_BEAMER] || mtmp->egotype_teleportself) && !rn2(25) && !mtmp->mcan &&
 	   !tele_restrict(mtmp)) {
 	    if(mtmp->mhp < 7 || (ptr == &mons[PM_SPOOPY_GHOST]) || mtmp->mpeaceful || rn2(2))
 		(void) rloc(mtmp, FALSE);
@@ -2023,9 +2031,11 @@ not_special:
 	gx = mtmp->mux;
 	gy = mtmp->muy;
 	appr = mtmp->mflee ? -1 : 1;
+
+	if (monsndx(ptr) == PM_SLEEPING_GIANT && !rn2(10)) mtmp->msleeping = 1;
 	if (monsndx(ptr) == PM_NOTHING_CHECKER_WHO_IS_CONFUSED) mtmp->mconf = 1;
 	if (monsndx(ptr) == PM_PANCAKE_SPIRIT) mtmp->mconf = 1;
-	if (mtmp->mconf || (uarmh && !rn2(10) && OBJ_DESCR(objects[uarmh->otyp]) && ( !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "inkcoat helmet") || !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "shlem pal'to chernil") || !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "siyoh palto dubulg'a") ) ) || (uarmh && uarmh->oartifact == ART_RADAR_NOT_WORKING) || (monsndx(ptr) == PM_DANCING_DRAGON) || (monsndx(ptr) == PM_NOTHING_CHECKER_WHO_IS_CONFUSED) || (monsndx(ptr) == PM_TREMBLING_POPLAR) || (u.uswallow && mtmp == u.ustuck))
+	if (mtmp->mconf || (uarmh && !rn2(10) && OBJ_DESCR(objects[uarmh->otyp]) && ( !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "inkcoat helmet") || !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "shlem pal'to chernil") || !strcmp(OBJ_DESCR(objects[uarmh->otyp]), "siyoh palto dubulg'a") ) ) || (uarmh && uarmh->oartifact == ART_RADAR_NOT_WORKING) || (monsndx(ptr) == PM_DANCING_DRAGON) || (monsndx(ptr) == PM_NOTHING_CHECKER_WHO_IS_CONFUSED) || (monsndx(ptr) == PM_TREMBLING_POPLAR) || (monsndx(ptr) == PM_DEAR_ENEMY) || (monsndx(ptr) == PM_TOIDI) || (u.uswallow && mtmp == u.ustuck))
 		appr = 0;
 	else {
 #ifdef GOLDOBJ
@@ -2107,6 +2117,8 @@ not_special:
 	if (ptr == &mons[PM_BOGUXORN]) appr = -1;
 	if (ptr == &mons[PM_POOL_EDGE_SWIMMER]) appr = -1;
 	if (ptr == &mons[PM_SOCIAL_DISORDER]) appr = -1;
+
+	if (u.katitrapocc && !mtmp->mpeaceful) appr = -1; /* they're supposed to let you perform your occupation in peace */
 
 	if ((!mtmp->mpeaceful || !rn2(10))
 #ifdef REINCARNATION
@@ -2332,12 +2344,12 @@ not_special:
 		mmoved==1 && can_tunnel && needspick(ptr)) {
 		if (closed_door(nix, niy)) {
 		    if (!(mw_tmp = MON_WEP(mtmp)) ||
-			!is_pick(mw_tmp) || !is_axe(mw_tmp))
+			(mw_tmp && (!is_pick(mw_tmp) || !is_axe(mw_tmp))) )
 			mtmp->weapon_check = NEED_PICK_OR_AXE;
 		} else if (IS_TREE(levl[nix][niy].typ)) {
-		    if (!(mw_tmp = MON_WEP(mtmp)) || !is_axe(mw_tmp))
+		    if (!(mw_tmp = MON_WEP(mtmp)) || (mw_tmp && !is_axe(mw_tmp)) )
 			mtmp->weapon_check = NEED_AXE;
-		} else if (!(mw_tmp = MON_WEP(mtmp)) || !is_pick(mw_tmp)) {
+		} else if (!(mw_tmp = MON_WEP(mtmp)) || (mw_tmp && !is_pick(mw_tmp)) ) {
 		mtmp->weapon_check = NEED_PICK_AXE;
 		}
 		if (mtmp->weapon_check >= NEED_PICK_AXE && mon_wield_item(mtmp))
@@ -2572,7 +2584,7 @@ postmov:
 		if (organivorous(ptr) || mtmp->egotype_organivore) {
 		    if (meatobj(mtmp) == 2) return 2;	/* it died */
 		}
-		if (ptr == &mons[PM_GHOUL] || ptr == &mons[PM_GHAST] || ptr == &mons[PM_GASTLY] || ptr == &mons[PM_PHANTOM_GHOST]
+		if (ptr == &mons[PM_GHOUL] || ptr == &mons[PM_GHAST] || ptr == &mons[PM_STINKING_ALIEN] || ptr == &mons[PM_GASTLY] || ptr == &mons[PM_PHANTOM_GHOST]
 		|| ptr == &mons[PM_HAUNTER] || ptr == &mons[PM_GENGAR] || ptr == &mons[PM_CORPULENT_DOG] || ptr == &mons[PM_SPIT_DEMON] || ptr == &mons[PM_THESTRAL] || ptr == &mons[PM_THICK_POTATO] || ptr == &mons[PM_BLACK_MUZZLE] || ptr == &mons[PM_CORPSE_SPITTER] || ptr == &mons[PM_MUZZLE_FIEND] || ptr == &mons[PM_MAW_FIEND] || ptr == &mons[PM_ROCKET_MUZZLE]) meatcorpse(mtmp);
 
 		if(!*in_rooms(mtmp->mx, mtmp->my, SHOPBASE) || !rn2(25)) {

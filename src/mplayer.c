@@ -96,7 +96,7 @@ char *nam;
 
 		} else {
 
-			switch (rnd(70)) {
+			switch (rnd(72)) {
 
 				case 1: strcpy(nam, "Bhaak"); break;
 				case 2: strcpy(nam, "Jonadab"); break;
@@ -168,6 +168,8 @@ char *nam;
 				case 68: strcpy(nam, "Andrio"); break;
 				case 69: strcpy(nam, "Metanite"); break;
 				case 70: strcpy(nam, "Greyberyl"); break;
+				case 71: strcpy(nam, "Pellsson"); break;
+				case 72: strcpy(nam, "Recluse"); break;
 				default: strcpy(nam, "BugMalName"); break;
 
 			}
@@ -301,6 +303,30 @@ register boolean special;
 		case PM_UNDEAD_MASON:
 			weapon = DWARVISH_MATTOCK;
 			armor = FULL_PLATE_MAIL;
+		    break;
+		case PM_DEMAGOGUE:
+		case PM_UNDEAD_DEMAGOGUE:
+			armor = FULL_PLATE_MAIL;
+			weapon = THUNDER_HAMMER;
+		    break;
+		case PM_CELLAR_CHILD:
+		case PM_UNDEAD_CELLAR_CHILD:
+			weapon = BATTLE_STAFF;
+			armor = MAGE_PLATE_MAIL;
+		    break;
+		case PM_GRENADONIN:
+		case PM_UNDEAD_GRENADONIN:
+			weapon = KATANA;
+		    break;
+		case PM_WALSCHOLAR:
+		case PM_UNDEAD_WALSCHOLAR:
+			weapon = CONGLOMERATE_PICK;
+			armor = EVIL_LEATHER_ARMOR;
+		    break;
+		case PM_SOCIAL_JUSTICE_WARRIOR:
+		case PM_UNDEAD_SOCIAL_JUSTICE_WARRIOR:
+			helm = FEDORA;
+			weapon = INSECT_SQUASHER;
 		    break;
 		case PM_BINDER:
 		case PM_UNDEAD_BINDER:
